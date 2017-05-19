@@ -6,6 +6,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,17 +24,22 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @EnableAutoConfiguration
 @RestController
-public class Controller {
+public class Controller extends SpringBootServletInitializer {
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(Controller.class);
+    }
 
     public static void main(String[] args) throws Exception {
-        while(true) {
-            Map<String, String> headLines = retrieveHeadLinesFromNuNl();
-            addHeadLinesToDataBase(headLines);
-            System.out.print(".");
-            TimeUnit.MINUTES.sleep(5);
-        }
+//        while(true) {
+//            Map<String, String> headLines = retrieveHeadLinesFromNuNl();
+//            addHeadLinesToDataBase(headLines);
+//            System.out.print(".");
+//            TimeUnit.MINUTES.sleep(5);
+//        }
 
-        //SpringApplication.run(Controller.class, args);
+        SpringApplication.run(Controller.class, args);
     }
 
     private static Map<String, String> retrieveHeadLinesFromNuNl() throws Exception {
