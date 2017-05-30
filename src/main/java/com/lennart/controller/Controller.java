@@ -12,13 +12,11 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 
@@ -26,6 +24,8 @@ import java.util.concurrent.TimeUnit;
 @EnableAutoConfiguration
 @RestController
 public class Controller extends SpringBootServletInitializer {
+
+    private static Connection con;
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -37,10 +37,14 @@ public class Controller extends SpringBootServletInitializer {
     }
 
     @RequestMapping(value = "/startGame", method = RequestMethod.GET)
-    public @ResponseBody String startGame() throws Exception {
-        Map<String, String> headLines = retrieveHeadLinesFromNuNl();
-        addHeadLinesToDataBase(headLines);
-        return null;
+    public void startGame() throws Exception {
+        while(true) {
+            initializeDbConnection();
+            Map<String, String> headLines = retrieveHeadLinesFromNuNl();
+            addHeadLinesToDataBase(headLines);
+            closeDbConnection();
+            TimeUnit.MINUTES.sleep(10);
+        }
     }
 
     private static Map<String, String> retrieveHeadLinesFromNuNl() throws Exception {
@@ -82,9 +86,6 @@ public class Controller extends SpringBootServletInitializer {
     }
 
     private static boolean isHeadLineAlreadyInDatabase(String headLine) throws Exception {
-        Class.forName("com.mysql.jdbc.Driver").newInstance();
-        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/headlines", "root", "Vuurwerk00");
-
         Statement st = con.createStatement();
         String sql = ("SELECT * FROM nu_nl_headlines ORDER BY date;");
         ResultSet rs = st.executeQuery(sql);
@@ -105,15 +106,30 @@ public class Controller extends SpringBootServletInitializer {
 
         for (Map.Entry<String, String> entry : headLinesAndHrefs.entrySet()) {
             if(!isHeadLineAlreadyInDatabase(entry.getKey())) {
-                java.sql.Connection con;
-
-                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/headlines", "root", "Vuurwerk00");
+                int entryValue = getHighestIntEntry() + 1;
                 Statement st = con.createStatement();
-
-                st.executeUpdate("INSERT INTO nu_nl_headlines (date, headline, link) VALUES ('" + dateString + "', '" + entry.getKey() + "', '" + entry.getValue() + "')");
-
-                con.close();
+                st.executeUpdate("INSERT INTO nu_nl_headlines (entry, date, headline, link) VALUES ('" + entryValue + "', '" + dateString + "', '" + entry.getKey() + "', '" + entry.getValue() + "')");
             }
         }
+    }
+
+    private static int getHighestIntEntry() throws Exception {
+        Statement st = con.createStatement();
+        String sql = ("SELECT * FROM nu_nl_headlines ORDER BY entry DESC;");
+        ResultSet rs = st.executeQuery(sql);
+
+        if(rs.next()) {
+            return rs.getInt("entry");
+        }
+        return 0;
+    }
+
+    private void initializeDbConnection() throws Exception {
+        Class.forName("com.mysql.jdbc.Driver").newInstance();
+        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/headlines", "root", "Vuurwerk00");
+    }
+
+    private void closeDbConnection() throws SQLException {
+        con.close();
     }
 }

@@ -63,7 +63,6 @@ mainApp.controller('pokerController', function($scope, $http) {
         alert("hoihoi");
         $http.get('http://nieuws-statistieken.nl:8080/headlines-1.0-SNAPSHOT/startGame').success(function(data) {
             alert("heeee");
-            alert(JSON.stringify(data));
         })
     }
 
