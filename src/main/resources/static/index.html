@@ -1,10 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    Test hello
-</body>
+<html>
+    <head>
+        <title>Heads Up NLHE against computer</title>
+        <script src = "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+        <script src="js/play-against-bot.js"></script>
+    </head>
+
+    <body>
+        <div ng-app = "mainApp" ng-controller = "pokerController">
+            <div>
+                <button ng-click="startGame()">Start game</button>
+            </div>
+        </div>
+    </body>
 </html>

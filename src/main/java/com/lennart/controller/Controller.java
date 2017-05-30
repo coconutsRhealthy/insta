@@ -1,5 +1,6 @@
 package com.lennart.controller;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -32,14 +33,14 @@ public class Controller extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) throws Exception {
-//        while(true) {
-//            Map<String, String> headLines = retrieveHeadLinesFromNuNl();
-//            addHeadLinesToDataBase(headLines);
-//            System.out.print(".");
-//            TimeUnit.MINUTES.sleep(5);
-//        }
-
         SpringApplication.run(Controller.class, args);
+    }
+
+    @RequestMapping(value = "/startGame", method = RequestMethod.GET)
+    public @ResponseBody String startGame() throws Exception {
+        Map<String, String> headLines = retrieveHeadLinesFromNuNl();
+        addHeadLinesToDataBase(headLines);
+        return null;
     }
 
     private static Map<String, String> retrieveHeadLinesFromNuNl() throws Exception {
@@ -82,7 +83,7 @@ public class Controller extends SpringBootServletInitializer {
 
     private static boolean isHeadLineAlreadyInDatabase(String headLine) throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
-        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/test_lp", "root", "");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/headlines", "root", "Vuurwerk00");
 
         Statement st = con.createStatement();
         String sql = ("SELECT * FROM nu_nl_headlines ORDER BY date;");
@@ -97,7 +98,8 @@ public class Controller extends SpringBootServletInitializer {
     }
 
     private static void addHeadLinesToDataBase(Map<String, String> headLinesAndHrefs) throws Exception {
-        Date date = new Date();
+        Date date = DateUtils.addHours(new Date(), 2);
+
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateString = dateFormat.format(date);
 
@@ -105,7 +107,7 @@ public class Controller extends SpringBootServletInitializer {
             if(!isHeadLineAlreadyInDatabase(entry.getKey())) {
                 java.sql.Connection con;
 
-                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/test_lp", "root", "");
+                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/headlines", "root", "Vuurwerk00");
                 Statement st = con.createStatement();
 
                 st.executeUpdate("INSERT INTO nu_nl_headlines (date, headline, link) VALUES ('" + dateString + "', '" + entry.getKey() + "', '" + entry.getValue() + "')");
