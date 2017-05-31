@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 @RestController
 public class Controller extends SpringBootServletInitializer {
 
-    private static Connection con;
+    private Connection con;
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -39,27 +39,135 @@ public class Controller extends SpringBootServletInitializer {
     @RequestMapping(value = "/startGame", method = RequestMethod.GET)
     public void startGame() throws Exception {
         while(true) {
-            initializeDbConnection();
-            Map<String, String> headLines = retrieveHeadLinesFromNuNl();
-            addHeadLinesToDataBase(headLines);
-            closeDbConnection();
+            retrieveAndStoreNuNl();
+            TimeUnit.SECONDS.sleep(5);
+            retrieveAndStoreNos();
+            TimeUnit.SECONDS.sleep(5);
+            retrieveAndStoreTelegraaf();
+            TimeUnit.SECONDS.sleep(5);
+            retrieveAndStoreAd();
+            TimeUnit.SECONDS.sleep(5);
+            retrieveAndStoreVolkskrant();
+
             TimeUnit.MINUTES.sleep(10);
         }
     }
 
-    private static Map<String, String> retrieveHeadLinesFromNuNl() throws Exception {
+    private void retrieveAndStoreNuNl() {
+        try {
+            initializeDbConnection();
+            Map<String, String> nuNlHeadlines = retrieveHeadLinesFromNuNl();
+            addHeadLinesToDataBase("nu_nl_headlines", nuNlHeadlines);
+            closeDbConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void retrieveAndStoreNos() {
+        try {
+            initializeDbConnection();
+            Map<String, String> nosHeadlines = retrieveHeadLinesFromNos();
+            addHeadLinesToDataBase("nos_headlines", nosHeadlines);
+            closeDbConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void retrieveAndStoreTelegraaf() {
+        try {
+            initializeDbConnection();
+            Map<String, String> telegraafHeadlines = retrieveHeadLinesFromTelegraaf();
+            addHeadLinesToDataBase("telegraaf_headlines", telegraafHeadlines);
+            closeDbConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void retrieveAndStoreAd() {
+        try {
+            initializeDbConnection();
+            Map<String, String> adHeadlines = retrieveHeadLinesFromAd();
+            addHeadLinesToDataBase("ad_headlines", adHeadlines);
+            closeDbConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void retrieveAndStoreVolkskrant() {
+        try {
+            initializeDbConnection();
+            Map<String, String> volkskrantHeadlines = retrieveHeadLinesFromVolkskrant();
+            addHeadLinesToDataBase("volkskrant_headlines", volkskrantHeadlines);
+            closeDbConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Map<String, String> retrieveHeadLinesFromNuNl() throws Exception {
+        return retrieveHeadLinesFromSite("http://www.nu.nl/algemeen", "div#block-280723 div.block-content.clearfix span.title", "div#block-280723 div.block-content.clearfix a");
+    }
+
+    private Map<String, String> retrieveHeadLinesFromNos() throws Exception {
+        return retrieveHeadLinesFromSite("http://www.nos.nl", "div#latest_news span.link-hover", "div#latest_news a");
+    }
+
+    private Map<String, String> retrieveHeadLinesFromTelegraaf() throws Exception {
+        return retrieveHeadLinesFromSite("http://www.telegraaf.nl", "ul:nth-child(2) span.snelnieuws-tekst", "ul:nth-child(2) > li.item > a");
+    }
+
+    private Map<String, String> retrieveHeadLinesFromAd() throws Exception {
+        Map<String, String> mapIncludingTime = retrieveHeadLinesFromSite("http://www.ad.nl/accept?url=http://www.ad.nl/nieuws", "div.widget.fjs-autoupdate-widget ol.articles-list.fjs-articles-list h3", "div.widget.fjs-autoupdate-widget ol.articles-list.fjs-articles-list a");
+        return removeTimeFromAdHeadlines(mapIncludingTime);
+    }
+
+    private Map<String, String> retrieveHeadLinesFromVolkskrant() throws Exception {
+        Map<String, String> mapIncludingSportAndOpinie = retrieveHeadLinesFromSite("http://www.volkskrant.nl/cookiewall/accept?url=http://www.volkskrant.nl/", "ol.latest-articles.latest-articles--most-recent p", "ol.latest-articles.latest-articles--most-recent a");
+        return removeVolkskrantSportAndOpinieHeadlines(mapIncludingSportAndOpinie);
+    }
+
+    private Map<String, String> removeTimeFromAdHeadlines(Map<String, String> mapIncluding) {
+        Map<String, String> mapExcluding = new LinkedHashMap<>();
+
+        for (Map.Entry<String, String> entry : mapIncluding.entrySet()) {
+            String headlineNoTime = entry.getKey().substring(5);
+            mapExcluding.put(headlineNoTime, entry.getValue());
+        }
+        return mapExcluding;
+    }
+
+    private Map<String, String> removeVolkskrantSportAndOpinieHeadlines(Map<String, String> mapIncluding) {
+        Map<String, String> mapExcluding = new LinkedHashMap<>();
+
+        for (Map.Entry<String, String> entry : mapIncluding.entrySet()) {
+            String fourthElementInLink = entry.getValue().split("/")[3];
+
+            if(!fourthElementInLink.equals("sport") && !fourthElementInLink.equals("opinie")) {
+                mapExcluding.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return mapExcluding;
+    }
+
+    private Map<String, String> retrieveHeadLinesFromSite(String url, String headlinesSelector,
+                                                                 String hrefsSelector) throws Exception {
         Map<String, String> headLinesAndHrefs = new LinkedHashMap<>();
 
         List<String> headLines = new ArrayList<>();
         List<String> hRefs = new ArrayList<>();
 
-        Document document = Jsoup.connect("http://www.nu.nl").get();
-        Elements headLineTexts = document.select("div#block-324321 span.title");
+        Document document = Jsoup.connect(url).get();
+        Elements headLineTexts = document.select(headlinesSelector);
+
         for(Element e : headLineTexts) {
             headLines.add(e.text());
         }
 
-        Elements headLineHrefs = document.select("div#block-324321 a");
+        Elements headLineHrefs = document.select(hrefsSelector);
         for(Element e : headLineHrefs) {
             hRefs.add(e.attr("href"));
         }
@@ -74,7 +182,7 @@ public class Controller extends SpringBootServletInitializer {
         return headLinesAndHrefs;
     }
 
-    private static List<String> escapeSingleQuote(List<String> headLines) {
+    private List<String> escapeSingleQuote(List<String> headLines) {
         List<String> headLinesSingleQuotesEscaped = new ArrayList<>();
 
         for(String headLine : headLines) {
@@ -85,9 +193,9 @@ public class Controller extends SpringBootServletInitializer {
         return headLinesSingleQuotesEscaped;
     }
 
-    private static boolean isHeadLineAlreadyInDatabase(String headLine) throws Exception {
+    private boolean isHeadLineAlreadyInDatabase(String database, String headLine) throws Exception {
         Statement st = con.createStatement();
-        String sql = ("SELECT * FROM nu_nl_headlines ORDER BY date;");
+        String sql = ("SELECT * FROM " + database + " ORDER BY date;");
         ResultSet rs = st.executeQuery(sql);
         while(rs.next()) {
             String retrievedString = rs.getString("headline").replace("'", "''");
@@ -98,24 +206,24 @@ public class Controller extends SpringBootServletInitializer {
         return false;
     }
 
-    private static void addHeadLinesToDataBase(Map<String, String> headLinesAndHrefs) throws Exception {
+    private void addHeadLinesToDataBase(String database, Map<String, String> headLinesAndHrefs) throws Exception {
         Date date = DateUtils.addHours(new Date(), 2);
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateString = dateFormat.format(date);
 
         for (Map.Entry<String, String> entry : headLinesAndHrefs.entrySet()) {
-            if(!isHeadLineAlreadyInDatabase(entry.getKey())) {
-                int entryValue = getHighestIntEntry() + 1;
+            if(!isHeadLineAlreadyInDatabase(database, entry.getKey())) {
+                int entryValue = getHighestIntEntry(database) + 1;
                 Statement st = con.createStatement();
-                st.executeUpdate("INSERT INTO nu_nl_headlines (entry, date, headline, link) VALUES ('" + entryValue + "', '" + dateString + "', '" + entry.getKey() + "', '" + entry.getValue() + "')");
+                st.executeUpdate("INSERT INTO " + database + " (entry, date, headline, link) VALUES ('" + entryValue + "', '" + dateString + "', '" + entry.getKey() + "', '" + entry.getValue() + "')");
             }
         }
     }
 
-    private static int getHighestIntEntry() throws Exception {
+    private int getHighestIntEntry(String database) throws Exception {
         Statement st = con.createStatement();
-        String sql = ("SELECT * FROM nu_nl_headlines ORDER BY entry DESC;");
+        String sql = ("SELECT * FROM " + database + " ORDER BY entry DESC;");
         ResultSet rs = st.executeQuery(sql);
 
         if(rs.next()) {
