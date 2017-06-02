@@ -5,7 +5,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
@@ -35,7 +34,7 @@ public class Controller extends SpringBootServletInitializer {
     public static void main(String[] args) throws Exception {
         Controller controller = new Controller();
 
-        controller.testCompareMethode();
+        controller.testCompareMethodeWorldMultiplePerSite();
 
         //SpringApplication.run(Controller.class, args);
     }
@@ -245,7 +244,7 @@ public class Controller extends SpringBootServletInitializer {
         con.close();
     }
 
-    private void testCompareMethode() throws Exception {
+    private void testCompareMethodeWordOncePerSite() throws Exception {
         Document document = Jsoup.connect("http://www.cnn.com/").get();
         Document document2 = Jsoup.connect("http://www.nytimes.com/").get();
         Document document3 = Jsoup.connect("http://www.theguardian.com/").get();
@@ -351,100 +350,119 @@ public class Controller extends SpringBootServletInitializer {
         System.out.println("wacht");
     }
 
-    private List<String> getCommonWords() {
-        List<String> commonWords = new ArrayList<>();
+    private void testCompareMethodeWorldMultiplePerSite() throws Exception {
+        Document document = Jsoup.connect("http://www.cnn.com/").get();
+        Document document2 = Jsoup.connect("http://www.nytimes.com/").get();
+        Document document3 = Jsoup.connect("http://www.theguardian.com/").get();
+        Document document4 = Jsoup.connect("http://www.washingtonpost.com").get();
+        Document document5 = Jsoup.connect("http://bbc.co.uk/news").get();
 
-        commonWords.add("in");
-        commonWords.add("van");
-        commonWords.add("op");
-        commonWords.add("voor");
-        commonWords.add("en");
-        commonWords.add("met");
-        commonWords.add("de");
-        commonWords.add("bij");
-        commonWords.add("om");
-        commonWords.add("door");
-        commonWords.add("na");
-        commonWords.add("is");
-        commonWords.add("het");
-        commonWords.add("nieuwe");
-        commonWords.add("uit");
-        commonWords.add("zich");
-        commonWords.add("wil");
-        commonWords.add("dood");
-        commonWords.add("aan");
-        commonWords.add("niet");
-        commonWords.add("vs");
-        commonWords.add("te");
-        commonWords.add("cel");
-        commonWords.add("jaar");
-        commonWords.add("een");
-        commonWords.add("voorkomen");
-        commonWords.add("zaak");
-        commonWords.add("man");
-        commonWords.add("meer");
-        commonWords.add("dat");
-        commonWords.add("krijgt");
-        commonWords.add("geen");
-        commonWords.add("moet");
-        commonWords.add("tegen");
-        commonWords.add("als");
-        commonWords.add("naar");
-        commonWords.add("weer");
-        commonWords.add("eigen");
-        commonWords.add("dit");
-        commonWords.add("nederlandse");
-        commonWords.add("gaat");
-        commonWords.add("maar");
-        commonWords.add("gewonden");
-        commonWords.add("doden");
-        commonWords.add("over");
-        commonWords.add("er");
-        commonWords.add("af");
-        commonWords.add("den");
-        commonWords.add("opnieuw");
-        commonWords.add("zonder");
-        commonWords.add("gevonden");
-        commonWords.add("witte");
-        commonWords.add("deze");
-        commonWords.add("zeggen");
-        commonWords.add("ook");
-        commonWords.add("nu");
-        commonWords.add("nodig");
-        commonWords.add("die");
-        commonWords.add("wordt");
-        commonWords.add("eerst");
-        commonWords.add("grote");
-        commonWords.add("alsnog");
-        commonWords.add("kost");
-        commonWords.add("wat");
-        commonWords.add("schokt");
-        commonWords.add("alle");
-        commonWords.add("nog");
-        commonWords.add("dode");
-        commonWords.add("stapt");
-        commonWords.add("tijd");
-        commonWords.add("doet");
-        commonWords.add("eist");
-        commonWords.add("vrouw");
-        commonWords.add("eis");
-        commonWords.add("toch");
-        commonWords.add("schept");
-        commonWords.add("trekt");
-        commonWords.add("dicht");
-        commonWords.add("aantal");
-        commonWords.add("vindt");
-        commonWords.add("ze");
-        commonWords.add("dan");
-        commonWords.add("");
-        commonWords.add("liveblog");
-        commonWords.add("verdachte");
-        commonWords.add("minder");
-        commonWords.add("zijn");
-        commonWords.add("zal");
-        commonWords.add("onder");
+        Document document6 = Jsoup.connect("http://www.indiatimes.com").get();
+        Document document7 = Jsoup.connect("http://www.huffingtonpost.com").get();
+        Document document8 = Jsoup.connect("http://www.foxnews.com").get();
+        Document document9 = Jsoup.connect("http://www.bloomberg.com").get();
+        Document document10 = Jsoup.connect("http://www.reuters.com").get();
+        Document document11 = Jsoup.connect("http://www.usatoday.com").get();
+        Document document12 = Jsoup.connect("http://www.cnbc.com").get();
+        Document document13 = Jsoup.connect("http://www.nbcnews.com").get();
+        Document document14 = Jsoup.connect("http://www.chinadaily.com.cn").get();
+        Document document15 = Jsoup.connect("http://www.indianexpress.com").get();
+        Document document16 = Jsoup.connect("http://www.latimes.com").get();
+        Document document17 = Jsoup.connect("http://www.nypost.com").get();
+        Document document18 = Jsoup.connect("http://www.news.com.au").get();
+        Document document19 = Jsoup.connect("http://www.cbsnews.com").get();
+        Document document20 = Jsoup.connect("http://www.abcnews.go.com").get();
+        Document document21 = Jsoup.connect("http://www.dailymail.co.uk").get();
+        Document document22 = Jsoup.connect("http://www.thesun.co.uk").get();
+        Document document23 = Jsoup.connect("http://www.standard.co.uk").get();
+        Document document24 = Jsoup.connect("http://www.mirror.co.uk").get();
+        Document document25 = Jsoup.connect("http://www.telegraph.co.uk").get();
+        Document document26 = Jsoup.connect("http://www.dailystar.co.uk").get();
+        Document document27 = Jsoup.connect("http://www.ft.com").get();
+        Document document28 = Jsoup.connect("http://www.independent.co.uk").get();
 
-        return commonWords;
+        List<String> cnn = getListOfWordsFromDocument(document);
+        List<String> nyTimes = getListOfWordsFromDocument(document2);
+        List<String> theGuardian = getListOfWordsFromDocument(document3);
+        List<String> washingtonPost = getListOfWordsFromDocument(document4);
+        List<String> bbc = getListOfWordsFromDocument(document5);
+
+        List<String> indiaTimes = getListOfWordsFromDocument(document6);
+        List<String> huffingtonPost = getListOfWordsFromDocument(document7);
+        List<String> foxNews = getListOfWordsFromDocument(document8);
+        List<String> bloomBerg = getListOfWordsFromDocument(document9);
+        List<String> reuters = getListOfWordsFromDocument(document10);
+        List<String> usaToday = getListOfWordsFromDocument(document11);
+        List<String> cnbc = getListOfWordsFromDocument(document12);
+        List<String> nbcnews = getListOfWordsFromDocument(document13);
+        List<String> chinaDaily = getListOfWordsFromDocument(document14);
+        List<String> indianExpress = getListOfWordsFromDocument(document15);
+        List<String> laTimes = getListOfWordsFromDocument(document16);
+        List<String> nyPost = getListOfWordsFromDocument(document17);
+        List<String> newsAu = getListOfWordsFromDocument(document18);
+        List<String> cbsNews = getListOfWordsFromDocument(document19);
+        List<String> abcNews = getListOfWordsFromDocument(document20);
+        List<String> dailyMail = getListOfWordsFromDocument(document21);
+        List<String> theSun = getListOfWordsFromDocument(document22);
+        List<String> standard = getListOfWordsFromDocument(document23);
+        List<String> mirror = getListOfWordsFromDocument(document24);
+        List<String> telegraph = getListOfWordsFromDocument(document25);
+        List<String> dailystar = getListOfWordsFromDocument(document26);
+        List<String> ft = getListOfWordsFromDocument(document27);
+        List<String> independent = getListOfWordsFromDocument(document28);
+
+        List<String> combinedList = new ArrayList<>();
+        combinedList.addAll(cnn);
+        combinedList.addAll(nyTimes);
+        combinedList.addAll(theGuardian);
+        combinedList.addAll(washingtonPost);
+        combinedList.addAll(bbc);
+
+        combinedList.addAll(indiaTimes);
+        combinedList.addAll(huffingtonPost);
+        combinedList.addAll(foxNews);
+        combinedList.addAll(bloomBerg);
+        combinedList.addAll(reuters);
+        combinedList.addAll(usaToday);
+        combinedList.addAll(cnbc);
+        combinedList.addAll(nbcnews);
+        combinedList.addAll(chinaDaily);
+        combinedList.addAll(indianExpress);
+        combinedList.addAll(laTimes);
+        combinedList.addAll(nyPost);
+        combinedList.addAll(newsAu);
+        combinedList.addAll(cbsNews);
+        combinedList.addAll(abcNews);
+        combinedList.addAll(dailyMail);
+        combinedList.addAll(theSun);
+        combinedList.addAll(standard);
+        combinedList.addAll(mirror);
+        combinedList.addAll(telegraph);
+        combinedList.addAll(dailystar);
+        combinedList.addAll(ft);
+        combinedList.addAll(independent);
+
+        Map<String, Integer> occurrenceMapAll = new HashMap<>();
+
+        for(String word : combinedList) {
+            if(occurrenceMapAll.get(word) == null) {
+                int frequency = Collections.frequency(combinedList, word);
+                occurrenceMapAll.put(word, frequency);
+            }
+        }
+
+        Map<String, Integer> occurrenceMapOnlyTwoOrMore = new HashMap<>();
+
+        for (Map.Entry<String, Integer> entry : occurrenceMapAll.entrySet()) {
+            if(entry.getValue() >= 5) {
+                occurrenceMapOnlyTwoOrMore.put(entry.getKey(), entry.getValue());
+            }
+        }
+
+        occurrenceMapAll = sortByValue(occurrenceMapAll);
+        occurrenceMapOnlyTwoOrMore = sortByValue(occurrenceMapOnlyTwoOrMore);
+
+        System.out.println("wacht");
     }
 
     private <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
@@ -472,11 +490,23 @@ public class Controller extends SpringBootServletInitializer {
         List<String> listOfWords = new ArrayList<>();
 
         listOfWords.addAll(listOfWordsTemp);
-        listOfWords.removeAll(getCommonWords());
 
         Set<String> setOfWords = new HashSet<>();
         setOfWords.addAll(listOfWords);
 
         return setOfWords;
+    }
+
+    private List<String> getListOfWordsFromDocument(Document document) {
+        String allText = document.text();
+        allText = allText.replaceAll("[^A-Za-z0-9 ]", "");
+        allText = allText.toLowerCase();
+
+        List<String> listOfWordsTemp = Arrays.asList(allText.split(" "));
+        List<String> listOfWords = new ArrayList<>();
+
+        listOfWords.addAll(listOfWordsTemp);
+
+        return listOfWords;
     }
 }
