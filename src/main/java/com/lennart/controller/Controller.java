@@ -245,94 +245,98 @@ public class Controller extends SpringBootServletInitializer {
         con.close();
     }
 
-
-
-
-
-
     private void testCompareMethode() throws Exception {
-        //retrieve total html string of couple of sites
-        Document document = Jsoup.connect("http://www.nu.nl/").get();
-        String nuNl = document.text();
+        Document document = Jsoup.connect("http://www.cnn.com/").get();
+        Document document2 = Jsoup.connect("http://www.nytimes.com/").get();
+        Document document3 = Jsoup.connect("http://www.theguardian.com/").get();
+        Document document4 = Jsoup.connect("http://www.washingtonpost.com").get();
+        Document document5 = Jsoup.connect("http://bbc.co.uk/news").get();
 
-        Document document2 = Jsoup.connect("http://www.nos.nl/").get();
-        String nosNl = document2.text();
+        Document document6 = Jsoup.connect("http://www.indiatimes.com").get();
+        Document document7 = Jsoup.connect("http://www.huffingtonpost.com").get();
+        Document document8 = Jsoup.connect("http://www.foxnews.com").get();
+        Document document9 = Jsoup.connect("http://www.bloomberg.com").get();
+        Document document10 = Jsoup.connect("http://www.reuters.com").get();
+        Document document11 = Jsoup.connect("http://www.usatoday.com").get();
+        Document document12 = Jsoup.connect("http://www.cnbc.com").get();
+        Document document13 = Jsoup.connect("http://www.nbcnews.com").get();
+        Document document14 = Jsoup.connect("http://www.chinadaily.com.cn").get();
+        Document document15 = Jsoup.connect("http://www.indianexpress.com").get();
+        Document document16 = Jsoup.connect("http://www.latimes.com").get();
+        Document document17 = Jsoup.connect("http://www.nypost.com").get();
+        Document document18 = Jsoup.connect("http://www.news.com.au").get();
+        Document document19 = Jsoup.connect("http://www.cbsnews.com").get();
+        Document document20 = Jsoup.connect("http://www.abcnews.go.com").get();
+        Document document21 = Jsoup.connect("http://www.dailymail.co.uk").get();
+        Document document22 = Jsoup.connect("http://www.thesun.co.uk").get();
+        Document document23 = Jsoup.connect("http://www.standard.co.uk").get();
+        Document document24 = Jsoup.connect("http://www.mirror.co.uk").get();
+        Document document25 = Jsoup.connect("http://www.telegraph.co.uk").get();
+        Document document26 = Jsoup.connect("http://www.dailystar.co.uk").get();
+        Document document27 = Jsoup.connect("http://www.ft.com").get();
+        Document document28 = Jsoup.connect("http://www.independent.co.uk").get();
 
-        Document document3 = Jsoup.connect("http://www.telegraaf.nl/").get();
-        String telegraaf = document3.text();
+        Set<String> cnn = getSetOfWordsFromDocument(document);
+        Set<String> nyTimes = getSetOfWordsFromDocument(document2);
+        Set<String> theGuardian = getSetOfWordsFromDocument(document3);
+        Set<String> washingtonPost = getSetOfWordsFromDocument(document4);
+        Set<String> bbc = getSetOfWordsFromDocument(document5);
 
-        Document document4 = Jsoup.connect("http://www.ad.nl/accept?url=http://www.ad.nl/nieuws").get();
-        String ad = document4.text();
+        Set<String> indiaTimes = getSetOfWordsFromDocument(document6);
+        Set<String> huffingtonPost = getSetOfWordsFromDocument(document7);
+        Set<String> foxNews = getSetOfWordsFromDocument(document8);
+        Set<String> bloomBerg = getSetOfWordsFromDocument(document9);
+        Set<String> reuters = getSetOfWordsFromDocument(document10);
+        Set<String> usaToday = getSetOfWordsFromDocument(document11);
+        Set<String> cnbc = getSetOfWordsFromDocument(document12);
+        Set<String> nbcnews = getSetOfWordsFromDocument(document13);
+        Set<String> chinaDaily = getSetOfWordsFromDocument(document14);
+        Set<String> indianExpress = getSetOfWordsFromDocument(document15);
+        Set<String> laTimes = getSetOfWordsFromDocument(document16);
+        Set<String> nyPost = getSetOfWordsFromDocument(document17);
+        Set<String> newsAu = getSetOfWordsFromDocument(document18);
+        Set<String> cbsNews = getSetOfWordsFromDocument(document19);
+        Set<String> abcNews = getSetOfWordsFromDocument(document20);
+        Set<String> dailyMail = getSetOfWordsFromDocument(document21);
+        Set<String> theSun = getSetOfWordsFromDocument(document22);
+        Set<String> standard = getSetOfWordsFromDocument(document23);
+        Set<String> mirror = getSetOfWordsFromDocument(document24);
+        Set<String> telegraph = getSetOfWordsFromDocument(document25);
+        Set<String> dailystar = getSetOfWordsFromDocument(document26);
+        Set<String> ft = getSetOfWordsFromDocument(document27);
+        Set<String> independent = getSetOfWordsFromDocument(document28);
 
-        Document document5 = Jsoup.connect("http://www.volkskrant.nl/cookiewall/accept?url=http://www.volkskrant.nl/").get();
-        String volkskrant = document5.text();
-
-        //for each site, remove from this long string all nog alphanumerical characters
-        nuNl = nuNl.replaceAll("[^A-Za-z0-9 ]", "");
-        nosNl = nosNl.replaceAll("[^A-Za-z0-9 ]", "");
-        telegraaf = telegraaf.replaceAll("[^A-Za-z0-9 ]", "");
-        ad = ad.replaceAll("[^A-Za-z0-9 ]", "");
-        volkskrant = volkskrant.replaceAll("[^A-Za-z0-9 ]", "");
-
-        //verwijder hoofdletters
-        nuNl = nuNl.toLowerCase();
-        nosNl = nosNl.toLowerCase();
-        telegraaf = telegraaf.toLowerCase();
-        ad = ad.toLowerCase();
-        volkskrant = volkskrant.toLowerCase();
-
-        //then, for each site, split this long string in words with the spaces and make a list of this per site
-        List<String> nuNlListTemp = Arrays.asList(nuNl.split(" "));
-        List<String> nosNlListTemp = Arrays.asList(nosNl.split(" "));
-        List<String> telegraafListTemp = Arrays.asList(telegraaf.split(" "));
-        List<String> adListTemp = Arrays.asList(ad.split(" "));
-        List<String> volkskrantListTemp = Arrays.asList(volkskrant.split(" "));
-
-        //remove the common words
-        List<String> nuNlList = new ArrayList<>();
-        List<String> nosNlList = new ArrayList<>();
-        List<String> telegraafList = new ArrayList<>();
-        List<String> adList = new ArrayList<>();
-        List<String> volkskrantList = new ArrayList<>();
-
-        nuNlList.addAll(nuNlListTemp);
-        nosNlList.addAll(nosNlListTemp);
-        telegraafList.addAll(telegraafListTemp);
-        adList.addAll(adListTemp);
-        volkskrantList.addAll(volkskrantListTemp);
-
-        nuNlList.removeAll(getCommonWords());
-        nosNlList.removeAll(getCommonWords());
-        telegraafList.removeAll(getCommonWords());
-        adList.removeAll(getCommonWords());
-        volkskrantList.removeAll(getCommonWords());
-
-        //make a set of the remaining list per site. Now you have five String sets, each for every site (with unique words)
-        Set<String> nuNlSet = new HashSet<>();
-        nuNlSet.addAll(nuNlList);
-
-        Set<String> nosNlSet = new HashSet<>();
-        nosNlSet.addAll(nosNlList);
-
-        Set<String> telegraafSet = new HashSet<>();
-        telegraafSet.addAll(telegraafList);
-
-        Set<String> adSet = new HashSet<>();
-        adSet.addAll(adList);
-
-        Set<String> volkskrantSet = new HashSet<>();
-        volkskrantSet.addAll(volkskrantList);
-
-        //make one big new list, add all words from all 5 site sets in this new list
         List<String> combinedList = new ArrayList<>();
-        combinedList.addAll(nuNlSet);
-        combinedList.addAll(nosNlSet);
-        combinedList.addAll(telegraafSet);
-        combinedList.addAll(adSet);
-        combinedList.addAll(volkskrantSet);
+        combinedList.addAll(cnn);
+        combinedList.addAll(nyTimes);
+        combinedList.addAll(theGuardian);
+        combinedList.addAll(washingtonPost);
+        combinedList.addAll(bbc);
 
-        //per word in this list, count its frequency.
-        //after this count, add the word to a new Hashmap, with as key the word and as value the number of occurrences
+        combinedList.addAll(indiaTimes);
+        combinedList.addAll(huffingtonPost);
+        combinedList.addAll(foxNews);
+        combinedList.addAll(bloomBerg);
+        combinedList.addAll(reuters);
+        combinedList.addAll(usaToday);
+        combinedList.addAll(cnbc);
+        combinedList.addAll(nbcnews);
+        combinedList.addAll(chinaDaily);
+        combinedList.addAll(indianExpress);
+        combinedList.addAll(laTimes);
+        combinedList.addAll(nyPost);
+        combinedList.addAll(newsAu);
+        combinedList.addAll(cbsNews);
+        combinedList.addAll(abcNews);
+        combinedList.addAll(dailyMail);
+        combinedList.addAll(theSun);
+        combinedList.addAll(standard);
+        combinedList.addAll(mirror);
+        combinedList.addAll(telegraph);
+        combinedList.addAll(dailystar);
+        combinedList.addAll(ft);
+        combinedList.addAll(independent);
+
         Map<String, Integer> occurrenceMap = new HashMap<>();
 
         for(String word : combinedList) {
@@ -342,7 +346,6 @@ public class Controller extends SpringBootServletInitializer {
             }
         }
 
-        //finally, sort this hashmap on number of occurrences
         occurrenceMap = sortByValue(occurrenceMap);
 
         System.out.println("wacht");
@@ -458,5 +461,22 @@ public class Controller extends SpringBootServletInitializer {
             result.put(entry.getKey(), entry.getValue());
         }
         return result;
+    }
+
+    private Set<String> getSetOfWordsFromDocument(Document document) {
+        String allText = document.text();
+        allText = allText.replaceAll("[^A-Za-z0-9 ]", "");
+        allText = allText.toLowerCase();
+
+        List<String> listOfWordsTemp = Arrays.asList(allText.split(" "));
+        List<String> listOfWords = new ArrayList<>();
+
+        listOfWords.addAll(listOfWordsTemp);
+        listOfWords.removeAll(getCommonWords());
+
+        Set<String> setOfWords = new HashSet<>();
+        setOfWords.addAll(listOfWords);
+
+        return setOfWords;
     }
 }
