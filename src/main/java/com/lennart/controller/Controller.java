@@ -33,7 +33,11 @@ public class Controller extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) throws Exception {
-        SpringApplication.run(Controller.class, args);
+        Controller controller = new Controller();
+
+        controller.testCompareMethode();
+
+        //SpringApplication.run(Controller.class, args);
     }
 
     @RequestMapping(value = "/startGame", method = RequestMethod.GET)
@@ -239,5 +243,220 @@ public class Controller extends SpringBootServletInitializer {
 
     private void closeDbConnection() throws SQLException {
         con.close();
+    }
+
+
+
+
+
+
+    private void testCompareMethode() throws Exception {
+        //retrieve total html string of couple of sites
+        Document document = Jsoup.connect("http://www.nu.nl/").get();
+        String nuNl = document.text();
+
+        Document document2 = Jsoup.connect("http://www.nos.nl/").get();
+        String nosNl = document2.text();
+
+        Document document3 = Jsoup.connect("http://www.telegraaf.nl/").get();
+        String telegraaf = document3.text();
+
+        Document document4 = Jsoup.connect("http://www.ad.nl/accept?url=http://www.ad.nl/nieuws").get();
+        String ad = document4.text();
+
+        Document document5 = Jsoup.connect("http://www.volkskrant.nl/cookiewall/accept?url=http://www.volkskrant.nl/").get();
+        String volkskrant = document5.text();
+
+        //for each site, remove from this long string all nog alphanumerical characters
+        nuNl = nuNl.replaceAll("[^A-Za-z0-9 ]", "");
+        nosNl = nosNl.replaceAll("[^A-Za-z0-9 ]", "");
+        telegraaf = telegraaf.replaceAll("[^A-Za-z0-9 ]", "");
+        ad = ad.replaceAll("[^A-Za-z0-9 ]", "");
+        volkskrant = volkskrant.replaceAll("[^A-Za-z0-9 ]", "");
+
+        //verwijder hoofdletters
+        nuNl = nuNl.toLowerCase();
+        nosNl = nosNl.toLowerCase();
+        telegraaf = telegraaf.toLowerCase();
+        ad = ad.toLowerCase();
+        volkskrant = volkskrant.toLowerCase();
+
+        //then, for each site, split this long string in words with the spaces and make a list of this per site
+        List<String> nuNlListTemp = Arrays.asList(nuNl.split(" "));
+        List<String> nosNlListTemp = Arrays.asList(nosNl.split(" "));
+        List<String> telegraafListTemp = Arrays.asList(telegraaf.split(" "));
+        List<String> adListTemp = Arrays.asList(ad.split(" "));
+        List<String> volkskrantListTemp = Arrays.asList(volkskrant.split(" "));
+
+        //remove the common words
+        List<String> nuNlList = new ArrayList<>();
+        List<String> nosNlList = new ArrayList<>();
+        List<String> telegraafList = new ArrayList<>();
+        List<String> adList = new ArrayList<>();
+        List<String> volkskrantList = new ArrayList<>();
+
+        nuNlList.addAll(nuNlListTemp);
+        nosNlList.addAll(nosNlListTemp);
+        telegraafList.addAll(telegraafListTemp);
+        adList.addAll(adListTemp);
+        volkskrantList.addAll(volkskrantListTemp);
+
+        nuNlList.removeAll(getCommonWords());
+        nosNlList.removeAll(getCommonWords());
+        telegraafList.removeAll(getCommonWords());
+        adList.removeAll(getCommonWords());
+        volkskrantList.removeAll(getCommonWords());
+
+        //make a set of the remaining list per site. Now you have five String sets, each for every site (with unique words)
+        Set<String> nuNlSet = new HashSet<>();
+        nuNlSet.addAll(nuNlList);
+
+        Set<String> nosNlSet = new HashSet<>();
+        nosNlSet.addAll(nosNlList);
+
+        Set<String> telegraafSet = new HashSet<>();
+        telegraafSet.addAll(telegraafList);
+
+        Set<String> adSet = new HashSet<>();
+        adSet.addAll(adList);
+
+        Set<String> volkskrantSet = new HashSet<>();
+        volkskrantSet.addAll(volkskrantList);
+
+        //make one big new list, add all words from all 5 site sets in this new list
+        List<String> combinedList = new ArrayList<>();
+        combinedList.addAll(nuNlSet);
+        combinedList.addAll(nosNlSet);
+        combinedList.addAll(telegraafSet);
+        combinedList.addAll(adSet);
+        combinedList.addAll(volkskrantSet);
+
+        //per word in this list, count its frequency.
+        //after this count, add the word to a new Hashmap, with as key the word and as value the number of occurrences
+        Map<String, Integer> occurrenceMap = new HashMap<>();
+
+        for(String word : combinedList) {
+            if(occurrenceMap.get(word) == null) {
+                int frequency = Collections.frequency(combinedList, word);
+                occurrenceMap.put(word, frequency);
+            }
+        }
+
+        //finally, sort this hashmap on number of occurrences
+        occurrenceMap = sortByValue(occurrenceMap);
+
+        System.out.println("wacht");
+    }
+
+    private List<String> getCommonWords() {
+        List<String> commonWords = new ArrayList<>();
+
+        commonWords.add("in");
+        commonWords.add("van");
+        commonWords.add("op");
+        commonWords.add("voor");
+        commonWords.add("en");
+        commonWords.add("met");
+        commonWords.add("de");
+        commonWords.add("bij");
+        commonWords.add("om");
+        commonWords.add("door");
+        commonWords.add("na");
+        commonWords.add("is");
+        commonWords.add("het");
+        commonWords.add("nieuwe");
+        commonWords.add("uit");
+        commonWords.add("zich");
+        commonWords.add("wil");
+        commonWords.add("dood");
+        commonWords.add("aan");
+        commonWords.add("niet");
+        commonWords.add("vs");
+        commonWords.add("te");
+        commonWords.add("cel");
+        commonWords.add("jaar");
+        commonWords.add("een");
+        commonWords.add("voorkomen");
+        commonWords.add("zaak");
+        commonWords.add("man");
+        commonWords.add("meer");
+        commonWords.add("dat");
+        commonWords.add("krijgt");
+        commonWords.add("geen");
+        commonWords.add("moet");
+        commonWords.add("tegen");
+        commonWords.add("als");
+        commonWords.add("naar");
+        commonWords.add("weer");
+        commonWords.add("eigen");
+        commonWords.add("dit");
+        commonWords.add("nederlandse");
+        commonWords.add("gaat");
+        commonWords.add("maar");
+        commonWords.add("gewonden");
+        commonWords.add("doden");
+        commonWords.add("over");
+        commonWords.add("er");
+        commonWords.add("af");
+        commonWords.add("den");
+        commonWords.add("opnieuw");
+        commonWords.add("zonder");
+        commonWords.add("gevonden");
+        commonWords.add("witte");
+        commonWords.add("deze");
+        commonWords.add("zeggen");
+        commonWords.add("ook");
+        commonWords.add("nu");
+        commonWords.add("nodig");
+        commonWords.add("die");
+        commonWords.add("wordt");
+        commonWords.add("eerst");
+        commonWords.add("grote");
+        commonWords.add("alsnog");
+        commonWords.add("kost");
+        commonWords.add("wat");
+        commonWords.add("schokt");
+        commonWords.add("alle");
+        commonWords.add("nog");
+        commonWords.add("dode");
+        commonWords.add("stapt");
+        commonWords.add("tijd");
+        commonWords.add("doet");
+        commonWords.add("eist");
+        commonWords.add("vrouw");
+        commonWords.add("eis");
+        commonWords.add("toch");
+        commonWords.add("schept");
+        commonWords.add("trekt");
+        commonWords.add("dicht");
+        commonWords.add("aantal");
+        commonWords.add("vindt");
+        commonWords.add("ze");
+        commonWords.add("dan");
+        commonWords.add("");
+        commonWords.add("liveblog");
+        commonWords.add("verdachte");
+        commonWords.add("minder");
+        commonWords.add("zijn");
+        commonWords.add("zal");
+        commonWords.add("onder");
+
+        return commonWords;
+    }
+
+    private <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
+        List<Map.Entry<K, V>> list = new LinkedList<>( map.entrySet() );
+        Collections.sort(list, new Comparator<Map.Entry<K, V>>() {
+            @Override
+            public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
+                return (o1.getValue() ).compareTo( o2.getValue());
+            }
+        });
+
+        Map<K, V> result = new LinkedHashMap<>();
+        for (Map.Entry<K, V> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        return result;
     }
 }
