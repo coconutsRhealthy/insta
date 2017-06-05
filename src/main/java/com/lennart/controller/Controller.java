@@ -34,7 +34,7 @@ public class Controller extends SpringBootServletInitializer {
     public static void main(String[] args) throws Exception {
         Controller controller = new Controller();
 
-        controller.testCompareMethodeWorldMultiplePerSite();
+        controller.testCompareMethodeWordOncePerSite();
 
         //SpringApplication.run(Controller.class, args);
     }
@@ -245,202 +245,511 @@ public class Controller extends SpringBootServletInitializer {
     }
 
     private void testCompareMethodeWordOncePerSite() throws Exception {
-        Document document = Jsoup.connect("http://www.cnn.com/").get();
-        Document document2 = Jsoup.connect("http://www.nytimes.com/").get();
-        Document document3 = Jsoup.connect("http://www.theguardian.com/").get();
-        Document document4 = Jsoup.connect("http://www.washingtonpost.com").get();
-        Document document5 = Jsoup.connect("http://bbc.co.uk/news").get();
+        //Canada
+        Document document1 = Jsoup.connect("http://www.cbc.ca/news").get();
+        Document document2 = Jsoup.connect("https://www.thestar.com").get();
 
-        Document document6 = Jsoup.connect("http://www.indiatimes.com").get();
-        Document document7 = Jsoup.connect("http://www.huffingtonpost.com").get();
+        //US
+        Document document3 = Jsoup.connect("https://www.nytimes.com").get();
+        Document document4 = Jsoup.connect("https://www.washingtonpost.com").get();
+        Document document5 = Jsoup.connect("http://www.huffingtonpost.com").get();
+        Document document6 = Jsoup.connect("http://www.latimes.com").get();
+        Document document7 = Jsoup.connect("http://www.cnn.com").get();
         Document document8 = Jsoup.connect("http://www.foxnews.com").get();
-        Document document9 = Jsoup.connect("http://www.bloomberg.com").get();
-        Document document10 = Jsoup.connect("http://www.reuters.com").get();
-        Document document11 = Jsoup.connect("http://www.usatoday.com").get();
-        Document document12 = Jsoup.connect("http://www.cnbc.com").get();
-        Document document13 = Jsoup.connect("http://www.nbcnews.com").get();
-        Document document14 = Jsoup.connect("http://www.chinadaily.com.cn").get();
-        Document document15 = Jsoup.connect("http://www.indianexpress.com").get();
-        Document document16 = Jsoup.connect("http://www.latimes.com").get();
-        Document document17 = Jsoup.connect("http://www.nypost.com").get();
-        Document document18 = Jsoup.connect("http://www.news.com.au").get();
-        Document document19 = Jsoup.connect("http://www.cbsnews.com").get();
-        Document document20 = Jsoup.connect("http://www.abcnews.go.com").get();
-        Document document21 = Jsoup.connect("http://www.dailymail.co.uk").get();
-        Document document22 = Jsoup.connect("http://www.thesun.co.uk").get();
-        Document document23 = Jsoup.connect("http://www.standard.co.uk").get();
-        Document document24 = Jsoup.connect("http://www.mirror.co.uk").get();
-        Document document25 = Jsoup.connect("http://www.telegraph.co.uk").get();
-        Document document26 = Jsoup.connect("http://www.dailystar.co.uk").get();
-        Document document27 = Jsoup.connect("http://www.ft.com").get();
-        Document document28 = Jsoup.connect("http://www.independent.co.uk").get();
+        Document document9 = Jsoup.connect("https://www.usatoday.com").get();
+        Document document10 = Jsoup.connect("https://www.wsj.com").get();
+        Document document11 = Jsoup.connect("http://www.cnbc.com").get();
+        Document document12 = Jsoup.connect("http://www.nbcnews.com").get();
 
-        Set<String> cnn = getSetOfWordsFromDocument(document);
-        Set<String> nyTimes = getSetOfWordsFromDocument(document2);
-        Set<String> theGuardian = getSetOfWordsFromDocument(document3);
+        //Mexico
+        Document document13 = Jsoup.connect("http://www.theyucatantimes.com").get();
+        Document document14 = Jsoup.connect("http://www.thenews.mx").get();
+
+        //Brazil
+        Document document15 = Jsoup.connect("http://riotimesonline.com").get();
+        Document document16 = Jsoup.connect("http://www1.folha.uol.com.br/internacional/en").get();
+
+        //Argentina
+        Document document17 = Jsoup.connect("http://www.buenosairesherald.com/printed-edition").get();
+
+        //UK
+        Document document18 = Jsoup.connect("https://www.theguardian.com").get();
+        Document document19 = Jsoup.connect("http://www.bbc.co.uk").get();
+        Document document20 = Jsoup.connect("https://www.ft.com").get();
+        Document document21 = Jsoup.connect("https://www.thetimes.co.uk").get();
+        Document document22 = Jsoup.connect("https://www.thesun.co.uk").get();
+
+        //Ireland
+        Document document23 = Jsoup.connect("http://www.irishtimes.com").get();
+
+        //France
+        Document document24 = Jsoup.connect("https://www.thelocal.fr").get();
+        Document document25 = Jsoup.connect("https://www.mediapart.fr/en/english").get();
+
+        //Germany
+        Document document26 = Jsoup.connect("http://www.spiegel.de/international").get();
+        Document document27 = Jsoup.connect("https://www.thelocal.de").get();
+
+        //Spain
+        Document document28 = Jsoup.connect("http://elpais.com/elpais/inenglish.html").get();
+
+        //Italy
+        Document document29 = Jsoup.connect("http://www.ansa.it/english").get();
+
+        //Russia
+        Document document30 = Jsoup.connect("https://www.rt.com").get();
+        Document document31 = Jsoup.connect("https://themoscowtimes.com").get();
+
+        //South Africa
+        Document document32 = Jsoup.connect("http://www.dailysun.co.za").get();
+        Document document33 = Jsoup.connect("http://www.timeslive.co.za").get();
+
+        //Nigeria
+        Document document34 = Jsoup.connect("http://www.vanguardngr.com").get();
+
+        //Dubai
+        Document document35 = Jsoup.connect("http://gulfnews.com").get();
+
+        //Turkey
+        Document document36 = Jsoup.connect("https://www.dailysabah.com").get();
+
+        //Iran
+        Document document37 = Jsoup.connect("http://www.tehrantimes.com").get();
+
+        //Israel
+        Document document38 = Jsoup.connect("https://www.ynetnews.com").get();
+
+        //Oman
+        Document document39 = Jsoup.connect("http://timesofoman.com").get();
+
+        //India
+        Document document40 = Jsoup.connect("http://timesofindia.indiatimes.com/home/headlines").get();
+        Document document41 = Jsoup.connect("http://indianexpress.com").get();
+
+        //China
+        Document document42 = Jsoup.connect("http://www.chinadaily.com.cn").get();
+        Document document43 = Jsoup.connect("http://www.shanghaidaily.com").get();
+        Document document44 = Jsoup.connect("http://www.xinhuanet.com/english").get();
+        Document document45 = Jsoup.connect("http://www.globaltimes.cn").get();
+        Document document46 = Jsoup.connect("http://www.scmp.com/frontpage/international").get();
+
+        //Japan
+        Document document47 = Jsoup.connect("http://www.japantimes.co.jp").get();
+        Document document48 = Jsoup.connect("http://the-japan-news.com").get();
+        Document document49 = Jsoup.connect("https://japantoday.com").get();
+
+        //Hong Kong
+        //Document document50 = Jsoup.connect("www.chinadaily.com.cn/hkedition/hk.html").get();
+        Document document51 = Jsoup.connect("https://www.hongkongfp.com").get();
+
+        //Thailand
+        Document document52 = Jsoup.connect("http://www.bangkokpost.com").get();
+
+        //Vietnam
+        Document document53 = Jsoup.connect("http://vietnamnews.vn").get();
+
+        //Indonesia
+        Document document54 = Jsoup.connect("http://www.thejakartapost.com").get();
+
+        //Australia
+        Document document55 = Jsoup.connect("http://www.abc.net.au/news").get();
+        Document document56 = Jsoup.connect("http://www.theaustralian.com.au").get();
+
+        //New Zealand
+        Document document57 = Jsoup.connect("http://www.nzherald.co.nz").get();
+
+        //Other
+        Document document58 = Jsoup.connect("http://www.aljazeera.com").get();
+        Document document59 = Jsoup.connect("https://www.bloomberg.com").get();
+        Document document60 = Jsoup.connect("http://www.reuters.com").get();
+
+        Set<String> cbc = getSetOfWordsFromDocument(document1);
+        Set<String> theStar = getSetOfWordsFromDocument(document2);
+        Set<String> nyTimes = getSetOfWordsFromDocument(document3);
         Set<String> washingtonPost = getSetOfWordsFromDocument(document4);
-        Set<String> bbc = getSetOfWordsFromDocument(document5);
-
-        Set<String> indiaTimes = getSetOfWordsFromDocument(document6);
-        Set<String> huffingtonPost = getSetOfWordsFromDocument(document7);
+        Set<String> huffingtonPost = getSetOfWordsFromDocument(document5);
+        Set<String> laTimes = getSetOfWordsFromDocument(document6);
+        Set<String> cnn = getSetOfWordsFromDocument(document7);
         Set<String> foxNews = getSetOfWordsFromDocument(document8);
-        Set<String> bloomBerg = getSetOfWordsFromDocument(document9);
-        Set<String> reuters = getSetOfWordsFromDocument(document10);
-        Set<String> usaToday = getSetOfWordsFromDocument(document11);
-        Set<String> cnbc = getSetOfWordsFromDocument(document12);
-        Set<String> nbcnews = getSetOfWordsFromDocument(document13);
-        Set<String> chinaDaily = getSetOfWordsFromDocument(document14);
-        Set<String> indianExpress = getSetOfWordsFromDocument(document15);
-        Set<String> laTimes = getSetOfWordsFromDocument(document16);
-        Set<String> nyPost = getSetOfWordsFromDocument(document17);
-        Set<String> newsAu = getSetOfWordsFromDocument(document18);
-        Set<String> cbsNews = getSetOfWordsFromDocument(document19);
-        Set<String> abcNews = getSetOfWordsFromDocument(document20);
-        Set<String> dailyMail = getSetOfWordsFromDocument(document21);
+        Set<String> usaToday = getSetOfWordsFromDocument(document9);
+        Set<String> wsj = getSetOfWordsFromDocument(document10);
+        Set<String> cnbc = getSetOfWordsFromDocument(document11);
+        Set<String> nbc = getSetOfWordsFromDocument(document12);
+        Set<String> theYucatanTimes = getSetOfWordsFromDocument(document13);
+        Set<String> theNewsMx = getSetOfWordsFromDocument(document14);
+        Set<String> rioTimesOnline = getSetOfWordsFromDocument(document15);
+        Set<String> folha = getSetOfWordsFromDocument(document16);
+        Set<String> buenosAiresHerald = getSetOfWordsFromDocument(document17);
+        Set<String> theGuardian = getSetOfWordsFromDocument(document18);
+        Set<String> bbc = getSetOfWordsFromDocument(document19);
+        Set<String> ft = getSetOfWordsFromDocument(document20);
+        Set<String> theTimes = getSetOfWordsFromDocument(document21);
         Set<String> theSun = getSetOfWordsFromDocument(document22);
-        Set<String> standard = getSetOfWordsFromDocument(document23);
-        Set<String> mirror = getSetOfWordsFromDocument(document24);
-        Set<String> telegraph = getSetOfWordsFromDocument(document25);
-        Set<String> dailystar = getSetOfWordsFromDocument(document26);
-        Set<String> ft = getSetOfWordsFromDocument(document27);
-        Set<String> independent = getSetOfWordsFromDocument(document28);
+        Set<String> irishTimes = getSetOfWordsFromDocument(document23);
+        Set<String> theLocalFr = getSetOfWordsFromDocument(document24);
+        Set<String> mediaPartFr = getSetOfWordsFromDocument(document25);
+        Set<String> spiegel = getSetOfWordsFromDocument(document26);
+        Set<String> theLocalDe = getSetOfWordsFromDocument(document27);
+        Set<String> elPais = getSetOfWordsFromDocument(document28);
+        Set<String> ansaIt = getSetOfWordsFromDocument(document29);
+        Set<String> rt = getSetOfWordsFromDocument(document30);
+        Set<String> theMoscowTimes = getSetOfWordsFromDocument(document31);
+        Set<String> dailySun = getSetOfWordsFromDocument(document32);
+        Set<String> timesLive = getSetOfWordsFromDocument(document33);
+        Set<String> vanguardNgr = getSetOfWordsFromDocument(document34);
+        Set<String> gulfNews = getSetOfWordsFromDocument(document35);
+        Set<String> dailySabah = getSetOfWordsFromDocument(document36);
+        Set<String> teheranTimes = getSetOfWordsFromDocument(document37);
+        Set<String> ynetNews = getSetOfWordsFromDocument(document38);
+        Set<String> timesOfOman = getSetOfWordsFromDocument(document39);
+        Set<String> timesOfIndia = getSetOfWordsFromDocument(document40);
+        Set<String> indianExpress = getSetOfWordsFromDocument(document41);
+        Set<String> chinaDaily = getSetOfWordsFromDocument(document42);
+        Set<String> shanghaiDaily = getSetOfWordsFromDocument(document43);
+        Set<String> xinHuanet = getSetOfWordsFromDocument(document44);
+        Set<String> globalTimesCn = getSetOfWordsFromDocument(document45);
+        Set<String> scmp = getSetOfWordsFromDocument(document46);
+        Set<String> japanTimes = getSetOfWordsFromDocument(document47);
+        Set<String> japanNews = getSetOfWordsFromDocument(document48);
+        Set<String> japanToday = getSetOfWordsFromDocument(document49);
+        //List<String> chinaDailyHk = getSetOfWordsFromDocument(document50);
+        Set<String> hongKongFp = getSetOfWordsFromDocument(document51);
+        Set<String> bangKokPost = getSetOfWordsFromDocument(document52);
+        Set<String> vietnamNews = getSetOfWordsFromDocument(document53);
+        Set<String> jakartaPost = getSetOfWordsFromDocument(document54);
+        Set<String> abcAu = getSetOfWordsFromDocument(document55);
+        Set<String> theAustralian = getSetOfWordsFromDocument(document56);
+        Set<String> nzHerald = getSetOfWordsFromDocument(document57);
+        Set<String> alJazeera = getSetOfWordsFromDocument(document58);
+        Set<String> bloomberg = getSetOfWordsFromDocument(document59);
+        Set<String> reuters = getSetOfWordsFromDocument(document60);
 
         List<String> combinedList = new ArrayList<>();
-        combinedList.addAll(cnn);
+        combinedList.addAll(cbc);
+        combinedList.addAll(theStar);
         combinedList.addAll(nyTimes);
-        combinedList.addAll(theGuardian);
         combinedList.addAll(washingtonPost);
-        combinedList.addAll(bbc);
-
-        combinedList.addAll(indiaTimes);
         combinedList.addAll(huffingtonPost);
-        combinedList.addAll(foxNews);
-        combinedList.addAll(bloomBerg);
-        combinedList.addAll(reuters);
-        combinedList.addAll(usaToday);
-        combinedList.addAll(cnbc);
-        combinedList.addAll(nbcnews);
-        combinedList.addAll(chinaDaily);
-        combinedList.addAll(indianExpress);
         combinedList.addAll(laTimes);
-        combinedList.addAll(nyPost);
-        combinedList.addAll(newsAu);
-        combinedList.addAll(cbsNews);
-        combinedList.addAll(abcNews);
-        combinedList.addAll(dailyMail);
-        combinedList.addAll(theSun);
-        combinedList.addAll(standard);
-        combinedList.addAll(mirror);
-        combinedList.addAll(telegraph);
-        combinedList.addAll(dailystar);
+        combinedList.addAll(cnn);
+        combinedList.addAll(foxNews);
+        combinedList.addAll(usaToday);
+        combinedList.addAll(wsj);
+        combinedList.addAll(cnbc);
+        combinedList.addAll(nbc);
+        combinedList.addAll(theYucatanTimes);
+        combinedList.addAll(theNewsMx);
+        combinedList.addAll(rioTimesOnline);
+        combinedList.addAll(folha);
+        combinedList.addAll(buenosAiresHerald);
+        combinedList.addAll(theGuardian);
+        combinedList.addAll(bbc);
         combinedList.addAll(ft);
-        combinedList.addAll(independent);
+        combinedList.addAll(theTimes);
+        combinedList.addAll(theSun);
+        combinedList.addAll(irishTimes);
+        combinedList.addAll(theLocalFr);
+        combinedList.addAll(mediaPartFr);
+        combinedList.addAll(spiegel);
+        combinedList.addAll(theLocalDe);
+        combinedList.addAll(elPais);
+        combinedList.addAll(ansaIt);
+        combinedList.addAll(rt);
+        combinedList.addAll(theMoscowTimes);
+        combinedList.addAll(dailySun);
+        combinedList.addAll(timesLive);
+        combinedList.addAll(vanguardNgr);
+        combinedList.addAll(gulfNews);
+        combinedList.addAll(dailySabah);
+        combinedList.addAll(teheranTimes);
+        combinedList.addAll(ynetNews);
+        combinedList.addAll(timesOfOman);
+        combinedList.addAll(timesOfIndia);
+        combinedList.addAll(indianExpress);
+        combinedList.addAll(chinaDaily);
+        combinedList.addAll(shanghaiDaily);
+        combinedList.addAll(xinHuanet);
+        combinedList.addAll(globalTimesCn);
+        combinedList.addAll(scmp);
+        combinedList.addAll(japanTimes);
+        combinedList.addAll(japanNews);
+        combinedList.addAll(japanToday);
+        //combinedList.addAll(chinaDailyHk);
+        combinedList.addAll(hongKongFp);
+        combinedList.addAll(bangKokPost);
+        combinedList.addAll(vietnamNews);
+        combinedList.addAll(jakartaPost);
+        combinedList.addAll(abcAu);
+        combinedList.addAll(theAustralian);
+        combinedList.addAll(nzHerald);
+        combinedList.addAll(alJazeera);
+        combinedList.addAll(bloomberg);
+        combinedList.addAll(reuters);
 
-        Map<String, Integer> occurrenceMap = new HashMap<>();
+        Map<String, Integer> occurrenceMapAll = new HashMap<>();
 
         for(String word : combinedList) {
-            if(occurrenceMap.get(word) == null) {
+            if(occurrenceMapAll.get(word) == null) {
                 int frequency = Collections.frequency(combinedList, word);
-                occurrenceMap.put(word, frequency);
+                occurrenceMapAll.put(word, frequency);
             }
         }
 
-        occurrenceMap = sortByValue(occurrenceMap);
+        Map<String, Integer> occurrenceMapOnlyTwoOrMore = new HashMap<>();
+
+        for (Map.Entry<String, Integer> entry : occurrenceMapAll.entrySet()) {
+            if(entry.getValue() >= 5) {
+                occurrenceMapOnlyTwoOrMore.put(entry.getKey(), entry.getValue());
+            }
+        }
+
+        occurrenceMapAll = sortByValue(occurrenceMapAll);
+        occurrenceMapOnlyTwoOrMore = sortByValue(occurrenceMapOnlyTwoOrMore);
 
         System.out.println("wacht");
     }
 
-    private void testCompareMethodeWorldMultiplePerSite() throws Exception {
-        Document document = Jsoup.connect("http://www.cnn.com/").get();
-        Document document2 = Jsoup.connect("http://www.nytimes.com/").get();
-        Document document3 = Jsoup.connect("http://www.theguardian.com/").get();
-        Document document4 = Jsoup.connect("http://www.washingtonpost.com").get();
-        Document document5 = Jsoup.connect("http://bbc.co.uk/news").get();
+    private void testCompareMethodeWordMultiplePerSite() throws Exception {
+        //Canada
+        Document document1 = Jsoup.connect("http://www.cbc.ca/news").get();
+        Document document2 = Jsoup.connect("https://www.thestar.com").get();
 
-        Document document6 = Jsoup.connect("http://www.indiatimes.com").get();
-        Document document7 = Jsoup.connect("http://www.huffingtonpost.com").get();
+        //US
+        Document document3 = Jsoup.connect("https://www.nytimes.com").get();
+        Document document4 = Jsoup.connect("https://www.washingtonpost.com").get();
+        Document document5 = Jsoup.connect("http://www.huffingtonpost.com").get();
+        Document document6 = Jsoup.connect("http://www.latimes.com").get();
+        Document document7 = Jsoup.connect("http://www.cnn.com").get();
         Document document8 = Jsoup.connect("http://www.foxnews.com").get();
-        Document document9 = Jsoup.connect("http://www.bloomberg.com").get();
-        Document document10 = Jsoup.connect("http://www.reuters.com").get();
-        Document document11 = Jsoup.connect("http://www.usatoday.com").get();
-        Document document12 = Jsoup.connect("http://www.cnbc.com").get();
-        Document document13 = Jsoup.connect("http://www.nbcnews.com").get();
-        Document document14 = Jsoup.connect("http://www.chinadaily.com.cn").get();
-        Document document15 = Jsoup.connect("http://www.indianexpress.com").get();
-        Document document16 = Jsoup.connect("http://www.latimes.com").get();
-        Document document17 = Jsoup.connect("http://www.nypost.com").get();
-        Document document18 = Jsoup.connect("http://www.news.com.au").get();
-        Document document19 = Jsoup.connect("http://www.cbsnews.com").get();
-        Document document20 = Jsoup.connect("http://www.abcnews.go.com").get();
-        Document document21 = Jsoup.connect("http://www.dailymail.co.uk").get();
-        Document document22 = Jsoup.connect("http://www.thesun.co.uk").get();
-        Document document23 = Jsoup.connect("http://www.standard.co.uk").get();
-        Document document24 = Jsoup.connect("http://www.mirror.co.uk").get();
-        Document document25 = Jsoup.connect("http://www.telegraph.co.uk").get();
-        Document document26 = Jsoup.connect("http://www.dailystar.co.uk").get();
-        Document document27 = Jsoup.connect("http://www.ft.com").get();
-        Document document28 = Jsoup.connect("http://www.independent.co.uk").get();
+        Document document9 = Jsoup.connect("https://www.usatoday.com").get();
+        Document document10 = Jsoup.connect("https://www.wsj.com").get();
+        Document document11 = Jsoup.connect("http://www.cnbc.com").get();
+        Document document12 = Jsoup.connect("http://www.nbcnews.com").get();
 
-        List<String> cnn = getListOfWordsFromDocument(document);
-        List<String> nyTimes = getListOfWordsFromDocument(document2);
-        List<String> theGuardian = getListOfWordsFromDocument(document3);
+        //Mexico
+        Document document13 = Jsoup.connect("http://www.theyucatantimes.com").get();
+        Document document14 = Jsoup.connect("http://www.thenews.mx").get();
+
+        //Brazil
+        Document document15 = Jsoup.connect("http://riotimesonline.com").get();
+        Document document16 = Jsoup.connect("http://www1.folha.uol.com.br/internacional/en").get();
+
+        //Argentina
+        Document document17 = Jsoup.connect("http://www.buenosairesherald.com/printed-edition").get();
+
+        //UK
+        Document document18 = Jsoup.connect("https://www.theguardian.com").get();
+        Document document19 = Jsoup.connect("http://www.bbc.co.uk").get();
+        Document document20 = Jsoup.connect("https://www.ft.com").get();
+        Document document21 = Jsoup.connect("https://www.thetimes.co.uk").get();
+        Document document22 = Jsoup.connect("https://www.thesun.co.uk").get();
+
+        //Ireland
+        Document document23 = Jsoup.connect("http://www.irishtimes.com").get();
+
+        //France
+        Document document24 = Jsoup.connect("https://www.thelocal.fr").get();
+        Document document25 = Jsoup.connect("https://www.mediapart.fr/en/english").get();
+
+        //Germany
+        Document document26 = Jsoup.connect("http://www.spiegel.de/international").get();
+        Document document27 = Jsoup.connect("https://www.thelocal.de").get();
+
+        //Spain
+        Document document28 = Jsoup.connect("http://elpais.com/elpais/inenglish.html").get();
+
+        //Italy
+        Document document29 = Jsoup.connect("http://www.ansa.it/english").get();
+
+        //Russia
+        Document document30 = Jsoup.connect("https://www.rt.com").get();
+        Document document31 = Jsoup.connect("https://themoscowtimes.com").get();
+
+        //South Africa
+        Document document32 = Jsoup.connect("http://www.dailysun.co.za").get();
+        Document document33 = Jsoup.connect("http://www.timeslive.co.za").get();
+
+        //Nigeria
+        Document document34 = Jsoup.connect("http://www.vanguardngr.com").get();
+
+        //Dubai
+        Document document35 = Jsoup.connect("http://gulfnews.com").get();
+
+        //Turkey
+        Document document36 = Jsoup.connect("https://www.dailysabah.com").get();
+
+        //Iran
+        Document document37 = Jsoup.connect("http://www.tehrantimes.com").get();
+
+        //Israel
+        Document document38 = Jsoup.connect("https://www.ynetnews.com").get();
+
+        //Oman
+        Document document39 = Jsoup.connect("http://timesofoman.com").get();
+
+        //India
+        Document document40 = Jsoup.connect("http://timesofindia.indiatimes.com/home/headlines").get();
+        Document document41 = Jsoup.connect("http://indianexpress.com").get();
+
+        //China
+        Document document42 = Jsoup.connect("http://www.chinadaily.com.cn").get();
+        Document document43 = Jsoup.connect("http://www.shanghaidaily.com").get();
+        Document document44 = Jsoup.connect("http://www.xinhuanet.com/english").get();
+        Document document45 = Jsoup.connect("http://www.globaltimes.cn").get();
+        Document document46 = Jsoup.connect("http://www.scmp.com/frontpage/international").get();
+
+        //Japan
+        Document document47 = Jsoup.connect("http://www.japantimes.co.jp").get();
+        Document document48 = Jsoup.connect("http://the-japan-news.com").get();
+        Document document49 = Jsoup.connect("https://japantoday.com").get();
+
+        //Hong Kong
+        //Document document50 = Jsoup.connect("www.chinadaily.com.cn/hkedition/hk.html").get();
+        Document document51 = Jsoup.connect("https://www.hongkongfp.com").get();
+
+        //Thailand
+        Document document52 = Jsoup.connect("http://www.bangkokpost.com").get();
+
+        //Vietnam
+        Document document53 = Jsoup.connect("http://vietnamnews.vn").get();
+
+        //Indonesia
+        Document document54 = Jsoup.connect("http://www.thejakartapost.com").get();
+
+        //Australia
+        Document document55 = Jsoup.connect("http://www.abc.net.au/news").get();
+        Document document56 = Jsoup.connect("http://www.theaustralian.com.au").get();
+
+        //New Zealand
+        Document document57 = Jsoup.connect("http://www.nzherald.co.nz").get();
+
+        //Other
+        Document document58 = Jsoup.connect("http://www.aljazeera.com").get();
+        Document document59 = Jsoup.connect("https://www.bloomberg.com").get();
+        Document document60 = Jsoup.connect("http://www.reuters.com").get();
+
+        List<String> cbc = getListOfWordsFromDocument(document1);
+        List<String> theStar = getListOfWordsFromDocument(document2);
+        List<String> nyTimes = getListOfWordsFromDocument(document3);
         List<String> washingtonPost = getListOfWordsFromDocument(document4);
-        List<String> bbc = getListOfWordsFromDocument(document5);
-
-        List<String> indiaTimes = getListOfWordsFromDocument(document6);
-        List<String> huffingtonPost = getListOfWordsFromDocument(document7);
+        List<String> huffingtonPost = getListOfWordsFromDocument(document5);
+        List<String> laTimes = getListOfWordsFromDocument(document6);
+        List<String> cnn = getListOfWordsFromDocument(document7);
         List<String> foxNews = getListOfWordsFromDocument(document8);
-        List<String> bloomBerg = getListOfWordsFromDocument(document9);
-        List<String> reuters = getListOfWordsFromDocument(document10);
-        List<String> usaToday = getListOfWordsFromDocument(document11);
-        List<String> cnbc = getListOfWordsFromDocument(document12);
-        List<String> nbcnews = getListOfWordsFromDocument(document13);
-        List<String> chinaDaily = getListOfWordsFromDocument(document14);
-        List<String> indianExpress = getListOfWordsFromDocument(document15);
-        List<String> laTimes = getListOfWordsFromDocument(document16);
-        List<String> nyPost = getListOfWordsFromDocument(document17);
-        List<String> newsAu = getListOfWordsFromDocument(document18);
-        List<String> cbsNews = getListOfWordsFromDocument(document19);
-        List<String> abcNews = getListOfWordsFromDocument(document20);
-        List<String> dailyMail = getListOfWordsFromDocument(document21);
+        List<String> usaToday = getListOfWordsFromDocument(document9);
+        List<String> wsj = getListOfWordsFromDocument(document10);
+        List<String> cnbc = getListOfWordsFromDocument(document11);
+        List<String> nbc = getListOfWordsFromDocument(document12);
+        List<String> theYucatanTimes = getListOfWordsFromDocument(document13);
+        List<String> theNewsMx = getListOfWordsFromDocument(document14);
+        List<String> rioTimesOnline = getListOfWordsFromDocument(document15);
+        List<String> folha = getListOfWordsFromDocument(document16);
+        List<String> buenosAiresHerald = getListOfWordsFromDocument(document17);
+        List<String> theGuardian = getListOfWordsFromDocument(document18);
+        List<String> bbc = getListOfWordsFromDocument(document19);
+        List<String> ft = getListOfWordsFromDocument(document20);
+        List<String> theTimes = getListOfWordsFromDocument(document21);
         List<String> theSun = getListOfWordsFromDocument(document22);
-        List<String> standard = getListOfWordsFromDocument(document23);
-        List<String> mirror = getListOfWordsFromDocument(document24);
-        List<String> telegraph = getListOfWordsFromDocument(document25);
-        List<String> dailystar = getListOfWordsFromDocument(document26);
-        List<String> ft = getListOfWordsFromDocument(document27);
-        List<String> independent = getListOfWordsFromDocument(document28);
+        List<String> irishTimes = getListOfWordsFromDocument(document23);
+        List<String> theLocalFr = getListOfWordsFromDocument(document24);
+        List<String> mediaPartFr = getListOfWordsFromDocument(document25);
+        List<String> spiegel = getListOfWordsFromDocument(document26);
+        List<String> theLocalDe = getListOfWordsFromDocument(document27);
+        List<String> elPais = getListOfWordsFromDocument(document28);
+        List<String> ansaIt = getListOfWordsFromDocument(document29);
+        List<String> rt = getListOfWordsFromDocument(document30);
+        List<String> theMoscowTimes = getListOfWordsFromDocument(document31);
+        List<String> dailySun = getListOfWordsFromDocument(document32);
+        List<String> timesLive = getListOfWordsFromDocument(document33);
+        List<String> vanguardNgr = getListOfWordsFromDocument(document34);
+        List<String> gulfNews = getListOfWordsFromDocument(document35);
+        List<String> dailySabah = getListOfWordsFromDocument(document36);
+        List<String> teheranTimes = getListOfWordsFromDocument(document37);
+        List<String> ynetNews = getListOfWordsFromDocument(document38);
+        List<String> timesOfOman = getListOfWordsFromDocument(document39);
+        List<String> timesOfIndia = getListOfWordsFromDocument(document40);
+        List<String> indianExpress = getListOfWordsFromDocument(document41);
+        List<String> chinaDaily = getListOfWordsFromDocument(document42);
+        List<String> shanghaiDaily = getListOfWordsFromDocument(document43);
+        List<String> xinHuanet = getListOfWordsFromDocument(document44);
+        List<String> globalTimesCn = getListOfWordsFromDocument(document45);
+        List<String> scmp = getListOfWordsFromDocument(document46);
+        List<String> japanTimes = getListOfWordsFromDocument(document47);
+        List<String> japanNews = getListOfWordsFromDocument(document48);
+        List<String> japanToday = getListOfWordsFromDocument(document49);
+        //List<String> chinaDailyHk = getListOfWordsFromDocument(document50);
+        List<String> hongKongFp = getListOfWordsFromDocument(document51);
+        List<String> bangKokPost = getListOfWordsFromDocument(document52);
+        List<String> vietnamNews = getListOfWordsFromDocument(document53);
+        List<String> jakartaPost = getListOfWordsFromDocument(document54);
+        List<String> abcAu = getListOfWordsFromDocument(document55);
+        List<String> theAustralian = getListOfWordsFromDocument(document56);
+        List<String> nzHerald = getListOfWordsFromDocument(document57);
+        List<String> alJazeera = getListOfWordsFromDocument(document58);
+        List<String> bloomberg = getListOfWordsFromDocument(document59);
+        List<String> reuters = getListOfWordsFromDocument(document60);
 
         List<String> combinedList = new ArrayList<>();
-        combinedList.addAll(cnn);
+        combinedList.addAll(cbc);
+        combinedList.addAll(theStar);
         combinedList.addAll(nyTimes);
-        combinedList.addAll(theGuardian);
         combinedList.addAll(washingtonPost);
-        combinedList.addAll(bbc);
-
-        combinedList.addAll(indiaTimes);
         combinedList.addAll(huffingtonPost);
-        combinedList.addAll(foxNews);
-        combinedList.addAll(bloomBerg);
-        combinedList.addAll(reuters);
-        combinedList.addAll(usaToday);
-        combinedList.addAll(cnbc);
-        combinedList.addAll(nbcnews);
-        combinedList.addAll(chinaDaily);
-        combinedList.addAll(indianExpress);
         combinedList.addAll(laTimes);
-        combinedList.addAll(nyPost);
-        combinedList.addAll(newsAu);
-        combinedList.addAll(cbsNews);
-        combinedList.addAll(abcNews);
-        combinedList.addAll(dailyMail);
-        combinedList.addAll(theSun);
-        combinedList.addAll(standard);
-        combinedList.addAll(mirror);
-        combinedList.addAll(telegraph);
-        combinedList.addAll(dailystar);
+        combinedList.addAll(cnn);
+        combinedList.addAll(foxNews);
+        combinedList.addAll(usaToday);
+        combinedList.addAll(wsj);
+        combinedList.addAll(cnbc);
+        combinedList.addAll(nbc);
+        combinedList.addAll(theYucatanTimes);
+        combinedList.addAll(theNewsMx);
+        combinedList.addAll(rioTimesOnline);
+        combinedList.addAll(folha);
+        combinedList.addAll(buenosAiresHerald);
+        combinedList.addAll(theGuardian);
+        combinedList.addAll(bbc);
         combinedList.addAll(ft);
-        combinedList.addAll(independent);
+        combinedList.addAll(theTimes);
+        combinedList.addAll(theSun);
+        combinedList.addAll(irishTimes);
+        combinedList.addAll(theLocalFr);
+        combinedList.addAll(mediaPartFr);
+        combinedList.addAll(spiegel);
+        combinedList.addAll(theLocalDe);
+        combinedList.addAll(elPais);
+        combinedList.addAll(ansaIt);
+        combinedList.addAll(rt);
+        combinedList.addAll(theMoscowTimes);
+        combinedList.addAll(dailySun);
+        combinedList.addAll(timesLive);
+        combinedList.addAll(vanguardNgr);
+        combinedList.addAll(gulfNews);
+        combinedList.addAll(dailySabah);
+        combinedList.addAll(teheranTimes);
+        combinedList.addAll(ynetNews);
+        combinedList.addAll(timesOfOman);
+        combinedList.addAll(timesOfIndia);
+        combinedList.addAll(indianExpress);
+        combinedList.addAll(chinaDaily);
+        combinedList.addAll(shanghaiDaily);
+        combinedList.addAll(xinHuanet);
+        combinedList.addAll(globalTimesCn);
+        combinedList.addAll(scmp);
+        combinedList.addAll(japanTimes);
+        combinedList.addAll(japanNews);
+        combinedList.addAll(japanToday);
+        //combinedList.addAll(chinaDailyHk);
+        combinedList.addAll(hongKongFp);
+        combinedList.addAll(bangKokPost);
+        combinedList.addAll(vietnamNews);
+        combinedList.addAll(jakartaPost);
+        combinedList.addAll(abcAu);
+        combinedList.addAll(theAustralian);
+        combinedList.addAll(nzHerald);
+        combinedList.addAll(alJazeera);
+        combinedList.addAll(bloomberg);
+        combinedList.addAll(reuters);
 
         Map<String, Integer> occurrenceMapAll = new HashMap<>();
 
