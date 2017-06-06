@@ -85,7 +85,7 @@ public class HeadlineAnalyst {
         //headlineAnalyst.getWordsRankedByOccurrence(headlineAnalyst.retrieveAllHeadlinesFromDatabaseForDate("2017-06-01"));
     }
 
-    private <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
+    public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
         List<Map.Entry<K, V>> list = new LinkedList<>( map.entrySet() );
         Collections.sort(list, new Comparator<Map.Entry<K, V>>() {
             @Override

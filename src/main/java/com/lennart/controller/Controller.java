@@ -11,6 +11,7 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -25,6 +26,67 @@ import java.util.concurrent.TimeUnit;
 public class Controller extends SpringBootServletInitializer {
 
     private Connection con;
+
+    private Document document1;
+    private Document document2;
+    private Document document3;
+    private Document document4;
+    private Document document5;
+    private Document document6;
+    private Document document7;
+    private Document document8;
+    private Document document9;
+    private Document document10;
+    private Document document11;
+    private Document document12;
+    private Document document13;
+    private Document document14;
+    private Document document15;
+    private Document document16;
+    private Document document17;
+    private Document document18;
+    private Document document19;
+    private Document document20;
+    private Document document21;
+    private Document document22;
+    private Document document23;
+    private Document document24;
+    private Document document25;
+    private Document document26;
+    private Document document27;
+    private Document document28;
+    private Document document29;
+    private Document document30;
+    private Document document31;
+    private Document document32;
+    private Document document33;
+    private Document document34;
+    private Document document35;
+    private Document document36;
+    private Document document37;
+    private Document document38;
+    private Document document39;
+    private Document document40;
+    private Document document41;
+    private Document document42;
+    private Document document43;
+    private Document document44;
+    private Document document45;
+    private Document document46;
+    private Document document47;
+    private Document document48;
+    private Document document49;
+    private Document document50;
+    private Document document51;
+    private Document document52;
+    private Document document53;
+    private Document document54;
+    private Document document55;
+    private Document document56;
+    private Document document57;
+    private Document document58;
+    private Document document59;
+    private Document document60;
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -244,125 +306,7 @@ public class Controller extends SpringBootServletInitializer {
         con.close();
     }
 
-    private void testCompareMethodeWordOncePerSite() throws Exception {
-        //Canada
-        Document document1 = Jsoup.connect("http://www.cbc.ca/news").get();
-        Document document2 = Jsoup.connect("https://www.thestar.com").get();
-
-        //US
-        Document document3 = Jsoup.connect("https://www.nytimes.com").get();
-        Document document4 = Jsoup.connect("https://www.washingtonpost.com").get();
-        Document document5 = Jsoup.connect("http://www.huffingtonpost.com").get();
-        Document document6 = Jsoup.connect("http://www.latimes.com").get();
-        Document document7 = Jsoup.connect("http://www.cnn.com").get();
-        Document document8 = Jsoup.connect("http://www.foxnews.com").get();
-        Document document9 = Jsoup.connect("https://www.usatoday.com").get();
-        Document document10 = Jsoup.connect("https://www.wsj.com").get();
-        Document document11 = Jsoup.connect("http://www.cnbc.com").get();
-        Document document12 = Jsoup.connect("http://www.nbcnews.com").get();
-
-        //Mexico
-        Document document13 = Jsoup.connect("http://www.theyucatantimes.com").get();
-        Document document14 = Jsoup.connect("http://www.thenews.mx").get();
-
-        //Brazil
-        Document document15 = Jsoup.connect("http://riotimesonline.com").get();
-        Document document16 = Jsoup.connect("http://www1.folha.uol.com.br/internacional/en").get();
-
-        //Argentina
-        Document document17 = Jsoup.connect("http://www.buenosairesherald.com/printed-edition").get();
-
-        //UK
-        Document document18 = Jsoup.connect("https://www.theguardian.com").get();
-        Document document19 = Jsoup.connect("http://www.bbc.co.uk").get();
-        Document document20 = Jsoup.connect("https://www.ft.com").get();
-        Document document21 = Jsoup.connect("https://www.thetimes.co.uk").get();
-        Document document22 = Jsoup.connect("https://www.thesun.co.uk").get();
-
-        //Ireland
-        Document document23 = Jsoup.connect("http://www.irishtimes.com").get();
-
-        //France
-        Document document24 = Jsoup.connect("https://www.thelocal.fr").get();
-        Document document25 = Jsoup.connect("https://www.mediapart.fr/en/english").get();
-
-        //Germany
-        Document document26 = Jsoup.connect("http://www.spiegel.de/international").get();
-        Document document27 = Jsoup.connect("https://www.thelocal.de").get();
-
-        //Spain
-        Document document28 = Jsoup.connect("http://elpais.com/elpais/inenglish.html").get();
-
-        //Italy
-        Document document29 = Jsoup.connect("http://www.ansa.it/english").get();
-
-        //Russia
-        Document document30 = Jsoup.connect("https://www.rt.com").get();
-        Document document31 = Jsoup.connect("https://themoscowtimes.com").get();
-
-        //South Africa
-        Document document32 = Jsoup.connect("http://www.dailysun.co.za").get();
-        Document document33 = Jsoup.connect("http://www.timeslive.co.za").get();
-
-        //Nigeria
-        Document document34 = Jsoup.connect("http://www.vanguardngr.com").get();
-
-        //Dubai
-        Document document35 = Jsoup.connect("http://gulfnews.com").get();
-
-        //Turkey
-        Document document36 = Jsoup.connect("https://www.dailysabah.com").get();
-
-        //Iran
-        Document document37 = Jsoup.connect("http://www.tehrantimes.com").get();
-
-        //Israel
-        Document document38 = Jsoup.connect("https://www.ynetnews.com").get();
-
-        //Oman
-        Document document39 = Jsoup.connect("http://timesofoman.com").get();
-
-        //India
-        Document document40 = Jsoup.connect("http://timesofindia.indiatimes.com/home/headlines").get();
-        Document document41 = Jsoup.connect("http://indianexpress.com").get();
-
-        //China
-        Document document42 = Jsoup.connect("http://www.chinadaily.com.cn").get();
-        Document document43 = Jsoup.connect("http://www.shanghaidaily.com").get();
-        Document document44 = Jsoup.connect("http://www.xinhuanet.com/english").get();
-        Document document45 = Jsoup.connect("http://www.globaltimes.cn").get();
-        Document document46 = Jsoup.connect("http://www.scmp.com/frontpage/international").get();
-
-        //Japan
-        Document document47 = Jsoup.connect("http://www.japantimes.co.jp").get();
-        Document document48 = Jsoup.connect("http://the-japan-news.com").get();
-        Document document49 = Jsoup.connect("https://japantoday.com").get();
-
-        //Hong Kong
-        //Document document50 = Jsoup.connect("www.chinadaily.com.cn/hkedition/hk.html").get();
-        Document document51 = Jsoup.connect("https://www.hongkongfp.com").get();
-
-        //Thailand
-        Document document52 = Jsoup.connect("http://www.bangkokpost.com").get();
-
-        //Vietnam
-        Document document53 = Jsoup.connect("http://vietnamnews.vn").get();
-
-        //Indonesia
-        Document document54 = Jsoup.connect("http://www.thejakartapost.com").get();
-
-        //Australia
-        Document document55 = Jsoup.connect("http://www.abc.net.au/news").get();
-        Document document56 = Jsoup.connect("http://www.theaustralian.com.au").get();
-
-        //New Zealand
-        Document document57 = Jsoup.connect("http://www.nzherald.co.nz").get();
-
-        //Other
-        Document document58 = Jsoup.connect("http://www.aljazeera.com").get();
-        Document document59 = Jsoup.connect("https://www.bloomberg.com").get();
-        Document document60 = Jsoup.connect("http://www.reuters.com").get();
-
+    public Map<String, Integer> testCompareMethodeWordOncePerSite() throws Exception {
         Set<String> cbc = getSetOfWordsFromDocument(document1);
         Set<String> theStar = getSetOfWordsFromDocument(document2);
         Set<String> nyTimes = getSetOfWordsFromDocument(document3);
@@ -386,10 +330,10 @@ public class Controller extends SpringBootServletInitializer {
         Set<String> theTimes = getSetOfWordsFromDocument(document21);
         Set<String> theSun = getSetOfWordsFromDocument(document22);
         Set<String> irishTimes = getSetOfWordsFromDocument(document23);
-        Set<String> theLocalFr = getSetOfWordsFromDocument(document24);
+        Set<String> telegraphFr = getSetOfWordsFromDocument(document24);
         Set<String> mediaPartFr = getSetOfWordsFromDocument(document25);
         Set<String> spiegel = getSetOfWordsFromDocument(document26);
-        Set<String> theLocalDe = getSetOfWordsFromDocument(document27);
+        Set<String> telegraphDe = getSetOfWordsFromDocument(document27);
         Set<String> elPais = getSetOfWordsFromDocument(document28);
         Set<String> ansaIt = getSetOfWordsFromDocument(document29);
         Set<String> rt = getSetOfWordsFromDocument(document30);
@@ -448,10 +392,10 @@ public class Controller extends SpringBootServletInitializer {
         combinedList.addAll(theTimes);
         combinedList.addAll(theSun);
         combinedList.addAll(irishTimes);
-        combinedList.addAll(theLocalFr);
+        combinedList.addAll(telegraphFr);
         combinedList.addAll(mediaPartFr);
         combinedList.addAll(spiegel);
-        combinedList.addAll(theLocalDe);
+        combinedList.addAll(telegraphDe);
         combinedList.addAll(elPais);
         combinedList.addAll(ansaIt);
         combinedList.addAll(rt);
@@ -495,139 +439,19 @@ public class Controller extends SpringBootServletInitializer {
             }
         }
 
-        Map<String, Integer> occurrenceMapOnlyTwoOrMore = new HashMap<>();
+//        Map<String, Integer> occurrenceMapOnlyTwoOrMore = new HashMap<>();
+//
+//        for (Map.Entry<String, Integer> entry : occurrenceMapAll.entrySet()) {
+//            if(entry.getValue() >= 5) {
+//                occurrenceMapOnlyTwoOrMore.put(entry.getKey(), entry.getValue());
+//            }
+//        }
 
-        for (Map.Entry<String, Integer> entry : occurrenceMapAll.entrySet()) {
-            if(entry.getValue() >= 5) {
-                occurrenceMapOnlyTwoOrMore.put(entry.getKey(), entry.getValue());
-            }
-        }
-
-        occurrenceMapAll = sortByValue(occurrenceMapAll);
-        occurrenceMapOnlyTwoOrMore = sortByValue(occurrenceMapOnlyTwoOrMore);
-
-        System.out.println("wacht");
+        return sortByValue(occurrenceMapAll);
+        //occurrenceMapOnlyTwoOrMore = sortByValue(occurrenceMapOnlyTwoOrMore);
     }
 
-    private void testCompareMethodeWordMultiplePerSite() throws Exception {
-        //Canada
-        Document document1 = Jsoup.connect("http://www.cbc.ca/news").get();
-        Document document2 = Jsoup.connect("https://www.thestar.com").get();
-
-        //US
-        Document document3 = Jsoup.connect("https://www.nytimes.com").get();
-        Document document4 = Jsoup.connect("https://www.washingtonpost.com").get();
-        Document document5 = Jsoup.connect("http://www.huffingtonpost.com").get();
-        Document document6 = Jsoup.connect("http://www.latimes.com").get();
-        Document document7 = Jsoup.connect("http://www.cnn.com").get();
-        Document document8 = Jsoup.connect("http://www.foxnews.com").get();
-        Document document9 = Jsoup.connect("https://www.usatoday.com").get();
-        Document document10 = Jsoup.connect("https://www.wsj.com").get();
-        Document document11 = Jsoup.connect("http://www.cnbc.com").get();
-        Document document12 = Jsoup.connect("http://www.nbcnews.com").get();
-
-        //Mexico
-        Document document13 = Jsoup.connect("http://www.theyucatantimes.com").get();
-        Document document14 = Jsoup.connect("http://www.thenews.mx").get();
-
-        //Brazil
-        Document document15 = Jsoup.connect("http://riotimesonline.com").get();
-        Document document16 = Jsoup.connect("http://www1.folha.uol.com.br/internacional/en").get();
-
-        //Argentina
-        Document document17 = Jsoup.connect("http://www.buenosairesherald.com/printed-edition").get();
-
-        //UK
-        Document document18 = Jsoup.connect("https://www.theguardian.com").get();
-        Document document19 = Jsoup.connect("http://www.bbc.co.uk").get();
-        Document document20 = Jsoup.connect("https://www.ft.com").get();
-        Document document21 = Jsoup.connect("https://www.thetimes.co.uk").get();
-        Document document22 = Jsoup.connect("https://www.thesun.co.uk").get();
-
-        //Ireland
-        Document document23 = Jsoup.connect("http://www.irishtimes.com").get();
-
-        //France
-        Document document24 = Jsoup.connect("https://www.thelocal.fr").get();
-        Document document25 = Jsoup.connect("https://www.mediapart.fr/en/english").get();
-
-        //Germany
-        Document document26 = Jsoup.connect("http://www.spiegel.de/international").get();
-        Document document27 = Jsoup.connect("https://www.thelocal.de").get();
-
-        //Spain
-        Document document28 = Jsoup.connect("http://elpais.com/elpais/inenglish.html").get();
-
-        //Italy
-        Document document29 = Jsoup.connect("http://www.ansa.it/english").get();
-
-        //Russia
-        Document document30 = Jsoup.connect("https://www.rt.com").get();
-        Document document31 = Jsoup.connect("https://themoscowtimes.com").get();
-
-        //South Africa
-        Document document32 = Jsoup.connect("http://www.dailysun.co.za").get();
-        Document document33 = Jsoup.connect("http://www.timeslive.co.za").get();
-
-        //Nigeria
-        Document document34 = Jsoup.connect("http://www.vanguardngr.com").get();
-
-        //Dubai
-        Document document35 = Jsoup.connect("http://gulfnews.com").get();
-
-        //Turkey
-        Document document36 = Jsoup.connect("https://www.dailysabah.com").get();
-
-        //Iran
-        Document document37 = Jsoup.connect("http://www.tehrantimes.com").get();
-
-        //Israel
-        Document document38 = Jsoup.connect("https://www.ynetnews.com").get();
-
-        //Oman
-        Document document39 = Jsoup.connect("http://timesofoman.com").get();
-
-        //India
-        Document document40 = Jsoup.connect("http://timesofindia.indiatimes.com/home/headlines").get();
-        Document document41 = Jsoup.connect("http://indianexpress.com").get();
-
-        //China
-        Document document42 = Jsoup.connect("http://www.chinadaily.com.cn").get();
-        Document document43 = Jsoup.connect("http://www.shanghaidaily.com").get();
-        Document document44 = Jsoup.connect("http://www.xinhuanet.com/english").get();
-        Document document45 = Jsoup.connect("http://www.globaltimes.cn").get();
-        Document document46 = Jsoup.connect("http://www.scmp.com/frontpage/international").get();
-
-        //Japan
-        Document document47 = Jsoup.connect("http://www.japantimes.co.jp").get();
-        Document document48 = Jsoup.connect("http://the-japan-news.com").get();
-        Document document49 = Jsoup.connect("https://japantoday.com").get();
-
-        //Hong Kong
-        //Document document50 = Jsoup.connect("www.chinadaily.com.cn/hkedition/hk.html").get();
-        Document document51 = Jsoup.connect("https://www.hongkongfp.com").get();
-
-        //Thailand
-        Document document52 = Jsoup.connect("http://www.bangkokpost.com").get();
-
-        //Vietnam
-        Document document53 = Jsoup.connect("http://vietnamnews.vn").get();
-
-        //Indonesia
-        Document document54 = Jsoup.connect("http://www.thejakartapost.com").get();
-
-        //Australia
-        Document document55 = Jsoup.connect("http://www.abc.net.au/news").get();
-        Document document56 = Jsoup.connect("http://www.theaustralian.com.au").get();
-
-        //New Zealand
-        Document document57 = Jsoup.connect("http://www.nzherald.co.nz").get();
-
-        //Other
-        Document document58 = Jsoup.connect("http://www.aljazeera.com").get();
-        Document document59 = Jsoup.connect("https://www.bloomberg.com").get();
-        Document document60 = Jsoup.connect("http://www.reuters.com").get();
-
+    public Map<String, Integer> testCompareMethodeWordMultiplePerSite() throws Exception {
         List<String> cbc = getListOfWordsFromDocument(document1);
         List<String> theStar = getListOfWordsFromDocument(document2);
         List<String> nyTimes = getListOfWordsFromDocument(document3);
@@ -651,10 +475,10 @@ public class Controller extends SpringBootServletInitializer {
         List<String> theTimes = getListOfWordsFromDocument(document21);
         List<String> theSun = getListOfWordsFromDocument(document22);
         List<String> irishTimes = getListOfWordsFromDocument(document23);
-        List<String> theLocalFr = getListOfWordsFromDocument(document24);
+        List<String> telegraphFr = getListOfWordsFromDocument(document24);
         List<String> mediaPartFr = getListOfWordsFromDocument(document25);
         List<String> spiegel = getListOfWordsFromDocument(document26);
-        List<String> theLocalDe = getListOfWordsFromDocument(document27);
+        List<String> telegraphDe = getListOfWordsFromDocument(document27);
         List<String> elPais = getListOfWordsFromDocument(document28);
         List<String> ansaIt = getListOfWordsFromDocument(document29);
         List<String> rt = getListOfWordsFromDocument(document30);
@@ -713,10 +537,10 @@ public class Controller extends SpringBootServletInitializer {
         combinedList.addAll(theTimes);
         combinedList.addAll(theSun);
         combinedList.addAll(irishTimes);
-        combinedList.addAll(theLocalFr);
+        combinedList.addAll(telegraphFr);
         combinedList.addAll(mediaPartFr);
         combinedList.addAll(spiegel);
-        combinedList.addAll(theLocalDe);
+        combinedList.addAll(telegraphDe);
         combinedList.addAll(elPais);
         combinedList.addAll(ansaIt);
         combinedList.addAll(rt);
@@ -760,18 +584,16 @@ public class Controller extends SpringBootServletInitializer {
             }
         }
 
-        Map<String, Integer> occurrenceMapOnlyTwoOrMore = new HashMap<>();
+//        Map<String, Integer> occurrenceMapOnlyTwoOrMore = new HashMap<>();
+//
+//        for (Map.Entry<String, Integer> entry : occurrenceMapAll.entrySet()) {
+//            if(entry.getValue() >= 5) {
+//                occurrenceMapOnlyTwoOrMore.put(entry.getKey(), entry.getValue());
+//            }
+//        }
 
-        for (Map.Entry<String, Integer> entry : occurrenceMapAll.entrySet()) {
-            if(entry.getValue() >= 5) {
-                occurrenceMapOnlyTwoOrMore.put(entry.getKey(), entry.getValue());
-            }
-        }
-
-        occurrenceMapAll = sortByValue(occurrenceMapAll);
-        occurrenceMapOnlyTwoOrMore = sortByValue(occurrenceMapOnlyTwoOrMore);
-
-        System.out.println("wacht");
+        return sortByValue(occurrenceMapAll);
+        //occurrenceMapOnlyTwoOrMore = sortByValue(occurrenceMapOnlyTwoOrMore);
     }
 
     private <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
@@ -817,5 +639,126 @@ public class Controller extends SpringBootServletInitializer {
         listOfWords.addAll(listOfWordsTemp);
 
         return listOfWords;
+    }
+
+    public void initializeDocuments() throws IOException {
+        //Canada
+        document1 = Jsoup.connect("http://www.cbc.ca/news").get();
+        document2 = Jsoup.connect("https://www.thestar.com").get();
+
+        //US
+        document3 = Jsoup.connect("https://www.nytimes.com").get();
+        document4 = Jsoup.connect("https://www.washingtonpost.com").get();
+        document5 = Jsoup.connect("http://www.huffingtonpost.com").get();
+        document6 = Jsoup.connect("http://www.latimes.com").get();
+        document7 = Jsoup.connect("http://www.cnn.com").get();
+        document8 = Jsoup.connect("http://www.foxnews.com").get();
+        document9 = Jsoup.connect("https://www.usatoday.com").get();
+        document10 = Jsoup.connect("https://www.wsj.com").get();
+        document11 = Jsoup.connect("http://www.cnbc.com").get();
+        document12 = Jsoup.connect("http://www.nbcnews.com").get();
+
+        //Mexico
+        document13 = Jsoup.connect("http://www.theyucatantimes.com").get();
+        document14 = Jsoup.connect("http://www.thenews.mx").get();
+        //www.eluniversal.com.mx/english
+
+        //Brazil
+        document15 = Jsoup.connect("http://riotimesonline.com").get();
+        document16 = Jsoup.connect("http://www1.folha.uol.com.br/internacional/en").get();
+
+        //Argentina
+        document17 = Jsoup.connect("http://www.buenosairesherald.com/printed-edition").get();
+
+        //UK
+        document18 = Jsoup.connect("https://www.theguardian.com").get();
+        document19 = Jsoup.connect("http://www.bbc.co.uk").get();
+        document20 = Jsoup.connect("https://www.ft.com").get();
+        document21 = Jsoup.connect("https://www.thetimes.co.uk").get();
+        document22 = Jsoup.connect("https://www.thesun.co.uk").get();
+
+        //Ireland
+        document23 = Jsoup.connect("http://www.irishtimes.com").get();
+
+        //France
+        document24 = Jsoup.connect("http://www.telegraph.co.uk/france/").get();
+        document25 = Jsoup.connect("https://www.mediapart.fr/en/english").get();
+
+        //Germany
+        document26 = Jsoup.connect("http://www.spiegel.de/international").get();
+        document27 = Jsoup.connect("http://www.telegraph.co.uk/germany").get();
+
+        //Spain
+        document28 = Jsoup.connect("http://elpais.com/elpais/inenglish.html").get();
+
+        //Italy
+        document29 = Jsoup.connect("http://www.ansa.it/english").get();
+
+        //Russia
+        document30 = Jsoup.connect("https://www.rt.com").get();
+        document31 = Jsoup.connect("https://themoscowtimes.com").get();
+
+        //South Africa
+        document32 = Jsoup.connect("http://www.dailysun.co.za").get();
+        document33 = Jsoup.connect("http://www.timeslive.co.za").get();
+
+        //Nigeria
+        document34 = Jsoup.connect("http://www.vanguardngr.com").get();
+
+        //Dubai
+        document35 = Jsoup.connect("http://gulfnews.com").get();
+
+        //Turkey
+        document36 = Jsoup.connect("https://www.dailysabah.com").get();
+
+        //Iran
+        document37 = Jsoup.connect("http://www.tehrantimes.com").get();
+
+        //Israel
+        document38 = Jsoup.connect("https://www.ynetnews.com").get();
+
+        //Oman
+        document39 = Jsoup.connect("http://timesofoman.com").get();
+
+        //India
+        document40 = Jsoup.connect("http://timesofindia.indiatimes.com/home/headlines").get();
+        document41 = Jsoup.connect("http://indianexpress.com").get();
+
+        //China
+        document42 = Jsoup.connect("http://www.chinadaily.com.cn").get();
+        document43 = Jsoup.connect("http://www.shanghaidaily.com").get();
+        document44 = Jsoup.connect("http://www.xinhuanet.com/english").get();
+        document45 = Jsoup.connect("http://www.globaltimes.cn").get();
+        document46 = Jsoup.connect("http://www.scmp.com/frontpage/international").get();
+
+        //Japan
+        document47 = Jsoup.connect("http://www.japantimes.co.jp").get();
+        document48 = Jsoup.connect("http://the-japan-news.com").get();
+        document49 = Jsoup.connect("https://japantoday.com").get();
+
+        //Hong Kong
+        //Document document50 = Jsoup.connect("www.chinadaily.com.cn/hkedition/hk.html").get();
+        document51 = Jsoup.connect("https://www.hongkongfp.com").get();
+
+        //Thailand
+        document52 = Jsoup.connect("http://www.bangkokpost.com").get();
+
+        //Vietnam
+        document53 = Jsoup.connect("http://vietnamnews.vn").get();
+
+        //Indonesia
+        document54 = Jsoup.connect("http://www.thejakartapost.com").get();
+
+        //Australia
+        document55 = Jsoup.connect("http://www.abc.net.au/news").get();
+        document56 = Jsoup.connect("http://www.theaustralian.com.au").get();
+
+        //New Zealand
+        document57 = Jsoup.connect("http://www.nzherald.co.nz").get();
+
+        //Other
+        document58 = Jsoup.connect("http://www.aljazeera.com").get();
+        document59 = Jsoup.connect("https://www.bloomberg.com").get();
+        document60 = Jsoup.connect("http://www.reuters.com").get();
     }
 }
