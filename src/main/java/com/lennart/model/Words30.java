@@ -32,15 +32,18 @@ public class Words30 {
 
         Map<String, List<Integer>> combinedMap = joinMaps(occurrenceMapMultiple, occurrenceMapSingle);
 
+        copyValueOfColumnsToLeft();
+
         for (Map.Entry<String, List<Integer>> entry : combinedMap.entrySet()) {
-            initializeDbConnection();
             double avNoOccurrences = entry.getValue().get(0) / numberOfSites;
             double avPercentageSites = entry.getValue().get(1) / numberOfSites;
 
+            initializeDbConnection();
             storeOrUpdateWordInDatabase("30_words_english", entry.getKey(), avNoOccurrences, avPercentageSites);
             closeDbConnection();
         }
 
+        calculateAndSetNewAverages(combinedMap);
     }
 
     private void copyValueOfColumnsToLeft() throws Exception {
@@ -72,28 +75,36 @@ public class Words30 {
         closeDbConnection();
     }
 
-    private void calculateAndSetNewAverages(String word) throws SQLException {
-        List<Double> avNoOccurrList = new ArrayList<>();
-        List<Double> avNoSitesList = new ArrayList<>();
+    private void calculateAndSetNewAverages(Map<String, List<Integer>> combinedMap) throws Exception {
+        for (Map.Entry<String, List<Integer>> entry : combinedMap.entrySet()) {
+            initializeDbConnection();
+            List<Double> avNoOccurrList = new ArrayList<>();
+            List<Double> avNoSitesList = new ArrayList<>();
 
-        ResultSet rs = getResultSetFromQuery("SELECT * FROM english_words_new WHERE word = '" + word + "';");
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM english_words_new WHERE word = '" + entry.getKey() + "';");
 
-        while(rs.next()) {
-            for(int i = 1; i < 31; i++) {
-                double avNoOccur = rs.getDouble(i + "_av_no_occurr_site");
-                avNoOccurrList.add(avNoOccur);
+            while(rs.next()) {
+                for(int i = 1; i < 31; i++) {
+                    double avNoOccur = rs.getDouble(i + "_av_no_occurr_site");
+                    avNoOccurrList.add(avNoOccur);
 
-                double avNoSites = rs.getDouble(i + "_av_no_sites");
-                avNoSitesList.add(avNoSites);
+                    double avNoSites = rs.getDouble(i + "_av_no_sites");
+                    avNoSitesList.add(avNoSites);
+                }
             }
+
+            double avNoOccur = calculateAverageOfList(avNoOccurrList);
+            double avNoSites = calculateAverageOfList(avNoSitesList);
+
+            rs.close();
+            st.close();
+
+            st = con.createStatement();
+            st.executeUpdate("UPDATE 30_words_english SET tot_av_no_occurr_site = '" + avNoOccur + "', tot_av_no_sites = '" + avNoSites + "' WHERE word = '" + entry.getKey() + "'");
+            st.close();
+            closeDbConnection();
         }
-
-        double avNoOccur = calculateAverageOfList(avNoOccurrList);
-        double avNoSites = calculateAverageOfList(avNoSitesList);
-
-        Statement st = con.createStatement();
-        st.executeUpdate("UPDATE 30_words_english SET tot_av_no_occurr_site = '" + avNoOccur + "', tot_av_no_sites = '" + avNoSites + "' WHERE word = '" + word + "'");
-        st.close();
     }
 
     private double calculateAverageOfList(List<Double> list) {
@@ -119,12 +130,21 @@ public class Words30 {
         st.close();
     }
 
-    private boolean isWordInDatabase(String database, String word) throws SQLException{
-        ResultSet rs = getResultSetFromQuery("SELECT * FROM " + database + " WHERE word = '" + word + "';");
-        return rs.next();
+    private boolean isWordInDatabase(String database, String word) throws Exception{
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM " + database + " WHERE word = '" + word + "';");
+
+        if(rs.next()) {
+            rs.close();
+            st.close();
+            return true;
+        }
+        rs.close();
+        st.close();
+        return false;
     }
 
-    private void updateWordInDatabase(String database, String word, double avNoOccurrences, double avNoSites) throws SQLException {
+    private void updateWordInDatabase(String database, String word, double avNoOccurrences, double avNoSites) throws Exception {
         Statement st = con.createStatement();
         st.executeUpdate("UPDATE " + database + " SET 30_av_no_occurr_site = '" + avNoOccurrences + "', 30_av_no_sites = '" + avNoSites + "' WHERE word = '" + word + "'");
         st.close();
@@ -139,19 +159,19 @@ public class Words30 {
         con.close();
     }
 
-    private ResultSet getResultSetFromQuery(String query) throws SQLException {
-        Statement st = con.createStatement();
-        return st.executeQuery(query);
-    }
-
     private int getHighestIntEntry(String database) throws Exception {
         Statement st = con.createStatement();
         String sql = ("SELECT * FROM " + database + " ORDER BY entry DESC;");
         ResultSet rs = st.executeQuery(sql);
 
         if(rs.next()) {
-            return rs.getInt("entry");
+            int highestIntEntry = rs.getInt("entry");
+            st.close();
+            rs.close();
+            return highestIntEntry;
         }
+        st.close();
+        rs.close();
         return 0;
     }
 
