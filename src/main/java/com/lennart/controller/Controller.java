@@ -761,4 +761,70 @@ public class Controller extends SpringBootServletInitializer {
         document59 = Jsoup.connect("https://www.bloomberg.com").get();
         document60 = Jsoup.connect("http://www.reuters.com").get();
     }
+
+    public List<Document> getListOfAllDocuments() {
+        List<Document> listOfAllDocuments = new ArrayList<>();
+
+        listOfAllDocuments.add(document1);
+        listOfAllDocuments.add(document2);
+        listOfAllDocuments.add(document3);
+        listOfAllDocuments.add(document4);
+        listOfAllDocuments.add(document5);
+        listOfAllDocuments.add(document6);
+        listOfAllDocuments.add(document7);
+        listOfAllDocuments.add(document8);
+        listOfAllDocuments.add(document9);
+        listOfAllDocuments.add(document10);
+        listOfAllDocuments.add(document11);
+        listOfAllDocuments.add(document12);
+        listOfAllDocuments.add(document13);
+        listOfAllDocuments.add(document14);
+        listOfAllDocuments.add(document15);
+        listOfAllDocuments.add(document16);
+        listOfAllDocuments.add(document17);
+        listOfAllDocuments.add(document18);
+        listOfAllDocuments.add(document19);
+        listOfAllDocuments.add(document20);
+        listOfAllDocuments.add(document21);
+        listOfAllDocuments.add(document22);
+        listOfAllDocuments.add(document23);
+        listOfAllDocuments.add(document24);
+        listOfAllDocuments.add(document25);
+        listOfAllDocuments.add(document26);
+        listOfAllDocuments.add(document27);
+        listOfAllDocuments.add(document28);
+        listOfAllDocuments.add(document29);
+        listOfAllDocuments.add(document30);
+        listOfAllDocuments.add(document31);
+        listOfAllDocuments.add(document32);
+        listOfAllDocuments.add(document33);
+        listOfAllDocuments.add(document34);
+        listOfAllDocuments.add(document35);
+        listOfAllDocuments.add(document36);
+        listOfAllDocuments.add(document37);
+        listOfAllDocuments.add(document38);
+        listOfAllDocuments.add(document39);
+        listOfAllDocuments.add(document40);
+        listOfAllDocuments.add(document41);
+        listOfAllDocuments.add(document42);
+        listOfAllDocuments.add(document43);
+        listOfAllDocuments.add(document44);
+        listOfAllDocuments.add(document45);
+        listOfAllDocuments.add(document46);
+        listOfAllDocuments.add(document47);
+        listOfAllDocuments.add(document48);
+        listOfAllDocuments.add(document49);
+        listOfAllDocuments.add(document51);
+        listOfAllDocuments.add(document52);
+        listOfAllDocuments.add(document53);
+        listOfAllDocuments.add(document54);
+        listOfAllDocuments.add(document55);
+        listOfAllDocuments.add(document56);
+        listOfAllDocuments.add(document57);
+        listOfAllDocuments.add(document58);
+        listOfAllDocuments.add(document59);
+        listOfAllDocuments.add(document60);
+
+        return listOfAllDocuments;
+    }
 }

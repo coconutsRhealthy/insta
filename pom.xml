@@ -78,5 +78,12 @@
       <version>6.0.6</version>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/org.apache.airavata/levenshtein-distance-service -->
+    <dependency>
+      <groupId>org.apache.airavata</groupId>
+      <artifactId>levenshtein-distance-service</artifactId>
+      <version>0.2-incubating</version>
+    </dependency>
+
   </dependencies>
 </project>
