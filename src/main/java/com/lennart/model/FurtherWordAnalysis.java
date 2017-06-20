@@ -15,7 +15,7 @@ public class FurtherWordAnalysis {
 
         //furtherWordAnalysis.myOwnCompare();
 
-        furtherWordAnalysis.getAllElementsPerWord();
+        //furtherWordAnalysis.getAllElementsPerWord();
 
 
 //        String headline = "this is the fuckingmonkey";
@@ -32,40 +32,30 @@ public class FurtherWordAnalysis {
 
     }
 
-    private Map<String, Elements> getAllElementsPerWord() throws Exception {
-
-        //String testWord = "collision";
-
+    public List<Element> getAllElementsPerWord(String word) throws Exception {
         Controller controller = new Controller();
-
         controller.initializeDocuments();
 
         List<Document> allDocuments = controller.getListOfAllDocuments();
-
-        List<Element> total = new ArrayList<>();
+        List<Element> elementsPerWord = new ArrayList<>();
 
         for(Document document : allDocuments) {
-            Elements elements = document.select("a:contains(journey)");
+            Elements elements = document.select("a:contains(" + word + ")");
             if(elements.size() != 0) {
-                total.add(elements.get(0));
+                elementsPerWord.add(elements.get(0));
             }
         }
-
-        List<String> headlinesPerWord = getHeadlinesPerWord(total);
-
-        List<String> trimmedHeadlines = trimHeadlinesToMax77Characters(headlinesPerWord);
-
-        trimmedHeadlines = removeWrongContainsHeadlines(trimmedHeadlines, " journey ");
-
-
-        double averageNew = getAverageLevenshteinDistance(trimmedHeadlines);
-
-        System.out.println("wacht");
-
-        return null;
+        return elementsPerWord;
     }
 
-    private List<String> getHeadlinesPerWord(List<Element> elementsList) {
+    public List<String> getHeadlinesPerWord(List<Element> elementsPerWord, String word) {
+        List<String> headlinesPerWord = getUncorrectedHeadlinesPerWord(elementsPerWord);
+        headlinesPerWord = trimHeadlinesToMax77Characters(headlinesPerWord);
+        headlinesPerWord = removeWrongContainsHeadlines(headlinesPerWord, " " + word + " ");
+        return headlinesPerWord;
+    }
+
+    private List<String> getUncorrectedHeadlinesPerWord(List<Element> elementsList) {
         List<String> headlines = new ArrayList<>();
 
         for(Element e : elementsList) {

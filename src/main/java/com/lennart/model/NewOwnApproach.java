@@ -1,5 +1,7 @@
 package com.lennart.model;
 
+import org.jsoup.nodes.Element;
+
 import java.util.*;
 
 /**
@@ -7,80 +9,40 @@ import java.util.*;
  */
 public class NewOwnApproach {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         NewOwnApproach newOwnApproach = new NewOwnApproach();
-        newOwnApproach.myNewOwnCompareLast();
-
+        newOwnApproach.myNewOwnCompareLast("planets");
     }
 
-    private void myNewOwnCompareLast() {
-        String a = "kevin truong accidental gay parents share unexpected journey to fatherhood";
-        String b = "koepkas journey now includes a us open title";
-        String c = "a filipino expatriates journey against cancer";
-        String d = "cricket mohammed amirs journey from nadir to zenith";
-        String e = "an eventful 40year journey for gaokao";
-//        String f = "not enough fighter jets is akin to playing cricket with just 7 players air ";
-//        String g = "three sukhoi jets deployed to tarakan to shoo fleeing maute terrorists";
-//        String h = "russia threatens to target us jets after syria warplane downed";
-//        String i = "qatar airways firms up order for 20 737 jets further options dependent on ita";
-//        String j = "lockheed martin about to close 37bn deal for f35 jets";
+    private List<String> myNewOwnCompareLast(String word) throws Exception {
+        FurtherWordAnalysis furtherWordAnalysis = new FurtherWordAnalysis();
 
-        List<String> originalHeadlines = new ArrayList<>();
-        originalHeadlines.add(a);
-        originalHeadlines.add(b);
-        originalHeadlines.add(c);
-        originalHeadlines.add(d);
-        originalHeadlines.add(e);
-//        originalHeadlines.add(f);
-//        originalHeadlines.add(g);
-//        originalHeadlines.add(h);
-//        originalHeadlines.add(i);
-//        originalHeadlines.add(j);
+        List<Element> elementsPerWord = furtherWordAnalysis.getAllElementsPerWord(word);
+        List<String> headlinesForWord = furtherWordAnalysis.getHeadlinesPerWord(elementsPerWord, word);
 
-        Set<String> setA = new HashSet();
-        Set<String> setB = new HashSet();
-        Set<String> setC = new HashSet();
-        Set<String> setD = new HashSet();
-        Set<String> setE = new HashSet();
-//        Set<String> setF = new HashSet();
-//        Set<String> setG = new HashSet();
-//        Set<String> setH = new HashSet();
-//        Set<String> setI = new HashSet();
-//        Set<String> setJ = new HashSet();
+        List<Set<String>> wordSetsPerHeadline = new ArrayList<>();
 
-        setA.addAll(Arrays.asList(a.split(" ")));
-        setB.addAll(Arrays.asList(b.split(" ")));
-        setC.addAll(Arrays.asList(c.split(" ")));
-        setD.addAll(Arrays.asList(d.split(" ")));
-        setE.addAll(Arrays.asList(e.split(" ")));
-//        setF.addAll(Arrays.asList(f.split(" ")));
-//        setG.addAll(Arrays.asList(g.split(" ")));
-//        setH.addAll(Arrays.asList(h.split(" ")));
-//        setI.addAll(Arrays.asList(i.split(" ")));
-//        setJ.addAll(Arrays.asList(j.split(" ")));
+        for(int i = 0; i < headlinesForWord.size(); i++) {
+            wordSetsPerHeadline.add(new HashSet<>());
+            wordSetsPerHeadline.get(i).addAll(Arrays.asList(headlinesForWord.get(i).split(" ")));
+        }
 
         List<String> allWordsCombined = new ArrayList<>();
-        allWordsCombined.addAll(setA);
-        allWordsCombined.addAll(setB);
-        allWordsCombined.addAll(setC);
-        allWordsCombined.addAll(setD);
-        allWordsCombined.addAll(setE);
-//        allWordsCombined.addAll(setF);
-//        allWordsCombined.addAll(setG);
-//        allWordsCombined.addAll(setH);
-//        allWordsCombined.addAll(setI);
-//        allWordsCombined.addAll(setJ);
+
+        for(Set<String> set : wordSetsPerHeadline) {
+            allWordsCombined.addAll(set);
+        }
 
         allWordsCombined = removeBlackListWords(allWordsCombined);
-        allWordsCombined = removeTheKeyword(allWordsCombined, "journey");
+        allWordsCombined = removeTheKeyword(allWordsCombined, word);
 
         Map<String, Integer> wordsRankedByOccurenceAll = new HashMap<>();
         Map<String, Integer> wordsRankedByOccurenceTwoOrMore = new HashMap<>();
 
-        for(String word : allWordsCombined) {
-            if(wordsRankedByOccurenceAll.get(word) == null) {
-                int frequency = Collections.frequency(allWordsCombined, word);
-                wordsRankedByOccurenceAll.put(word, frequency);
+        for(String s : allWordsCombined) {
+            if(wordsRankedByOccurenceAll.get(s) == null) {
+                int frequency = Collections.frequency(allWordsCombined, s);
+                wordsRankedByOccurenceAll.put(s, frequency);
             }
         }
 
@@ -91,7 +53,7 @@ public class NewOwnApproach {
         }
 
         List<String> headlinesToRemove = new ArrayList<>();
-        loop: for(String headline : originalHeadlines) {
+        loop: for(String headline : headlinesForWord) {
             for (Map.Entry<String, Integer> entry : wordsRankedByOccurenceTwoOrMore.entrySet()) {
                 if(headline.contains(entry.getKey())) {
                     continue loop;
@@ -100,11 +62,8 @@ public class NewOwnApproach {
             headlinesToRemove.add(headline);
         }
 
-        originalHeadlines.removeAll(headlinesToRemove);
-
-        System.out.println("wacht");
-
-
+        headlinesForWord.removeAll(headlinesToRemove);
+        return headlinesForWord;
     }
 
     public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
@@ -167,6 +126,7 @@ public class NewOwnApproach {
         blackListWords.add("her");
         blackListWords.add("get");
         blackListWords.add("no");
+        blackListWords.add("our");
 
         allWords.removeAll(blackListWords);
 
