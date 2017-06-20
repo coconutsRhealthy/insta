@@ -1,5 +1,6 @@
 package com.lennart.model;
 
+import com.lennart.controller.Controller;
 import org.jsoup.nodes.Element;
 
 import java.util.*;
@@ -11,13 +12,26 @@ public class NewOwnApproach {
 
     public static void main(String[] args) throws Exception {
         NewOwnApproach newOwnApproach = new NewOwnApproach();
-        newOwnApproach.myNewOwnCompareLast("planets");
+        //newOwnApproach.myNewOwnCompareLast("carney");
     }
 
-    private List<String> myNewOwnCompareLast(String word) throws Exception {
+    public Map<String, List<String>> getHeadlinesPerBuzzWord(Map<String, Double> buzzWords, Controller controller) throws Exception {
+        Map<String, List<String>> headlinesPerBuzzWord = new HashMap<>();
+
+        for (Map.Entry<String, Double> entry : buzzWords.entrySet()) {
+            List<String> headLinesForWord = myNewOwnCompareLast(entry.getKey(), controller);
+
+            if(headLinesForWord.size() >= 3) {
+                headlinesPerBuzzWord.put(entry.getKey(), headLinesForWord);
+            }
+        }
+        return headlinesPerBuzzWord;
+    }
+
+    private List<String> myNewOwnCompareLast(String word, Controller controller) throws Exception {
         FurtherWordAnalysis furtherWordAnalysis = new FurtherWordAnalysis();
 
-        List<Element> elementsPerWord = furtherWordAnalysis.getAllElementsPerWord(word);
+        List<Element> elementsPerWord = furtherWordAnalysis.getAllElementsPerWord(word, controller);
         List<String> headlinesForWord = furtherWordAnalysis.getHeadlinesPerWord(elementsPerWord, word);
 
         List<Set<String>> wordSetsPerHeadline = new ArrayList<>();
@@ -47,7 +61,7 @@ public class NewOwnApproach {
         }
 
         for (Map.Entry<String, Integer> entry : wordsRankedByOccurenceAll.entrySet()) {
-            if(entry.getValue() > 1) {
+            if(entry.getValue() > 2) {
                 wordsRankedByOccurenceTwoOrMore.put(entry.getKey(), entry.getValue());
             }
         }
@@ -56,7 +70,11 @@ public class NewOwnApproach {
         loop: for(String headline : headlinesForWord) {
             for (Map.Entry<String, Integer> entry : wordsRankedByOccurenceTwoOrMore.entrySet()) {
                 if(headline.contains(entry.getKey())) {
-                    continue loop;
+                    for (Map.Entry<String, Integer> entry2 : wordsRankedByOccurenceTwoOrMore.entrySet()) {
+                        if(!entry.getKey().equals(entry2.getKey()) && headline.contains(entry2.getKey())) {
+                            continue loop;
+                        }
+                    }
                 }
             }
             headlinesToRemove.add(headline);
@@ -127,6 +145,16 @@ public class NewOwnApproach {
         blackListWords.add("get");
         blackListWords.add("no");
         blackListWords.add("our");
+        blackListWords.add("new");
+        blackListWords.add("more");
+        blackListWords.add("with");
+        blackListWords.add("news");
+        blackListWords.add("ago");
+        blackListWords.add("about");
+        blackListWords.add("over");
+        blackListWords.add("up");
+        blackListWords.add("out");
+        blackListWords.add("all");
 
         allWords.removeAll(blackListWords);
 

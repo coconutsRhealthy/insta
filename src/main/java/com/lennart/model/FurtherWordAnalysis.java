@@ -32,9 +32,9 @@ public class FurtherWordAnalysis {
 
     }
 
-    public List<Element> getAllElementsPerWord(String word) throws Exception {
-        Controller controller = new Controller();
-        controller.initializeDocuments();
+    public List<Element> getAllElementsPerWord(String word, Controller controller) throws Exception {
+//        Controller controller = new Controller();
+//        controller.initializeDocuments();
 
         List<Document> allDocuments = controller.getListOfAllDocuments();
         List<Element> elementsPerWord = new ArrayList<>();

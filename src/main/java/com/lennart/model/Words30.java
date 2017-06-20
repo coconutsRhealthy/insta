@@ -198,7 +198,10 @@ public class Words30 {
 
         Map<String, Double> buzzWords = getBuzzWords(getTop50HighestIncreaseWordCountCurrent(controller), getTop50HighestIncreaseSiteCountCurrent(controller));
         System.out.println("Size buzzwords: "+ buzzWords.size());
-        storeBuzzWordsInDatabase(buzzWords, "buzzwords");
+
+        new NewOwnApproach().getHeadlinesPerBuzzWord(buzzWords, controller);
+
+        //storeBuzzWordsInDatabase(buzzWords, "buzzwords");
         closeDbConnection();
     }
 
@@ -227,7 +230,7 @@ public class Words30 {
 
             double newWordPerSite = entry.getValue();
 
-            if(oldWordPerSite >= 0.2 || newWordPerSite >= 0.2) {
+            if(oldWordPerSite >= 0.033 || newWordPerSite >= 0.033) {
                 wordIncreaseMap.put(word, newWordPerSite / oldWordPerSite);
             }
         }
@@ -235,7 +238,7 @@ public class Words30 {
         Map<String, Double> filteredMap = new HashMap<>();
 
         for (Map.Entry<String, Double> entry : wordIncreaseMap.entrySet()) {
-            if(entry.getValue() >= 2) {
+            if(entry.getValue() >= 1.3) {
                 filteredMap.put(entry.getKey(), entry.getValue());
             }
         }
@@ -268,7 +271,7 @@ public class Words30 {
 
             double newWordPerSite = entry.getValue();
 
-            if(oldWordPerSite >= 0.10 || newWordPerSite >= 0.10) {
+            if(newWordPerSite >= 0.033) {
                 wordIncreaseMap.put(word, newWordPerSite / oldWordPerSite);
             }
         }
@@ -276,7 +279,7 @@ public class Words30 {
         Map<String, Double> filteredMap = new HashMap<>();
 
         for (Map.Entry<String, Double> entry : wordIncreaseMap.entrySet()) {
-            if(entry.getValue() >= 2 ) {
+            if(entry.getValue() >= 1.3) {
                 filteredMap.put(entry.getKey(), entry.getValue());
             }
         }
