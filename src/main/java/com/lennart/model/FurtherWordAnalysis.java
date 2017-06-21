@@ -55,6 +55,13 @@ public class FurtherWordAnalysis {
         return headlinesPerWord;
     }
 
+    public List<String> getRawHeadlinesPerWord(List<Element> elementsPerWord, String word) {
+        List<String> headlinesPerWord = getUncorrectedHeadlinesPerWord(elementsPerWord);
+        headlinesPerWord = trimHeadlinesToMax77Characters(headlinesPerWord);
+        headlinesPerWord = removeWrongContainsHeadlinesForRaw(headlinesPerWord, " " + word + " ");
+        return headlinesPerWord;
+    }
+
     private List<String> getUncorrectedHeadlinesPerWord(List<Element> elementsList) {
         List<String> headlines = new ArrayList<>();
 
@@ -63,6 +70,63 @@ public class FurtherWordAnalysis {
         }
 
         return headlines;
+    }
+
+    public List<String> getHrefsPerWord(List<Element> elementsList) {
+        List<String> hrefs = new ArrayList<>();
+
+        for(Element e : elementsList) {
+            hrefs.add(e.attr("href"));
+        }
+        return hrefs;
+    }
+
+    public List<String> removeWrongContainsHeadlinesForRaw(List<String> headlines, String word) {
+        List<String> correctHeadlines = new ArrayList<>();
+        List<String> correctRawHeadlines = new ArrayList<>();
+
+        List<String> originalHeadlinesCopy = new ArrayList<>();
+        originalHeadlinesCopy.addAll(headlines);
+
+        List<String> lowerCaseReplacedHeadlines = new ArrayList<>();
+
+        for(String headline : headlines) {
+            String replacedHeadline = headline.replaceAll("[^A-Za-z0-9 ]", "");
+            replacedHeadline = replacedHeadline.toLowerCase();
+            lowerCaseReplacedHeadlines.add(replacedHeadline);
+        }
+
+        for(int i = 0; i < lowerCaseReplacedHeadlines.size(); i++) {
+            if(lowerCaseReplacedHeadlines.get(i).contains(word)) {
+                correctHeadlines.add(lowerCaseReplacedHeadlines.get(i));
+                correctRawHeadlines.add(originalHeadlinesCopy.get(i));
+            }
+        }
+
+        String wordRemoveTrailingSpace = word.replace(" ", "");
+        wordRemoveTrailingSpace = " " + wordRemoveTrailingSpace;
+
+        for(int i = 0; i < lowerCaseReplacedHeadlines.size(); i++) {
+            String headline = lowerCaseReplacedHeadlines.get(i);
+            int length = wordRemoveTrailingSpace.length();
+
+            String lastPart = "";
+
+            if(headline.length() > length) {
+                lastPart = headline.substring(headline.length() - length, headline.length());
+            }
+
+            if(lastPart.equals(wordRemoveTrailingSpace)) {
+                correctHeadlines.add(headline);
+                correctRawHeadlines.add(originalHeadlinesCopy.get(i));
+            }
+        }
+
+        if(correctHeadlines.size() != correctRawHeadlines.size()) {
+            System.out.println("wacht");
+        }
+
+        return correctRawHeadlines;
     }
 
     private List<String> removeWrongContainsHeadlines(List<String> headlines, String word) {

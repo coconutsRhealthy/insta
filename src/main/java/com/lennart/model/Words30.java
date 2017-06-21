@@ -199,7 +199,8 @@ public class Words30 {
         Map<String, Double> buzzWords = getBuzzWords(getTop50HighestIncreaseWordCountCurrent(controller), getTop50HighestIncreaseSiteCountCurrent(controller));
         System.out.println("Size buzzwords: "+ buzzWords.size());
 
-        new NewOwnApproach().getHeadlinesPerBuzzWord(buzzWords, controller);
+        //new NewOwnApproach().getHeadlinesPerBuzzWord(buzzWords, controller);
+        new NewOwnApproach().getDataForAllBuzzWords(buzzWords, controller);
 
         //storeBuzzWordsInDatabase(buzzWords, "buzzwords");
         closeDbConnection();
