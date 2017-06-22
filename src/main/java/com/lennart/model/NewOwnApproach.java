@@ -54,7 +54,7 @@ public class NewOwnApproach {
 
         List<Element> elementsPerWord = furtherWordAnalysis.getAllElementsPerWord(word, controller);
         List<String> uncorrectedTrimmedHeadlines = furtherWordAnalysis.getRawHeadlinesPerWord(elementsPerWord, word);
-        List<String> hrefsForWord = furtherWordAnalysis.getHrefsPerWord(elementsPerWord);
+        List<String> hrefsForWord = furtherWordAnalysis.getHrefHeadlinesPerWord(elementsPerWord, word);
         List<String> correctedHeadlinesForWord = furtherWordAnalysis.getHeadlinesPerWord(elementsPerWord, word);
 
         if(uncorrectedTrimmedHeadlines.size() != correctedHeadlinesForWord.size()) {
