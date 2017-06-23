@@ -83,7 +83,7 @@ public class FurtherWordAnalysis {
         List<String> hrefs = new ArrayList<>();
 
         for(Element e : elementsList) {
-            hrefs.add(e.attr("href"));
+            hrefs.add(e.attr("abs:href"));
         }
         return hrefs;
     }
