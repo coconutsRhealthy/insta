@@ -1,10 +1,13 @@
 package com.lennart.controller;
 
+import com.lennart.model.BuzzWord;
+import com.lennart.model.RetrieveBuzzwords;
 import org.apache.commons.lang3.time.DateUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
@@ -94,29 +97,38 @@ public class Controller extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) throws Exception {
-        Controller controller = new Controller();
+        //Controller controller = new Controller();
 
-        controller.testCompareMethodeWordOncePerSite();
+        //controller.testCompareMethodeWordOncePerSite();
 
-        //SpringApplication.run(Controller.class, args);
+        SpringApplication.run(Controller.class, args);
     }
+
+//    @RequestMapping(value = "/startGame", method = RequestMethod.GET)
+//    public void startGame() throws Exception {
+//        while(true) {
+//            retrieveAndStoreNuNl();
+//            TimeUnit.SECONDS.sleep(5);
+//            retrieveAndStoreNos();
+//            TimeUnit.SECONDS.sleep(5);
+//            retrieveAndStoreTelegraaf();
+//            TimeUnit.SECONDS.sleep(5);
+//            retrieveAndStoreAd();
+//            TimeUnit.SECONDS.sleep(5);
+//            retrieveAndStoreVolkskrant();
+//
+//            TimeUnit.MINUTES.sleep(10);
+//        }
+//    }
 
     @RequestMapping(value = "/startGame", method = RequestMethod.GET)
-    public void startGame() throws Exception {
-        while(true) {
-            retrieveAndStoreNuNl();
-            TimeUnit.SECONDS.sleep(5);
-            retrieveAndStoreNos();
-            TimeUnit.SECONDS.sleep(5);
-            retrieveAndStoreTelegraaf();
-            TimeUnit.SECONDS.sleep(5);
-            retrieveAndStoreAd();
-            TimeUnit.SECONDS.sleep(5);
-            retrieveAndStoreVolkskrant();
-
-            TimeUnit.MINUTES.sleep(10);
-        }
+    public @ResponseBody List<BuzzWord> sendBuzzWordsToClient() throws Exception {
+        List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveBuzzWordsFromDb("buzzwords_new");
+        //return buzzWords.get(0);
+        System.out.println("buzzwords size is: " + buzzWords.size());
+        return buzzWords;
     }
+
 
     private void retrieveAndStoreNuNl() {
         try {
