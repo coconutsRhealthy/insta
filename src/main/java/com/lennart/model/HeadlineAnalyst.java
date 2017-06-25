@@ -61,29 +61,29 @@ public class HeadlineAnalyst {
         return sortByValue(twoSubsequentWordsRankedByOccurence);
     }
 
-    public static void main(String[] args) throws Exception {
-//        String a = "2017-06-01 12:35:18";
-//        String b = "2017-06-01 13:00:00";
+//    public static void main(String[] args) throws Exception {
+////        String a = "2017-06-01 12:35:18";
+////        String b = "2017-06-01 13:00:00";
+////
+////        Date aa = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(a);
+////        Date bb = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(b);
+////
+////        if(aa.before(bb)) {
+////
+////        }
 //
-//        Date aa = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(a);
-//        Date bb = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(b);
 //
-//        if(aa.before(bb)) {
 //
-//        }
-
-
-
-
-        HeadlineAnalyst headlineAnalyst = new HeadlineAnalyst();
-
-        headlineAnalyst.getNumberOfHeadlinesUntilHourForDate("2017-06-01");
-
-        //headlineAnalyst.getDomesticForeignDistribution("2017-05-31");
 //
-//        headlineAnalyst.retrieveAllDateTimeFromDatabaseForDate("2017-06-01");
-        //headlineAnalyst.getWordsRankedByOccurrence(headlineAnalyst.retrieveAllHeadlinesFromDatabaseForDate("2017-06-01"));
-    }
+//        HeadlineAnalyst headlineAnalyst = new HeadlineAnalyst();
+//
+//        headlineAnalyst.getNumberOfHeadlinesUntilHourForDate("2017-06-01");
+//
+//        //headlineAnalyst.getDomesticForeignDistribution("2017-05-31");
+////
+////        headlineAnalyst.retrieveAllDateTimeFromDatabaseForDate("2017-06-01");
+//        //headlineAnalyst.getWordsRankedByOccurrence(headlineAnalyst.retrieveAllHeadlinesFromDatabaseForDate("2017-06-01"));
+//    }
 
     public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
         List<Map.Entry<K, V>> list = new LinkedList<>( map.entrySet() );

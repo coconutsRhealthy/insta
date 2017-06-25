@@ -10,27 +10,27 @@ import java.util.*;
 
 public class FurtherWordAnalysis {
 
-    public static void main(String[] args) throws Exception {
-        FurtherWordAnalysis furtherWordAnalysis = new FurtherWordAnalysis();
-
-        //furtherWordAnalysis.myOwnCompare();
-
-        //furtherWordAnalysis.getAllElementsPerWord();
-
-
-//        String headline = "this is the fuckingmonkey";
+//    public static void main(String[] args) throws Exception {
+//        FurtherWordAnalysis furtherWordAnalysis = new FurtherWordAnalysis();
 //
-//        String word = " fuckingmonkey ";
+//        //furtherWordAnalysis.myOwnCompare();
 //
-//        String wordRemoveTrailingSpace = word.replace(" ", "");
-//        wordRemoveTrailingSpace = " " + wordRemoveTrailingSpace;
+//        //furtherWordAnalysis.getAllElementsPerWord();
 //
-//        int length = wordRemoveTrailingSpace.length();
-//        String lastPart = headline.substring(headline.length() - length, headline.length());
 //
-//        System.out.println("wacht");
-
-    }
+////        String headline = "this is the fuckingmonkey";
+////
+////        String word = " fuckingmonkey ";
+////
+////        String wordRemoveTrailingSpace = word.replace(" ", "");
+////        wordRemoveTrailingSpace = " " + wordRemoveTrailingSpace;
+////
+////        int length = wordRemoveTrailingSpace.length();
+////        String lastPart = headline.substring(headline.length() - length, headline.length());
+////
+////        System.out.println("wacht");
+//
+//    }
 
     public List<Element> getAllElementsPerWord(String word, Controller controller) throws Exception {
 //        Controller controller = new Controller();

@@ -10,10 +10,10 @@ import java.util.*;
  */
 public class NewOwnApproach {
 
-    public static void main(String[] args) throws Exception {
-        NewOwnApproach newOwnApproach = new NewOwnApproach();
-        //newOwnApproach.myNewOwnCompareLast("carney");
-    }
+//    public static void main(String[] args) throws Exception {
+//        NewOwnApproach newOwnApproach = new NewOwnApproach();
+//        //newOwnApproach.myNewOwnCompareLast("carney");
+//    }
 
     public Map<String, Map<String, List<String>>> getDataForAllBuzzWords(Map<String, Double> buzzWords, Controller controller) throws Exception {
         Map<String, Map<String, List<String>>> dataForAllBuzzWords = new HashMap<>();

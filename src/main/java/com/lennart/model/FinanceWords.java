@@ -32,10 +32,10 @@ public class FinanceWords {
 
     private double numberOfSites = 15.0;
 
-    public static void main(String[] args) throws Exception {
-        FinanceWords financeWords = new FinanceWords();
-        financeWords.compareCurrentWithLastDbEntry();
-    }
+//    public static void main(String[] args) throws Exception {
+//        FinanceWords financeWords = new FinanceWords();
+//        financeWords.compareCurrentWithLastDbEntry();
+//    }
 
     private void compareCurrentWithLastDbEntry() throws Exception {
         initializeDocuments();

@@ -19,27 +19,27 @@ public class Words {
 //    private Map<String, Integer> occurrenceMapMultiple;
 //    private Map<String, Integer> occurrenceMapSingle;
 
-    public static void main(String[] args) throws Exception {
-        Words words = new Words();
-
-        words.initializeDbConnection();
-
-//        double a = words.retrieveAvNoOccurrencesFromDatabase("gunman");
-//        double b = words.retrieveAvNoOccurrencesFromDatabaseNew("gunman");
+//    public static void main(String[] args) throws Exception {
+//        Words words = new Words();
 //
-//        double c = words.retrieveAvPercentageSitesFromDatabase("gunman");
-//        double d = words.retrieveAvPercentageSitesFromDatabaseNew("gunman");
-
-        //words.getTop50HighestIncreaseSiteCount();
-
-        words.combine(words.getTop50HighestIncreaseWordCount(), words.getTop50HighestIncreaseSiteCount());
-
-        System.out.println("wacht");
-
-        words.closeDbConnection();
-
-        //words.updateDatabase();
-    }
+//        words.initializeDbConnection();
+//
+////        double a = words.retrieveAvNoOccurrencesFromDatabase("gunman");
+////        double b = words.retrieveAvNoOccurrencesFromDatabaseNew("gunman");
+////
+////        double c = words.retrieveAvPercentageSitesFromDatabase("gunman");
+////        double d = words.retrieveAvPercentageSitesFromDatabaseNew("gunman");
+//
+//        //words.getTop50HighestIncreaseSiteCount();
+//
+//        words.combine(words.getTop50HighestIncreaseWordCount(), words.getTop50HighestIncreaseSiteCount());
+//
+//        System.out.println("wacht");
+//
+//        words.closeDbConnection();
+//
+//        //words.updateDatabase();
+//    }
 
     private void updateDatabase() throws Exception {
         Controller controller = new Controller();

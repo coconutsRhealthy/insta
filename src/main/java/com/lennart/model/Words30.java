@@ -16,28 +16,33 @@ public class Words30 {
     private Connection con;
     private double numberOfSites = 59.0;
 
-    public static void main(String[] args) throws Exception {
-
-        //while(true) {
-            Words30 words30 = new Words30();
-            words30.compareCurrentWithLastDbEntry();
-        //}
-
-////
-//        List<Double> list1 = words30.getWordLastNoOWordsAndSitesFromJsoup("bird");
-//        List<Double> list2 = words30.getWordLastNoOfWordsAndSitesFromDb("bird");
+//    public static void main(String[] args) throws Exception {
 //
-//        System.out.println("wacht");
-
-//        words30.initializeDbConnection();
-//        words30.getBuzzWords(words30.getTop50HighestIncreaseWordCountCurrent(), words30.getTop50HighestIncreaseSiteCountCurrent());
-//        words30.closeDbConnection();
-
-
-        //words30.updateDatabase();
-
-        //words30.copyValueOfColumnsToLeft();
-    }
+//        //while(true) {
+//            Words30 words30 = new Words30();
+//            Map<String, Map<String, List<String>>> dataForAllBuzzWords = words30.compareCurrentWithLastDbEntry();
+//
+//            if(dataForAllBuzzWords != null) {
+//                System.out.println("Size of dataForAllBuzzWords; " + dataForAllBuzzWords.size());
+//                new StoreBuzzwords().storeBuzzwordsInDb(dataForAllBuzzWords);
+//            }
+//        //}
+//
+//////
+////        List<Double> list1 = words30.getWordLastNoOWordsAndSitesFromJsoup("bird");
+////        List<Double> list2 = words30.getWordLastNoOfWordsAndSitesFromDb("bird");
+////
+////        System.out.println("wacht");
+//
+////        words30.initializeDbConnection();
+////        words30.getBuzzWords(words30.getTop50HighestIncreaseWordCountCurrent(), words30.getTop50HighestIncreaseSiteCountCurrent());
+////        words30.closeDbConnection();
+//
+//
+//        //words30.updateDatabase();
+//
+//        //words30.copyValueOfColumnsToLeft();
+//    }
 
     private void updateDatabase() throws Exception {
         Controller controller = new Controller();
@@ -185,13 +190,13 @@ public class Words30 {
         return st.executeQuery(query);
     }
 
-    private void compareCurrentWithLastDbEntry() throws Exception {
+    private Map<String, Map<String, List<String>>> compareCurrentWithLastDbEntry() throws Exception {
         Controller controller = new Controller();
 
         try {
             controller.initializeDocuments();
         } catch (Exception e) {
-            return;
+            return null;
         }
 
         initializeDbConnection();
@@ -199,11 +204,10 @@ public class Words30 {
         Map<String, Double> buzzWords = getBuzzWords(getTop50HighestIncreaseWordCountCurrent(controller), getTop50HighestIncreaseSiteCountCurrent(controller));
         System.out.println("Size buzzwords: "+ buzzWords.size());
 
-        //new NewOwnApproach().getHeadlinesPerBuzzWord(buzzWords, controller);
-        new NewOwnApproach().getDataForAllBuzzWords(buzzWords, controller);
-
-        //storeBuzzWordsInDatabase(buzzWords, "buzzwords");
+        Map<String, Map<String, List<String>>> dataForAllBuzzWords = new NewOwnApproach().getDataForAllBuzzWords(buzzWords, controller);
         closeDbConnection();
+
+        return dataForAllBuzzWords;
     }
 
     private Map<String, Double> getTop50HighestIncreaseWordCountCurrent(Controller controller) throws Exception {
