@@ -16,33 +16,33 @@ public class Words30 {
     private Connection con;
     private double numberOfSites = 59.0;
 
-//    public static void main(String[] args) throws Exception {
-//
-//        //while(true) {
-//            Words30 words30 = new Words30();
-//            Map<String, Map<String, List<String>>> dataForAllBuzzWords = words30.compareCurrentWithLastDbEntry();
-//
-//            if(dataForAllBuzzWords != null) {
-//                System.out.println("Size of dataForAllBuzzWords; " + dataForAllBuzzWords.size());
-//                new StoreBuzzwords().storeBuzzwordsInDb(dataForAllBuzzWords);
-//            }
-//        //}
-//
-//////
-////        List<Double> list1 = words30.getWordLastNoOWordsAndSitesFromJsoup("bird");
-////        List<Double> list2 = words30.getWordLastNoOfWordsAndSitesFromDb("bird");
+    public static void main(String[] args) throws Exception {
+
+        //while(true) {
+            Words30 words30 = new Words30();
+            Map<String, Map<String, List<String>>> dataForAllBuzzWords = words30.compareCurrentWithLastDbEntry();
+
+            if(dataForAllBuzzWords != null) {
+                System.out.println("Size of dataForAllBuzzWords; " + dataForAllBuzzWords.size());
+                new StoreBuzzwords().storeBuzzwordsInDb(dataForAllBuzzWords);
+            }
+        //}
+
 ////
-////        System.out.println("wacht");
+//        List<Double> list1 = words30.getWordLastNoOWordsAndSitesFromJsoup("bird");
+//        List<Double> list2 = words30.getWordLastNoOfWordsAndSitesFromDb("bird");
 //
-////        words30.initializeDbConnection();
-////        words30.getBuzzWords(words30.getTop50HighestIncreaseWordCountCurrent(), words30.getTop50HighestIncreaseSiteCountCurrent());
-////        words30.closeDbConnection();
-//
-//
-//        //words30.updateDatabase();
-//
-//        //words30.copyValueOfColumnsToLeft();
-//    }
+//        System.out.println("wacht");
+
+//        words30.initializeDbConnection();
+//        words30.getBuzzWords(words30.getTop50HighestIncreaseWordCountCurrent(), words30.getTop50HighestIncreaseSiteCountCurrent());
+//        words30.closeDbConnection();
+
+
+        //words30.updateDatabase();
+
+        //words30.copyValueOfColumnsToLeft();
+    }
 
     private void updateDatabase() throws Exception {
         Controller controller = new Controller();

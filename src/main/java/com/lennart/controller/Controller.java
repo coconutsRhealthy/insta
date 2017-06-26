@@ -121,10 +121,9 @@ public class Controller extends SpringBootServletInitializer {
 //        }
 //    }
 
-    @RequestMapping(value = "/startGame", method = RequestMethod.GET)
+    @RequestMapping(value = "/getBuzzWords", method = RequestMethod.GET)
     public @ResponseBody List<BuzzWord> sendBuzzWordsToClient() throws Exception {
         List<BuzzWord> buzzWords = new RetrieveBuzzwords().retrieveBuzzWordsFromDb("buzzwords_new");
-        //return buzzWords.get(0);
         System.out.println("buzzwords size is: " + buzzWords.size());
         return buzzWords;
     }

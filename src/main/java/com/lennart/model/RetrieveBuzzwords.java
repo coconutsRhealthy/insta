@@ -3,6 +3,7 @@ package com.lennart.model;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -12,9 +13,9 @@ public class RetrieveBuzzwords {
 
     private Connection con;
 
-    public static void main(String[] args) throws Exception {
-        new RetrieveBuzzwords().retrieveBuzzWordsFromDb("buzzwords_new");
-    }
+//    public static void main(String[] args) throws Exception {
+//        new RetrieveBuzzwords().retrieveBuzzWordsFromDb("buzzwords_new");
+//    }
 
     public List<BuzzWord> retrieveBuzzWordsFromDb(String database) throws Exception {
         List<BuzzWord> buzzWords = new ArrayList<>();
@@ -37,6 +38,7 @@ public class RetrieveBuzzwords {
         st.close();
         closeDbConnection();
 
+        Collections.reverse(buzzWords);
         return buzzWords;
     }
 
