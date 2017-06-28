@@ -55,6 +55,12 @@ public class Words30 {
         }
 
         while(true) {
+            try {
+                deleteEntriesOlderThan24Hours();
+            } catch(Exception e) {
+
+            }
+
             if(new Date().getTime() < (timeOfLastNewsWordsRefresh + TimeUnit.HOURS.toMillis(10))) {
                 try {
                     Map<String, Map<String, List<String>>> dataForAllBuzzWords = compareCurrentWithLastDbEntry();
@@ -71,10 +77,32 @@ public class Words30 {
                 try {
                     updateDatabase();
                 } catch (Exception e) {
-
+                    overallMethodServer();
                 }
             }
         }
+    }
+
+    private void deleteEntriesOlderThan24Hours() throws Exception {
+        long currentDate = new Date().getTime();
+        initializeDbConnection();
+        ResultSet rs = getResultSetFromQuery("SELECT * FROM buzzwords_new");
+
+        while(rs.next()) {
+            String s = rs.getString("date");
+            Date parsedDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(s);
+
+            if(parsedDateTime.getTime() < currentDate - TimeUnit.HOURS.toMillis(24)) {
+                String wordToRemove = rs.getString("word");
+
+                Statement st = con.createStatement();
+                st.executeUpdate("DELETE FROM buzzwords_new WHERE word = '" + wordToRemove + "';");
+                st.close();
+            }
+        }
+
+        rs.close();
+        closeDbConnection();
     }
 
     public void updateDatabase() throws Exception {
