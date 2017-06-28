@@ -7,6 +7,7 @@ import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by LennartMac on 05/06/17.
@@ -16,35 +17,67 @@ public class Words30 {
     private Connection con;
     private double numberOfSites = 59.0;
 
-    public static void main(String[] args) throws Exception {
-
-        //while(true) {
-            Words30 words30 = new Words30();
-            Map<String, Map<String, List<String>>> dataForAllBuzzWords = words30.compareCurrentWithLastDbEntry();
-
-            if(dataForAllBuzzWords != null) {
-                System.out.println("Size of dataForAllBuzzWords; " + dataForAllBuzzWords.size());
-                new StoreBuzzwords().storeBuzzwordsInDb(dataForAllBuzzWords);
-            }
-        //}
-
-////
-//        List<Double> list1 = words30.getWordLastNoOWordsAndSitesFromJsoup("bird");
-//        List<Double> list2 = words30.getWordLastNoOfWordsAndSitesFromDb("bird");
+//    public static void main(String[] args) throws Exception {
 //
-//        System.out.println("wacht");
+//        //while(true) {
+//            Words30 words30 = new Words30();
+////            Map<String, Map<String, List<String>>> dataForAllBuzzWords = words30.compareCurrentWithLastDbEntry();
+////
+////            if(dataForAllBuzzWords != null) {
+////                System.out.println("Size of dataForAllBuzzWords; " + dataForAllBuzzWords.size());
+////                new StoreBuzzwords().storeBuzzwordsInDb(dataForAllBuzzWords);
+////            }
+//        //}
+//
+//////
+////        List<Double> list1 = words30.getWordLastNoOWordsAndSitesFromJsoup("bird");
+////        List<Double> list2 = words30.getWordLastNoOfWordsAndSitesFromDb("bird");
+////
+////        System.out.println("wacht");
+//
+////        words30.initializeDbConnection();
+////        words30.getBuzzWords(words30.getTop50HighestIncreaseWordCountCurrent(), words30.getTop50HighestIncreaseSiteCountCurrent());
+////        words30.closeDbConnection();
+//
+//
+//        words30.updateDatabase();
+//
+//        //words30.copyValueOfColumnsToLeft();
+//    }
 
-//        words30.initializeDbConnection();
-//        words30.getBuzzWords(words30.getTop50HighestIncreaseWordCountCurrent(), words30.getTop50HighestIncreaseSiteCountCurrent());
-//        words30.closeDbConnection();
+    public void overallMethodServer() {
+        long timeOfLastNewsWordsRefresh = new Date().getTime();
 
+        try {
+            updateDatabase();
+        } catch (Exception e) {
+            overallMethodServer();
+        }
 
-        //words30.updateDatabase();
+        while(true) {
+            if(new Date().getTime() < (timeOfLastNewsWordsRefresh + TimeUnit.HOURS.toMillis(10))) {
+                try {
+                    Map<String, Map<String, List<String>>> dataForAllBuzzWords = compareCurrentWithLastDbEntry();
 
-        //words30.copyValueOfColumnsToLeft();
+                    if(dataForAllBuzzWords != null) {
+                        new StoreBuzzwords().storeBuzzwordsInDb(dataForAllBuzzWords);
+                    }
+                } catch (Exception e) {
+
+                }
+            } else {
+                timeOfLastNewsWordsRefresh = new Date().getTime();
+
+                try {
+                    updateDatabase();
+                } catch (Exception e) {
+
+                }
+            }
+        }
     }
 
-    private void updateDatabase() throws Exception {
+    public void updateDatabase() throws Exception {
         Controller controller = new Controller();
 
         controller.initializeDocuments();
@@ -190,7 +223,7 @@ public class Words30 {
         return st.executeQuery(query);
     }
 
-    private Map<String, Map<String, List<String>>> compareCurrentWithLastDbEntry() throws Exception {
+    public Map<String, Map<String, List<String>>> compareCurrentWithLastDbEntry() throws Exception {
         Controller controller = new Controller();
 
         try {
