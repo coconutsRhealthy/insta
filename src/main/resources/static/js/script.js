@@ -5,7 +5,7 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
     $scope.buzzWords;
     $scope.words = [];
 
-    $http.get('/getBuzzWords').success(function(data) {
+    $http.get('http://nieuws-statistieken.nl:8080/headlines-frontend-1.0-SNAPSHOT/getBuzzWords').success(function(data) {
         $scope.buzzWords = data;
     })
 
