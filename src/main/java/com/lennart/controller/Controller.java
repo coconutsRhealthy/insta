@@ -2,6 +2,7 @@ package com.lennart.controller;
 
 import com.lennart.model.BuzzWord;
 import com.lennart.model.RetrieveBuzzwords;
+import com.lennart.model.Words30;
 import org.apache.commons.lang3.time.DateUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -120,6 +121,11 @@ public class Controller extends SpringBootServletInitializer {
 //            TimeUnit.MINUTES.sleep(10);
 //        }
 //    }
+
+    @RequestMapping(value = "/startGame", method = RequestMethod.GET)
+    public void startGame() throws Exception {
+        new Words30().overallMethodServer();
+    }
 
     @RequestMapping(value = "/getBuzzWords", method = RequestMethod.GET)
     public @ResponseBody List<BuzzWord> sendBuzzWordsToClient() throws Exception {
