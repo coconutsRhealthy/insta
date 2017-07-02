@@ -44,7 +44,9 @@ public class Words {
     private void updateDatabase() throws Exception {
         Controller controller = new Controller();
 
-        controller.initializeDocuments();
+        for(int i = 1; i <= 60; i++) {
+            controller.initializeDocuments(i);
+        }
 
         Map<String, Integer> occurrenceMapMultiple = controller.testCompareMethodeWordMultiplePerSite();
         Map<String, Integer> occurrenceMapSingle = controller.testCompareMethodeWordOncePerSite();

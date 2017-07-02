@@ -46,10 +46,18 @@ public class Words30 {
 //    }
 
     public void overallMethodServer() {
+        try {
+            clearTable();
+        } catch (Exception e) {
+
+        }
+
         long timeOfLastNewsWordsRefresh = new Date().getTime();
 
         try {
-            updateDatabase();
+            for(int i = 1; i <= 60; i++) {
+                updateDatabase(i);
+            }
         } catch (Exception e) {
             overallMethodServer();
         }
@@ -75,7 +83,9 @@ public class Words30 {
                 timeOfLastNewsWordsRefresh = new Date().getTime();
 
                 try {
-                    updateDatabase();
+                    for(int i = 1; i <= 60; i++) {
+                        updateDatabase(i);
+                    }
                 } catch (Exception e) {
                     overallMethodServer();
                 }
@@ -105,26 +115,26 @@ public class Words30 {
         closeDbConnection();
     }
 
-    public void updateDatabase() throws Exception {
+    public void updateDatabase(int number) throws Exception {
         Controller controller = new Controller();
 
-        controller.initializeDocuments();
+        controller.initializeDocuments(number);
 
         Map<String, Integer> occurrenceMapMultiple = controller.testCompareMethodeWordMultiplePerSite();
         Map<String, Integer> occurrenceMapSingle = controller.testCompareMethodeWordOncePerSite();
 
         Map<String, List<Integer>> combinedMap = joinMaps(occurrenceMapMultiple, occurrenceMapSingle);
 
-        clearTable();
+        //clearTable();
 
+        initializeDbConnection();
         for (Map.Entry<String, List<Integer>> entry : combinedMap.entrySet()) {
             double avNoOccurrences = entry.getValue().get(0) / numberOfSites;
             double avPercentageSites = entry.getValue().get(1) / numberOfSites;
 
-            initializeDbConnection();
             storeOrUpdateWordInDatabase("news_words", entry.getKey(), avNoOccurrences, avPercentageSites);
-            closeDbConnection();
         }
+        closeDbConnection();
     }
 
     private void clearTable() throws Exception {
@@ -255,7 +265,9 @@ public class Words30 {
         Controller controller = new Controller();
 
         try {
-            controller.initializeDocuments();
+            for(int i = 1; i <= 60; i++) {
+                controller.initializeDocuments(i);
+            }
         } catch (Exception e) {
             return null;
         }
@@ -385,7 +397,9 @@ public class Words30 {
         List<Double> numbers = new ArrayList<>();
 
         Controller controller = new Controller();
-        controller.initializeDocuments();
+        for(int i = 1; i <= 60; i++) {
+            controller.initializeDocuments(i);
+        }
 
         Map<String, Integer> occurrenceMapMultiple = controller.testCompareMethodeWordMultiplePerSite();
         Map<String, Integer> occurrenceMapSingle = controller.testCompareMethodeWordOncePerSite();

@@ -15,11 +15,11 @@ public class StoreBuzzwords {
     public void storeBuzzwordsInDb(Map<String, Map<String, List<String>>> dataForAllBuzzwords) throws Exception {
         String database = "buzzwords_new";
 
+        initializeDbConnection();
         for (Map.Entry<String, Map<String, List<String>>> entry : dataForAllBuzzwords.entrySet()) {
             List<String> headlinesForWord = entry.getValue().get("rawHeadlines");
             List<String> linksForWord = entry.getValue().get("hrefs");
 
-            initializeDbConnection();
             if(!isWordInDatabase(database, entry.getKey())) {
                 addNewBuzzwordToDb(database, entry.getKey(), headlinesForWord, linksForWord);
             } else {
@@ -29,8 +29,8 @@ public class StoreBuzzwords {
                     }
                 }
             }
-            closeDbConnection();
         }
+        closeDbConnection();
     }
 
     private void addNewBuzzwordToDb(String database, String buzzWord, List<String> headlines, List<String> links) throws Exception {

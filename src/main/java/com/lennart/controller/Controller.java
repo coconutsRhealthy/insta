@@ -124,7 +124,9 @@ public class Controller extends SpringBootServletInitializer {
 
     @RequestMapping(value = "/startGame", method = RequestMethod.GET)
     public void startGame() throws Exception {
-        new Words30().overallMethodServer();
+        for(int i = 1; i <= 60; i++) {
+            new Words30().overallMethodServer();
+        }
     }
 
     @RequestMapping(value = "/getBuzzWords", method = RequestMethod.GET)
@@ -630,153 +632,230 @@ public class Controller extends SpringBootServletInitializer {
     }
 
     private Set<String> getSetOfWordsFromDocument(Document document) {
-        String allText = document.text();
-        allText = allText.replaceAll("[^A-Za-z0-9 ]", "");
-        allText = allText.toLowerCase();
+        if(document != null) {
+            String allText = document.text();
+            allText = allText.replaceAll("[^A-Za-z0-9 ]", "");
+            allText = allText.toLowerCase();
 
-        List<String> listOfWordsTemp = Arrays.asList(allText.split(" "));
-        List<String> listOfWords = new ArrayList<>();
+            List<String> listOfWordsTemp = Arrays.asList(allText.split(" "));
+            List<String> listOfWords = new ArrayList<>();
 
-        listOfWords.addAll(listOfWordsTemp);
+            listOfWords.addAll(listOfWordsTemp);
 
-        Set<String> setOfWords = new HashSet<>();
-        setOfWords.addAll(listOfWords);
+            Set<String> setOfWords = new HashSet<>();
+            setOfWords.addAll(listOfWords);
 
-        return setOfWords;
+            return setOfWords;
+        } else {
+            return new HashSet<>();
+        }
     }
 
     private List<String> getListOfWordsFromDocument(Document document) {
-        String allText = document.text();
-        allText = allText.replaceAll("[^A-Za-z0-9 ]", "");
-        allText = allText.toLowerCase();
+        if(document != null) {
+            String allText = document.text();
+            allText = allText.replaceAll("[^A-Za-z0-9 ]", "");
+            allText = allText.toLowerCase();
 
-        List<String> listOfWordsTemp = Arrays.asList(allText.split(" "));
-        List<String> listOfWords = new ArrayList<>();
+            List<String> listOfWordsTemp = Arrays.asList(allText.split(" "));
+            List<String> listOfWords = new ArrayList<>();
 
-        listOfWords.addAll(listOfWordsTemp);
+            listOfWords.addAll(listOfWordsTemp);
 
-        return listOfWords;
+            return listOfWords;
+        } else {
+            return new ArrayList<>();
+        }
     }
 
-    public void initializeDocuments() throws IOException {
-        //Canada
-        document1 = Jsoup.connect("http://www.cbc.ca/news").get();
-        document2 = Jsoup.connect("https://www.thestar.com").get();
+    public void initializeDocuments(int number) throws IOException {
+        switch(number) {
+            case 1:
+                document1 = readSite("http://www.cbc.ca/news");
+                break;
+            case 2:
+                document2 = readSite("https://www.thestar.com");
+                break;
+            case 3:
+                document3 = readSite("https://www.nytimes.com");
+                break;
+            case 4:
+                document4 = readSite("https://www.washingtonpost.com");
+                break;
+            case 5:
+                document5 = readSite("http://www.huffingtonpost.com");
+                break;
+            case 6:
+                document6 = readSite("http://www.latimes.com");
+                break;
+            case 7:
+                document7 = readSite("http://www.cnn.com");
+                break;
+            case 8:
+                document8 = readSite("http://www.foxnews.com");
+                break;
+            case 9:
+                document9 = readSite("https://www.usatoday.com");
+                break;
+            case 10:
+                document10 = readSite("https://www.wsj.com");
+                break;
+            case 11:
+                document11 = readSite("http://www.cnbc.com");
+                break;
+            case 12:
+                document12 = readSite("http://www.nbcnews.com");
+                break;
+            case 13:
+                document13 = readSite("http://www.theyucatantimes.com");
+                break;
+            case 14:
+                document14 = readSite("http://www.thenews.mx");
+                break;
+            case 15:
+                document15 = readSite("http://riotimesonline.com");
+                break;
+            case 16:
+                document16 = readSite("http://www1.folha.uol.com.br/internacional/en");
+                break;
+            case 17:
+                document17 = readSite("http://www.buenosairesherald.com/printed-edition");
+                break;
+            case 18:
+                document18 = readSite("https://www.theguardian.com");
+                break;
+            case 19:
+                document19 = readSite("http://www.bbc.co.uk");
+                break;
+            case 20:
+                document20 = readSite("https://www.ft.com");
+                break;
+            case 21:
+                document21 = readSite("https://www.thetimes.co.uk");
+                break;
+            case 22:
+                document22 = readSite("https://www.thesun.co.uk");
+                break;
+            case 23:
+                document23 = readSite("http://www.irishtimes.com");
+                break;
+            case 24:
+                document24 = readSite("http://www.telegraph.co.uk/france/");
+                break;
+            case 25:
+                document25 = readSite("https://www.mediapart.fr/en/english");
+                break;
+            case 26:
+                document26 = readSite("http://www.spiegel.de/international");
+                break;
+            case 27:
+                document27 = readSite("http://www.telegraph.co.uk/germany");
+                break;
+            case 28:
+                document28 = readSite("http://elpais.com/elpais/inenglish.html");
+                break;
+            case 29:
+                document29 = readSite("http://www.ansa.it/english");
+                break;
+            case 30:
+                document30 = readSite("https://www.rt.com");
+                break;
+            case 31:
+                document31 = readSite("https://themoscowtimes.com");
+                break;
+            case 32:
+                document32 = readSite("http://www.dailysun.co.za");
+                break;
+            case 33:
+                document33 = readSite("http://www.timeslive.co.za");
+                break;
+            case 34:
+                document34 = readSite("http://www.vanguardngr.com");
+                break;
+            case 35:
+                document35 = readSite("http://gulfnews.com");
+                break;
+            case 36:
+                document36 = readSite("https://www.dailysabah.com");
+                break;
+            case 37:
+                document37 = readSite("http://www.tehrantimes.com");
+                break;
+            case 38:
+                document38 = readSite("https://www.ynetnews.com");
+                break;
+            case 39:
+                document39 = readSite("http://timesofoman.com");
+                break;
+            case 40:
+                document40 = readSite("http://timesofindia.indiatimes.com/home/headlines");
+                break;
+            case 41:
+                document41 = readSite("http://indianexpress.com");
+                break;
+            case 42:
+                document42 = readSite("http://www.chinadaily.com.cn");
+                break;
+            case 43:
+                document43 = readSite("http://www.shanghaidaily.com");
+                break;
+            case 44:
+                document44 = readSite("http://www.xinhuanet.com/english");
+                break;
+            case 45:
+                document45 = readSite("http://www.globaltimes.cn");
+                break;
+            case 46:
+                document46 = readSite("http://www.scmp.com/frontpage/international");
+                break;
+            case 47:
+                document47 = readSite("http://www.japantimes.co.jp");
+                break;
+            case 48:
+                document48 = readSite("http://the-japan-news.com");
+                break;
+            case 49:
+                document49 = readSite("https://japantoday.com");
+                break;
+            case 51:
+                document51 = readSite("https://www.hongkongfp.com");
+                break;
+            case 52:
+                document52 = readSite("http://www.bangkokpost.com");
+                break;
+            case 53:
+                document53 = readSite("http://vietnamnews.vn");
+                break;
+            case 54:
+                document54 = readSite("http://www.thejakartapost.com");
+                break;
+            case 55:
+                document55 = readSite("http://www.abc.net.au/news");
+                break;
+            case 56:
+                document56 = readSite("http://www.theaustralian.com.au");
+                break;
+            case 57:
+                document57 = readSite("http://www.nzherald.co.nz");
+                break;
+            case 58:
+                document58 = readSite("http://www.aljazeera.com");
+                break;
+            case 59:
+                document59 = readSite("https://www.bloomberg.com");
+                break;
+            case 60:
+                document60 = readSite("http://www.reuters.com");
+                break;
+        }
+    }
 
-        //US
-        document3 = Jsoup.connect("https://www.nytimes.com").get();
-        document4 = Jsoup.connect("https://www.washingtonpost.com").get();
-        document5 = Jsoup.connect("http://www.huffingtonpost.com").get();
-        document6 = Jsoup.connect("http://www.latimes.com").get();
-        document7 = Jsoup.connect("http://www.cnn.com").get();
-        document8 = Jsoup.connect("http://www.foxnews.com").get();
-        document9 = Jsoup.connect("https://www.usatoday.com").get();
-        document10 = Jsoup.connect("https://www.wsj.com").get();
-        document11 = Jsoup.connect("http://www.cnbc.com").get();
-        document12 = Jsoup.connect("http://www.nbcnews.com").get();
-
-        //Mexico
-        document13 = Jsoup.connect("http://www.theyucatantimes.com").get();
-        document14 = Jsoup.connect("http://www.thenews.mx").get();
-        //www.eluniversal.com.mx/english
-
-        //Brazil
-        document15 = Jsoup.connect("http://riotimesonline.com").get();
-        document16 = Jsoup.connect("http://www1.folha.uol.com.br/internacional/en").get();
-
-        //Argentina
-        document17 = Jsoup.connect("http://www.buenosairesherald.com/printed-edition").get();
-
-        //UK
-        document18 = Jsoup.connect("https://www.theguardian.com").get();
-        document19 = Jsoup.connect("http://www.bbc.co.uk").get();
-        document20 = Jsoup.connect("https://www.ft.com").get();
-        document21 = Jsoup.connect("https://www.thetimes.co.uk").get();
-        document22 = Jsoup.connect("https://www.thesun.co.uk").get();
-
-        //Ireland
-        document23 = Jsoup.connect("http://www.irishtimes.com").get();
-
-        //France
-        document24 = Jsoup.connect("http://www.telegraph.co.uk/france/").get();
-        document25 = Jsoup.connect("https://www.mediapart.fr/en/english").get();
-
-        //Germany
-        document26 = Jsoup.connect("http://www.spiegel.de/international").get();
-        document27 = Jsoup.connect("http://www.telegraph.co.uk/germany").get();
-
-        //Spain
-        document28 = Jsoup.connect("http://elpais.com/elpais/inenglish.html").get();
-
-        //Italy
-        document29 = Jsoup.connect("http://www.ansa.it/english").get();
-
-        //Russia
-        document30 = Jsoup.connect("https://www.rt.com").get();
-        document31 = Jsoup.connect("https://themoscowtimes.com").get();
-
-        //South Africa
-        document32 = Jsoup.connect("http://www.dailysun.co.za").get();
-        document33 = Jsoup.connect("http://www.timeslive.co.za").get();
-
-        //Nigeria
-        document34 = Jsoup.connect("http://www.vanguardngr.com").get();
-
-        //Dubai
-        document35 = Jsoup.connect("http://gulfnews.com").get();
-
-        //Turkey
-        document36 = Jsoup.connect("https://www.dailysabah.com").get();
-
-        //Iran
-        document37 = Jsoup.connect("http://www.tehrantimes.com").get();
-
-        //Israel
-        document38 = Jsoup.connect("https://www.ynetnews.com").get();
-
-        //Oman
-        document39 = Jsoup.connect("http://timesofoman.com").get();
-
-        //India
-        document40 = Jsoup.connect("http://timesofindia.indiatimes.com/home/headlines").get();
-        document41 = Jsoup.connect("http://indianexpress.com").get();
-
-        //China
-        document42 = Jsoup.connect("http://www.chinadaily.com.cn").get();
-        document43 = Jsoup.connect("http://www.shanghaidaily.com").get();
-        document44 = Jsoup.connect("http://www.xinhuanet.com/english").get();
-        document45 = Jsoup.connect("http://www.globaltimes.cn").get();
-        document46 = Jsoup.connect("http://www.scmp.com/frontpage/international").get();
-
-        //Japan
-        document47 = Jsoup.connect("http://www.japantimes.co.jp").get();
-        document48 = Jsoup.connect("http://the-japan-news.com").get();
-        document49 = Jsoup.connect("https://japantoday.com").get();
-
-        //Hong Kong
-        //Document document50 = Jsoup.connect("www.chinadaily.com.cn/hkedition/hk.html").get();
-        document51 = Jsoup.connect("https://www.hongkongfp.com").get();
-
-        //Thailand
-        document52 = Jsoup.connect("http://www.bangkokpost.com").get();
-
-        //Vietnam
-        document53 = Jsoup.connect("http://vietnamnews.vn").get();
-
-        //Indonesia
-        document54 = Jsoup.connect("http://www.thejakartapost.com").get();
-
-        //Australia
-        document55 = Jsoup.connect("http://www.abc.net.au/news").get();
-        document56 = Jsoup.connect("http://www.theaustralian.com.au").get();
-
-        //New Zealand
-        document57 = Jsoup.connect("http://www.nzherald.co.nz").get();
-
-        //Other
-        document58 = Jsoup.connect("http://www.aljazeera.com").get();
-        document59 = Jsoup.connect("https://www.bloomberg.com").get();
-        document60 = Jsoup.connect("http://www.reuters.com").get();
+    private Document readSite(String url) {
+        try {
+            return Jsoup.connect(url).get();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public List<Document> getListOfAllDocuments() {

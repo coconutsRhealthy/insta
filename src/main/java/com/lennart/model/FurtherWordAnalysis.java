@@ -40,9 +40,11 @@ public class FurtherWordAnalysis {
         List<Element> elementsPerWord = new ArrayList<>();
 
         for(Document document : allDocuments) {
-            Elements elements = document.select("a:contains(" + word + ")");
-            if(elements.size() != 0) {
-                elementsPerWord.add(elements.get(0));
+            if(document != null) {
+                Elements elements = document.select("a:contains(" + word + ")");
+                if(elements.size() != 0) {
+                    elementsPerWord.add(elements.get(0));
+                }
             }
         }
         return elementsPerWord;
