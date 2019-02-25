@@ -46,7 +46,7 @@ public class Aandacht {
             double avNoOfLikesPerPost = dataForUser.get("avNoOfLikesPerPost");
             double avNoOfCommentsPerPost = dataForUser.get("avNoOfCommentsPerPost");
             double avNoOfPostsPerDay = dataForUser.get("avNoOfPostsPerDay");
-            double likesToFollowerRatio = dataForUser.get("likesToFollower");
+            double engagement = dataForUser.get("engagement");
 
             st.executeUpdate("INSERT INTO userdata (" +
                     "entry, " +
@@ -58,7 +58,7 @@ public class Aandacht {
                     "avNoOfLikesPerPost, " +
                     "avNoOfCommentsPerPost, " +
                     "avNoOfPostsPerDay, " +
-                    "likesToFollowerRatio) " +
+                    "engagement) " +
                     "VALUES ('" +
                     (getHighestIntEntry("userdata") + 1) + "', '" +
                     date + "', '" +
@@ -69,7 +69,7 @@ public class Aandacht {
                     avNoOfLikesPerPost + "', '" +
                     avNoOfCommentsPerPost + "', '" +
                     avNoOfPostsPerDay + "', '" +
-                    likesToFollowerRatio + "'" +
+                    engagement + "'" +
                     ")");
         }
 
@@ -91,7 +91,7 @@ public class Aandacht {
         double averageNumberOfLikesPerPost = getAverageNumberOfLikesOrCommentsPerPost(likes);
         double averageNumberOfCommentsPerPost = getAverageNumberOfLikesOrCommentsPerPost(comments);
         double averageNumberOfPostsPerDay = averageNumberOfPostsPerDay(timeStamps);
-        double likesToFollowerRatio = (averageNumberOfLikesPerPost / followers);
+        double engagement = ((averageNumberOfLikesPerPost + averageNumberOfCommentsPerPost) / followers);
 
         Map<String, Double> dataForUser = new HashMap<>();
         dataForUser.put("followers", followers);
@@ -100,7 +100,7 @@ public class Aandacht {
         dataForUser.put("avNoOfLikesPerPost", averageNumberOfLikesPerPost);
         dataForUser.put("avNoOfCommentsPerPost", averageNumberOfCommentsPerPost);
         dataForUser.put("avNoOfPostsPerDay", averageNumberOfPostsPerDay);
-        dataForUser.put("likesToFollower", likesToFollowerRatio);
+        dataForUser.put("engagement", engagement);
 
         return dataForUser;
     }

@@ -42,9 +42,9 @@ public class Analysis {
             } else if(stat.equals("absoluteAvNoOfPostsPerDay")) {
                 double absoluteAvNoOfPostsPerDayDiff = getAbsoluteDifference("avNoOfPostsPerDay", allDataOfUser, daysDifference);
                 analysisMap.put(user, absoluteAvNoOfPostsPerDayDiff);
-            } else if(stat.equals("absoluteLikesToFollowerRatio")) {
-                double absoluteLikesToFollowerDiff = getAbsoluteDifference("likesToFollowerRatio", allDataOfUser, daysDifference);
-                analysisMap.put(user, absoluteLikesToFollowerDiff);
+            } else if(stat.equals("absoluteEngagement")) {
+                double absoluteEngagementDiff = getAbsoluteDifference("engagement", allDataOfUser, daysDifference);
+                analysisMap.put(user, absoluteEngagementDiff);
             }
         }
 
@@ -73,7 +73,7 @@ public class Analysis {
             dataPerEntry.put("avNoOfLikesPerPost", rs.getDouble("avNoOfLikesPerPost"));
             dataPerEntry.put("avNoOfCommentsPerPost", rs.getDouble("avNoOfCommentsPerPost"));
             dataPerEntry.put("avNoOfPostsPerDay", rs.getDouble("avNoOfPostsPerDay"));
-            dataPerEntry.put("likesToFollowerRatio", rs.getDouble("likesToFollowerRatio"));
+            dataPerEntry.put("engagement", rs.getDouble("engagement"));
 
             allDataOfUsers.put(rs.getInt("entry"), dataPerEntry);
         }
