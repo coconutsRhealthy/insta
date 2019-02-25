@@ -1,184 +1,81 @@
-package com.lennart.model.noswords;
+package com.lennart.model;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Aandacht {
 
+    private Connection con;
+
     public static void main(String[] args) throws Exception {
         Aandacht aandacht = new Aandacht();
+        aandacht.updateDb();
+    }
 
-        List<String> users = aandacht.fillUserList();
+    private void updateDb() throws Exception {
+        List<String> users = fillUserList();
 
         Map<String, Map<String, Double>> allDataForAllUsers = new HashMap<>();
 
+        String date = getCurrentDate();
+
         for(String user : users) {
-            Map<String, Double> userData = aandacht.getDataForUser(user);
+            Map<String, Double> userData = getDataForUser(user);
             System.out.println(".");
             allDataForAllUsers.put(user, userData);
         }
 
-        for (Map.Entry<String, Map<String, Double>> entry : allDataForAllUsers.entrySet()) {
-            System.out.println(entry.getKey());
-        }
+        initializeDbConnection();
 
-        System.out.println();
-        System.out.println();
+        Statement st = con.createStatement();
 
         for (Map.Entry<String, Map<String, Double>> entry : allDataForAllUsers.entrySet()) {
             Map<String, Double> dataForUser = entry.getValue();
-            String toPrint = String.valueOf(dataForUser.get("followers"));
-            toPrint = toPrint.replace(".", ",");
-            System.out.println(toPrint);
+
+            String userName = entry.getKey();
+            double followers = dataForUser.get("followers");
+            double following = dataForUser.get("following");
+            double numberOfPosts = dataForUser.get("numberOfPosts");
+            double avNoOfLikesPerPost = dataForUser.get("avNoOfLikesPerPost");
+            double avNoOfCommentsPerPost = dataForUser.get("avNoOfCommentsPerPost");
+            double avNoOfPostsPerDay = dataForUser.get("avNoOfPostsPerDay");
+            double likesToFollowerRatio = dataForUser.get("likesToFollower");
+
+            st.executeUpdate("INSERT INTO userdata (" +
+                    "entry, " +
+                    "date, " +
+                    "username, " +
+                    "followers, " +
+                    "following, " +
+                    "numberOfPosts, " +
+                    "avNoOfLikesPerPost, " +
+                    "avNoOfCommentsPerPost, " +
+                    "avNoOfPostsPerDay, " +
+                    "likesToFollowerRatio) " +
+                    "VALUES ('" +
+                    (getHighestIntEntry("userdata") + 1) + "', '" +
+                    date + "', '" +
+                    userName + "', '" +
+                    followers + "', '" +
+                    following + "', '" +
+                    numberOfPosts + "', '" +
+                    avNoOfLikesPerPost + "', '" +
+                    avNoOfCommentsPerPost + "', '" +
+                    avNoOfPostsPerDay + "', '" +
+                    likesToFollowerRatio + "'" +
+                    ")");
         }
 
-        System.out.println();
-        System.out.println();
+        st.close();
 
-//        for (Map.Entry<String, Map<String, Double>> entry : allDataForAllUsers.entrySet()) {
-//            Map<String, Double> dataForUser = entry.getValue();
-//            String toPrint = String.valueOf(dataForUser.get("following"));
-//            toPrint = toPrint.replace(".", ",");
-//            System.out.println(toPrint);
-//        }
-//
-//        System.out.println();
-//        System.out.println();
-//
-//        for (Map.Entry<String, Map<String, Double>> entry : allDataForAllUsers.entrySet()) {
-//            Map<String, Double> dataForUser = entry.getValue();
-//            String toPrint = String.valueOf(dataForUser.get("numberOfPosts"));
-//            toPrint = toPrint.replace(".", ",");
-//            System.out.println(toPrint);
-//        }
-//
-//        System.out.println();
-//        System.out.println();
-
-//        for (Map.Entry<String, Map<String, Double>> entry : allDataForAllUsers.entrySet()) {
-//            Map<String, Double> dataForUser = entry.getValue();
-//            String toPrint = String.valueOf(dataForUser.get("avNoOfLikesPerPost"));
-//            toPrint = toPrint.replace(".", ",");
-//            System.out.println(toPrint);
-//        }
-//
-//        System.out.println();
-//        System.out.println();
-
-        for (Map.Entry<String, Map<String, Double>> entry : allDataForAllUsers.entrySet()) {
-            Map<String, Double> dataForUser = entry.getValue();
-            String toPrint = String.valueOf(dataForUser.get("avNoOfPostsPerDay"));
-            toPrint = toPrint.replace(".", ",");
-            System.out.println(toPrint);
-        }
-
-        System.out.println();
-        System.out.println();
-
-        for (Map.Entry<String, Map<String, Double>> entry : allDataForAllUsers.entrySet()) {
-            Map<String, Double> dataForUser = entry.getValue();
-            String toPrint = String.valueOf(dataForUser.get("likesToFollower"));
-            toPrint = toPrint.replace(".", ",");
-            System.out.println(toPrint);
-        }
-
-        System.out.println();
-        System.out.println();
-
-        for (Map.Entry<String, Map<String, Double>> entry : allDataForAllUsers.entrySet()) {
-            Map<String, Double> dataForUser = entry.getValue();
-            String toPrint = String.valueOf(dataForUser.get("commentsToFollowers"));
-            toPrint = toPrint.replace(".", ",");
-            System.out.println(toPrint);
-        }
-//
-//        for (Map.Entry<String, Map<String, Double>> entry : allDataForAllUsers.entrySet()) {
-//            Map<String, Double> dataForUser = entry.getValue();
-//            String toPrint = String.valueOf(dataForUser.get("followersToFollowing"));
-//            toPrint = toPrint.replace(".", ",");
-//            System.out.println(toPrint);
-//        }
-//
-//        System.out.println();
-//        System.out.println();
-//
-//        for (Map.Entry<String, Map<String, Double>> entry : allDataForAllUsers.entrySet()) {
-//            Map<String, Double> dataForUser = entry.getValue();
-//            String toPrint = String.valueOf(dataForUser.get("followersToPostRatio"));
-//            toPrint = toPrint.replace(".", ",");
-//            System.out.println(toPrint);
-//        }
-//
-//        System.out.println();
-//        System.out.println();
-
-
-
-
-//        for(String user : users) {
-//            String script = aandacht.getRelevantScriptAsString(user);
-//            List<Integer> likes = aandacht.getDataOfLastPosts(script, "edge_liked_by", 12);
-//            List<Integer> timeStamps = aandacht.getDataOfLastPosts(script, "taken_at_timestamp", 12);
-//
-//            double averageNumberOfLikesPerPost = aandacht.getAverageNumberOfLikesPerPost(likes);
-//            double averageNumberOfPostsPerDay = aandacht.averageNumberOfPostsPerDay(timeStamps);
-//
-//            double followers = aandacht.getFollowers(script);
-//            double following = aandacht.getFollowing(script);
-//            double numberOfPosts = aandacht.getNumberOfPosts(script);
-//
-//            System.out.println("user: " + user);
-//            System.out.println("followers: " + followers);
-//            System.out.println("average amount of likes per post: " + averageNumberOfLikesPerPost);
-//            System.out.println("average number of posts per day: " + averageNumberOfPostsPerDay);
-//
-//            System.out.println("likes per follower: " + averageNumberOfLikesPerPost / followers);
-//            System.out.println("follower to following ratio: " + followers / following);
-//            System.out.println("followers to post ratio: " + followers / numberOfPosts);
-//
-//            System.out.println();
-//            System.out.println();
-//            System.out.println("*********");
-//            System.out.println();
-//            System.out.println();
-//        }
-
-
-
-
-
-
-
-
-//        List<String> users = aandacht.fillUserList();
-//        Map<String, Integer> usersAndFollowers = new HashMap<>();
-//
-//        for(String user : users) {
-//            String metaTag = aandacht.getRelevantMetaTag(user);
-//            String followersString = aandacht.getFollowersStringFromMetaTag(metaTag);
-//            int followers = aandacht.convertInstaNumberStringToInt(followersString);
-//
-//            usersAndFollowers.put(user, followers);
-//
-//            System.out.println(".");
-//        }
-//
-//        System.out.println();
-//        System.out.println();
-//
-//        usersAndFollowers = aandacht.sortByValue(usersAndFollowers);
-//
-//        for (Map.Entry<String, Integer> entry : usersAndFollowers.entrySet()) {
-//            System.out.println(entry.getKey());
-//        }
-//
-//        for (Map.Entry<String, Integer> entry : usersAndFollowers.entrySet()) {
-//            System.out.println(entry.getValue());
-//        }
+        closeDbConnection();
     }
 
     private Map<String, Double> getDataForUser(String username) throws Exception {
@@ -194,21 +91,16 @@ public class Aandacht {
         double averageNumberOfLikesPerPost = getAverageNumberOfLikesOrCommentsPerPost(likes);
         double averageNumberOfCommentsPerPost = getAverageNumberOfLikesOrCommentsPerPost(comments);
         double averageNumberOfPostsPerDay = averageNumberOfPostsPerDay(timeStamps);
-        double likesToFollowerRatio = (averageNumberOfLikesPerPost / followers) * 100;
-        double followersToFollowingRatio = followers / following;
-        double followersToPostRatio = followers / numberOfPosts;
-        double commentsToFollowerRatio = (averageNumberOfCommentsPerPost / followers) * 100;
+        double likesToFollowerRatio = (averageNumberOfLikesPerPost / followers);
 
         Map<String, Double> dataForUser = new HashMap<>();
         dataForUser.put("followers", followers);
         dataForUser.put("following", following);
         dataForUser.put("numberOfPosts", numberOfPosts);
         dataForUser.put("avNoOfLikesPerPost", averageNumberOfLikesPerPost);
+        dataForUser.put("avNoOfCommentsPerPost", averageNumberOfCommentsPerPost);
         dataForUser.put("avNoOfPostsPerDay", averageNumberOfPostsPerDay);
         dataForUser.put("likesToFollower", likesToFollowerRatio);
-        dataForUser.put("followersToFollowing", followersToFollowingRatio);
-        dataForUser.put("followersToPostRatio", followersToPostRatio);
-        dataForUser.put("commentsToFollowers", commentsToFollowerRatio);
 
         return dataForUser;
     }
@@ -301,81 +193,85 @@ public class Aandacht {
         return average;
     }
 
-    private String getRelevantMetaTag(String userName) throws Exception {
-        String relevantMetaTag = "";
-
-        Document document = Jsoup.connect("https://www.instagram.com/" + userName).get();
-        Elements metaTags = document.getElementsByTag("meta");
-
-        for(Element metaTag : metaTags) {
-            String metaTagText = metaTag.toString();
-
-            if(metaTagText.contains("Followers")) {
-                relevantMetaTag = metaTagText;
-            }
-
-        }
-
-        return relevantMetaTag;
-    }
-
-    private String getFollowersStringFromMetaTag(String metaTag) {
-        String followers = metaTag.substring(metaTag.indexOf("Followers") - 10, metaTag.indexOf("Followers") + 10);
-        followers = followers.substring(followers.indexOf("\"") + 1, followers.indexOf(" "));
-        return followers;
-    }
-
-    private int convertInstaNumberStringToInt(String numberString) {
-        //numberString = "20k";
-
-        int number = 0;
-
-        if(numberString.contains("k")) {
-            int thousandPart;
-            int hundredPart;
-
-            if(numberString.contains(".")) {
-                String[] parts = numberString.split("\\.");
-
-                //if(parts[1].length() > 1) {
-                    hundredPart = Integer.valueOf(parts[1].substring(0, 1));
-                //} else {
-                thousandPart = Integer.valueOf(parts[0]);
-                   // hundredPart = 0;
-                //}
-            } else {
-                numberString = numberString.replace("k", "");
-                thousandPart = Integer.valueOf(numberString);
-                hundredPart = 0;
-            }
-
-
-
-            number = (thousandPart * 1000) + (hundredPart * 100);
-        } else {
-            numberString = numberString.replace(",", "");
-            number = Integer.valueOf(numberString);
-        }
-
-        return number;
-    }
-
-    private double getFollowingFromPageHtml(String pageHtml) {
-        return 0;
-    }
-
-    private double getNumberOfPostsFromPageHtml(String pageHtml) {
-        return 0;
-    }
-
     private List<String> fillUserList() {
         List<String> users = new ArrayList<>();
 
+        users.add("glam_by_eefje");
+        users.add("miss_k_510");
+        users.add("melikebeauty");
+        users.add("shrn__");
+        users.add("soophjee");
+        users.add("jessiejazzvuijk");
+        users.add("mw_danique");
+        users.add("manontilstra");
+        users.add("bibibreijman");
+        users.add("melanielatooy");
+        users.add("jilllvd");
+        users.add("jiami");
+        users.add("teskedeschepper");
+        users.add("disfordazzle");
+        users.add("roosmarijnbraspenning");
+        users.add("robin.balou");
+        users.add("kickiedeklijn");
+        users.add("valerierooyackers");
+        users.add("lynnvandevorst");
+        users.add("indiasuy");
+        users.add("kikiboreel");
+        users.add("juliettemesterom");
+        users.add("elinevanhaasteren");
+        users.add("meialinde");
+        users.add("sylvanadejong");
+        users.add("ishh");
+        users.add("liekevdhoorn");
+        users.add("lizachloe");
+        users.add("esmeetrouw");
+        users.add("kimberlyesmee");
+        users.add("thefashionblognl");
+        users.add("bemmay");
+        users.add("xlisadam");
+        users.add("germainepeels");
+        users.add("marijezuurveld");
+        users.add("saar");
+        users.add("allaboutkimberly");
+        users.add("cheyennehinrichs");
+        users.add("dutchfashion_freak");
+        users.add("milouhendriks");
+        users.add("miloutjioe");
+        users.add("naomivredevoort");
+        users.add("ramijntje");
+        users.add("inesgomesdefaria");
+        users.add("remke");
+        users.add("irisamberr");
+        users.add("fennleonoor");
+        users.add("brunabear");
+        users.add("maximefelicia");
+        users.add("esmeehuiden");
+        users.add("sophiamolen");
+        users.add("rebelrosey");
+        users.add("elise.bak");
+        users.add("xarisha");
+        users.add("lisannede_bruijn");
+        users.add("daphisticated");
+        users.add("sophiemay");
+        users.add("nathalieejw");
+        users.add("queenofjetlags");
+        users.add("stephsa");
+        users.add("carmenmattijssen");
+        users.add("vivianhoorn");
+        users.add("babetteroosstyling");
+        users.add("frederiqueligtvoet");
+        users.add("noahfleur");
+        users.add("martinemaureen");
+        users.add("iriskristen");
+        users.add("laurensophiemessack");
+        users.add("lyannemeijer");
+        users.add("danizijlstra");
+        users.add("femke.vermaas");
+        users.add("evaschaapp");
         users.add("louiselutkes");
         users.add("anouskaband");
         users.add("nikkimarinus");
         users.add("amakahamelijnck");
-        users.add("bibikleinenberg");
         users.add("daniellecamille");
         users.add("claartjerose");
         users.add("bentheliem");
@@ -421,7 +317,6 @@ public class Aandacht {
         users.add("romyydb");
         users.add("jolielot");
         users.add("s0phieramaekers");
-        users.add("ingewildenberg");
         users.add("carmenleenen");
         users.add("jamiecrafoord");
 
@@ -452,5 +347,40 @@ public class Aandacht {
             result.put(entry.getKey(), entry.getValue());
         }
         return result;
+    }
+
+    private String getCurrentDate() {
+        java.util.Date date = new java.util.Date();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return dateFormat.format(date);
+    }
+
+    private int getHighestIntEntry(String table) throws Exception {
+        int highestIntEntry = 0;
+
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM " + table + " ORDER BY entry DESC;");
+
+        if(rs.next()) {
+            highestIntEntry = rs.getInt("entry");
+        }
+
+        st.close();
+        rs.close();
+
+        closeDbConnection();
+
+        return highestIntEntry;
+    }
+
+    private void initializeDbConnection() throws Exception {
+        Class.forName("com.mysql.jdbc.Driver").newInstance();
+        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/insta?&serverTimezone=UTC", "root", "");
+    }
+
+    private void closeDbConnection() throws SQLException {
+        con.close();
     }
 }
