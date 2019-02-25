@@ -193,7 +193,7 @@ public class Aandacht {
         return average;
     }
 
-    private List<String> fillUserList() {
+    public List<String> fillUserList() {
         List<String> users = new ArrayList<>();
 
         users.add("glam_by_eefje");
@@ -333,7 +333,7 @@ public class Aandacht {
         return stringToReturn;
     }
 
-    private <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
+    public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
         List<Map.Entry<K, V>> list = new LinkedList<>( map.entrySet() );
         Collections.sort(list, new Comparator<Map.Entry<K, V>>() {
             @Override
