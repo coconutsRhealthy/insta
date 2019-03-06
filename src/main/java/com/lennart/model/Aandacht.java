@@ -9,6 +9,7 @@ import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
 
 public class Aandacht {
 
@@ -47,6 +48,7 @@ public class Aandacht {
             double avNoOfCommentsPerPost = dataForUser.get("avNoOfCommentsPerPost");
             double avNoOfPostsPerDay = dataForUser.get("avNoOfPostsPerDay");
             double engagement = dataForUser.get("engagement");
+            double engagementLast24h = dataForUser.get("engagementLast24h");
 
             st.executeUpdate("INSERT INTO userdata (" +
                     "entry, " +
@@ -58,7 +60,8 @@ public class Aandacht {
                     "avNoOfLikesPerPost, " +
                     "avNoOfCommentsPerPost, " +
                     "avNoOfPostsPerDay, " +
-                    "engagement) " +
+                    "engagement, " +
+                    "engagementLast24h) " +
                     "VALUES ('" +
                     (getHighestIntEntry("userdata") + 1) + "', '" +
                     date + "', '" +
@@ -69,7 +72,8 @@ public class Aandacht {
                     avNoOfLikesPerPost + "', '" +
                     avNoOfCommentsPerPost + "', '" +
                     avNoOfPostsPerDay + "', '" +
-                    engagement + "'" +
+                    engagement + "', '" +
+                    engagementLast24h + "'" +
                     ")");
         }
 
@@ -90,8 +94,9 @@ public class Aandacht {
 
         double averageNumberOfLikesPerPost = getAverageNumberOfLikesOrCommentsPerPost(likes);
         double averageNumberOfCommentsPerPost = getAverageNumberOfLikesOrCommentsPerPost(comments);
-        double averageNumberOfPostsPerDay = averageNumberOfPostsPerDay(timeStamps);
+        double averageNumberOfPostsPerDay = averageNumberOfPostsPerDay(timeStamps, username);
         double engagement = ((averageNumberOfLikesPerPost + averageNumberOfCommentsPerPost) / followers);
+        double engagementLast24h = getEngagementOfLast24hours(getNumberOfPostsInLast24hoursNew(timeStamps), script, followers);
 
         Map<String, Double> dataForUser = new HashMap<>();
         dataForUser.put("followers", followers);
@@ -101,6 +106,7 @@ public class Aandacht {
         dataForUser.put("avNoOfCommentsPerPost", averageNumberOfCommentsPerPost);
         dataForUser.put("avNoOfPostsPerDay", averageNumberOfPostsPerDay);
         dataForUser.put("engagement", engagement);
+        dataForUser.put("engagementLast24h", engagementLast24h);
 
         return dataForUser;
     }
@@ -162,23 +168,29 @@ public class Aandacht {
         return allData;
     }
 
-    private double averageNumberOfPostsPerDay(List<Integer> timestampsOfLast12posts) {
-        int timeStampOfLastPost = timestampsOfLast12posts.get(0);
-        int timeStampOf12thPost = timestampsOfLast12posts.get(11);
+    private double averageNumberOfPostsPerDay(List<Integer> timestampsOfLast12posts, String user) {
+        try {
+            int timeStampOfLastPost = timestampsOfLast12posts.get(0);
+            int timeStampOf12thPost = timestampsOfLast12posts.get(11);
 
-        int difference = timeStampOfLastPost - timeStampOf12thPost;
+            int difference = timeStampOfLastPost - timeStampOf12thPost;
 
-        int differenceInMinutes = difference / 60;
-        int differenceInHours = differenceInMinutes / 60;
-        int differenceInDays = differenceInHours / 24;
+            int differenceInMinutes = difference / 60;
+            int differenceInHours = differenceInMinutes / 60;
+            int differenceInDays = differenceInHours / 24;
 
-        double differenceAsDouble = (double) differenceInDays;
+            double differenceAsDouble = (double) differenceInDays;
 
-        double postsPerDay = differenceAsDouble / 12;
+            double postsPerDay = differenceAsDouble / 12;
 
-        postsPerDay = 1 / postsPerDay;
+            postsPerDay = 1 / postsPerDay;
 
-        return postsPerDay;
+            return postsPerDay;
+        } catch (Exception e) {
+            System.out.println("error: " + user);
+        }
+
+        return -100;
     }
 
     private double getAverageNumberOfLikesOrCommentsPerPost(List<Integer> likesOrCommentsOfLast11posts) {
@@ -191,6 +203,39 @@ public class Aandacht {
         double average = total / 11;
 
         return average;
+    }
+
+    private double getNumberOfPostsInLast24hoursNew(List<Integer> timeStamps) {
+        long currentTimestamp = new Date().getTime();
+
+        currentTimestamp = currentTimestamp / 1000;
+
+        long timeStamp24ago = currentTimestamp - 86400;
+
+        int counter = 0;
+
+        for(Integer i : timeStamps) {
+            if(i > timeStamp24ago) {
+                counter++;
+            }
+        }
+
+        return counter;
+    }
+
+    private double getEngagementOfLast24hours(double postsOfLast24hours, String script, double numberOfFollowers) {
+        List<Integer> likes = getDataOfLastPosts(script, "edge_liked_by", 12);
+        List<Integer> comments = getDataOfLastPosts(script, "edge_media_to_comment", 12);
+
+        double engageCounter = 0;
+
+        for(int i = 0; i < postsOfLast24hours; i++) {
+            engageCounter = engageCounter + likes.get(i) + comments.get(i);
+        }
+
+        double engagementOfLast24h = engageCounter / numberOfFollowers;
+
+        return engagementOfLast24h;
     }
 
     public List<String> fillUserList() {
@@ -275,7 +320,7 @@ public class Aandacht {
         users.add("daniellecamille");
         users.add("claartjerose");
         users.add("bentheliem");
-        users.add("elaisaya");
+        //users.add("elaisaya");
         users.add("naomiavrahami");
         users.add("lizzyperridon");
         users.add("victoriawaldau");
@@ -320,6 +365,33 @@ public class Aandacht {
         users.add("carmenleenen");
         users.add("jamiecrafoord");
 
+        users.add("joshveldhuizen");
+        users.add("ankeglamournl");
+        users.add("noualiah");
+        users.add("fabiola_volkers");
+        users.add("daneejosephine");
+        users.add("ninaschotpoort");
+        users.add("estellehagen");
+        users.add("sterrevanwoudenberg");
+        users.add("lisevanwijk");
+        users.add("hntm_cecilia");
+        users.add("sanne");
+        users.add("beautygloss");
+        users.add("isadeejansen");
+        users.add("sophieousri");
+        users.add("louschulten");
+        users.add("lotteyvette");
+        users.add("lotteverlaat");
+        users.add("xdyonnex");
+        users.add("rachelleruwiel");
+        users.add("thedutchbandit");
+        users.add("mette_sterre");
+        users.add("yuliandvd");
+
+        users.add("albertdrosphotography");
+        users.add("een_wasbeer");
+        users.add("dutchtoy");
+
         return users;
     }
 
@@ -339,6 +411,22 @@ public class Aandacht {
             @Override
             public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
                 return (o1.getValue() ).compareTo( o2.getValue());
+            }
+        });
+
+        Map<K, V> result = new LinkedHashMap<>();
+        for (Map.Entry<K, V> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        return result;
+    }
+
+    public static <K, V extends Comparable<? super V>> Map<K, V> sortByValueHighToLow(Map<K, V> map) {
+        List<Map.Entry<K, V>> list = new LinkedList<>( map.entrySet() );
+        Collections.sort(list, new Comparator<Map.Entry<K, V>>() {
+            @Override
+            public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
+                return (o2.getValue() ).compareTo( o1.getValue());
             }
         });
 
