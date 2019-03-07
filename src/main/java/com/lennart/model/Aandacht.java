@@ -96,7 +96,7 @@ public class Aandacht {
         double averageNumberOfCommentsPerPost = getAverageNumberOfLikesOrCommentsPerPost(comments);
         double averageNumberOfPostsPerDay = averageNumberOfPostsPerDay(timeStamps, username);
         double engagement = ((averageNumberOfLikesPerPost + averageNumberOfCommentsPerPost) / followers);
-        double engagementLast24h = getEngagementOfLast24hours(getNumberOfPostsInLast24hoursNew(timeStamps), script, followers);
+        double engagementLast24h = getEngagementOfLast24hours(getNumberOfPostsInLast24hours(timeStamps), script, followers);
 
         Map<String, Double> dataForUser = new HashMap<>();
         dataForUser.put("followers", followers);
@@ -205,7 +205,7 @@ public class Aandacht {
         return average;
     }
 
-    private double getNumberOfPostsInLast24hoursNew(List<Integer> timeStamps) {
+    private double getNumberOfPostsInLast24hours(List<Integer> timeStamps) {
         long currentTimestamp = new Date().getTime();
 
         currentTimestamp = currentTimestamp / 1000;

@@ -9,14 +9,15 @@ public class Analysis {
 
     public static void main(String[] args) throws Exception {
         Analysis analysis = new Analysis();
-        analysis.doDiffAnalysisForStat("absoluteNumberOfPosts", 1);
+        //analysis.doDiffAnalysisForStat("absoluteNumberOfPosts", 1);
+        analysis.theTrueDiffAnalysis();
     }
 
     private void theTrueDiffAnalysis() throws Exception {
         Map<String, Double> relFollowerMap = getTop5ofFullMap(doDiffAnalysisForStat("relativeFollowers", 1));
-        Map<String, Double> absFollowerMap = getTop5ofFullMap(doDiffAnalysisForStat("relativeFollowing", 1));
-        Map<String, Double> absFollowingMap = getTop5ofFullMap(doDiffAnalysisForStat("absoluteFollowing", 1));
-        Map<String, Double> absNoOfPostsMap = getTop5ofFullMap(doDiffAnalysisForStat("absoluteNumberOfPosts", 1));
+        Map<String, Double> relFollowing = getTop5ofFullMap(doDiffAnalysisForStat("relativeFollowing", 1));
+        Map<String, Double> absPosts = getTop5ofFullMap(doDiffAnalysisForStat("absoluteNumberOfPosts", 1));
+        Map<String, Double> engagementLast24h = getTop5ofFullMap(getEngagementLast24hFromDb());
 
         for (Map.Entry<String, Double> entry : relFollowerMap.entrySet()) {
             System.out.println(entry.getKey());
@@ -27,28 +28,28 @@ public class Analysis {
 
         System.out.println();
 
-        for (Map.Entry<String, Double> entry : absFollowerMap.entrySet()) {
+        for (Map.Entry<String, Double> entry : relFollowing.entrySet()) {
             System.out.println(entry.getKey());
         }
-        for (Map.Entry<String, Double> entry : absFollowerMap.entrySet()) {
+        for (Map.Entry<String, Double> entry : relFollowing.entrySet()) {
             System.out.println(convertDoubleToPasteFriendly(entry.getValue()));
         }
 
         System.out.println();
 
-        for (Map.Entry<String, Double> entry : absFollowingMap.entrySet()) {
+        for (Map.Entry<String, Double> entry : absPosts.entrySet()) {
             System.out.println(entry.getKey());
         }
-        for (Map.Entry<String, Double> entry : absFollowingMap.entrySet()) {
+        for (Map.Entry<String, Double> entry : absPosts.entrySet()) {
             System.out.println(convertDoubleToPasteFriendly(entry.getValue()));
         }
 
         System.out.println();
 
-        for (Map.Entry<String, Double> entry : absNoOfPostsMap.entrySet()) {
+        for (Map.Entry<String, Double> entry : engagementLast24h.entrySet()) {
             System.out.println(entry.getKey());
         }
-        for (Map.Entry<String, Double> entry : absNoOfPostsMap.entrySet()) {
+        for (Map.Entry<String, Double> entry : engagementLast24h.entrySet()) {
             System.out.println(convertDoubleToPasteFriendly(entry.getValue()));
         }
 
@@ -117,6 +118,32 @@ public class Analysis {
                 }
             }
         }
+
+        analysisMap = Aandacht.sortByValueHighToLow(analysisMap);
+        return analysisMap;
+    }
+
+    private Map<String, Double> getEngagementLast24hFromDb() throws Exception {
+        List<String> allUsers = new Aandacht().fillUserList();
+
+        Map<String, Double> analysisMap = new HashMap<>();
+
+        initializeDbConnection();
+
+        for(String user : allUsers) {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM userdata WHERE username = '" + user + "' ORDER BY entry DESC;");
+
+            if(rs.next()) {
+                double engagementLast24h = rs.getDouble("engagementLast24h");
+                analysisMap.put(user, engagementLast24h);
+            }
+
+            rs.close();
+            st.close();
+        }
+
+        closeDbConnection();
 
         analysisMap = Aandacht.sortByValueHighToLow(analysisMap);
         return analysisMap;
