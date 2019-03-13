@@ -9,15 +9,70 @@ public class Analysis {
 
     public static void main(String[] args) throws Exception {
         Analysis analysis = new Analysis();
-        //analysis.doDiffAnalysisForStat("absoluteNumberOfPosts", 1);
-        analysis.theTrueDiffAnalysis();
+
+        List<String> users = new ArrayList<>();
+
+        users.add("kimberlyesmee");
+        users.add("carmenmattijssen");
+        users.add("mette_sterre");
+        users.add("cheyennehinrichs");
+        users.add("amarenns");
+
+        analysis.printFollowerDataForUser(users);
     }
 
-    private void theTrueDiffAnalysis() throws Exception {
-        Map<String, Double> relFollowerMap = getTop5ofFullMap(doDiffAnalysisForStat("relativeFollowers", 1));
-        Map<String, Double> relFollowing = getTop5ofFullMap(doDiffAnalysisForStat("relativeFollowing", 1));
-        Map<String, Double> absPosts = getTop5ofFullMap(doDiffAnalysisForStat("absoluteNumberOfPosts", 1));
-        Map<String, Double> engagementLast24h = getTop5ofFullMap(getEngagementLast24hFromDb());
+    private void doTheDailyTop5Analysis() throws Exception {
+        Map<String, Double> relFollowersMap = getTopXofFullMap(doDiffAnalysisForStat("relativeFollowers", 1), 20);
+
+        for (Map.Entry<String, Double> entry : relFollowersMap.entrySet()) {
+            System.out.println(entry.getKey());
+        }
+        for (Map.Entry<String, Double> entry : relFollowersMap.entrySet()) {
+            System.out.println(convertDoubleToPasteFriendly(entry.getValue() / 100));
+        }
+
+        Map<String, Double> absFollowerDiffMap = new LinkedHashMap<>();
+        Map<String, Double> engagementMap = new LinkedHashMap<>();
+
+        for(Map.Entry<String, Double> entry : relFollowersMap.entrySet()) {
+            String userName = entry.getKey();
+
+            Map<Integer, Map<String, Object>> allDataOfUser = getAllDataOfUser(userName);
+            double absoluteFollowerDiff = getAbsoluteDifference("followers", allDataOfUser, 1);
+
+            absFollowerDiffMap.put(entry.getKey(), absoluteFollowerDiff);
+        }
+
+        for(Map.Entry<String, Double> entry : relFollowersMap.entrySet()) {
+            String userName = entry.getKey();
+
+            Map<String, Double> dataForUser = new Aandacht().getDataForUser(userName);
+
+            double engagement = dataForUser.get("engagement");
+
+            engagementMap.put(entry.getKey(), engagement);
+        }
+
+        for(Map.Entry<String, Double> entry : absFollowerDiffMap.entrySet()) {
+            System.out.println(entry.getKey());
+        }
+        for(Map.Entry<String, Double> entry : absFollowerDiffMap.entrySet()) {
+            System.out.println(convertDoubleToPasteFriendly(entry.getValue()));
+        }
+
+        for(Map.Entry<String, Double> entry : engagementMap.entrySet()) {
+            System.out.println(entry.getKey());
+        }
+        for(Map.Entry<String, Double> entry : engagementMap.entrySet()) {
+            System.out.println(convertDoubleToPasteFriendly(entry.getValue()));
+        }
+    }
+
+    private void dailyTableTop20Analysis() throws Exception {
+        Map<String, Double> relFollowerMap = getTopXofFullMap(doDiffAnalysisForStat("relativeFollowers", 1), 5);
+        Map<String, Double> relFollowing = getTopXofFullMap(doDiffAnalysisForStat("relativeFollowing", 1), 5);
+        Map<String, Double> absPosts = getTopXofFullMap(doDiffAnalysisForStat("absoluteNumberOfPosts", 1), 5);
+        Map<String, Double> engagementLast24h = getTopXofFullMap(getEngagementLast24hFromDb(), 5);
 
         for (Map.Entry<String, Double> entry : relFollowerMap.entrySet()) {
             System.out.println(entry.getKey());
@@ -52,11 +107,34 @@ public class Analysis {
         for (Map.Entry<String, Double> entry : engagementLast24h.entrySet()) {
             System.out.println(convertDoubleToPasteFriendly(entry.getValue()));
         }
-
-        System.out.println();
     }
 
-    private Map<String, Double> getTop5ofFullMap(Map<String, Double> fullMap) {
+    private void printFollowerDataForUser(List<String> users) throws Exception {
+        initializeDbConnection();
+
+        for(String user : users) {
+            System.out.println("USER: " + user);
+            System.out.println();
+
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM userdata WHERE username = '" + user + "' ORDER BY entry ASC;");
+
+            while(rs.next()) {
+                System.out.println(convertDoubleToPasteFriendly(rs.getDouble("followers")));
+            }
+
+            rs.close();
+            st.close();
+
+            System.out.println();
+            System.out.println();
+            System.out.println();
+        }
+
+        closeDbConnection();
+    }
+
+    private Map<String, Double> getTopXofFullMap(Map<String, Double> fullMap, int topLimit) {
         Map<String, Double> top5map = new HashMap<>();
 
         int counter = 0;
@@ -64,7 +142,7 @@ public class Analysis {
         for (Map.Entry<String, Double> entry : fullMap.entrySet()) {
             counter++;
 
-            if(counter <= 5) {
+            if(counter <= topLimit) {
                 top5map.put(entry.getKey(), entry.getValue());
             } else {
                 break;
@@ -88,7 +166,7 @@ public class Analysis {
         Map<String, Double> analysisMap = new HashMap<>();
 
         for(String user : allUsers) {
-            if(!user.equals("albertdrosphotography") && !user.equals("een_wasbeer")) {
+            if(!user.equals("albertdrosphotography") && !user.equals("een_wasbeer") && !user.equals("dutchtoy")) {
                 Map<Integer, Map<String, Object>> allDataOfUser = getAllDataOfUser(user);
 
                 if(stat.equals("absoluteFollowers")) {

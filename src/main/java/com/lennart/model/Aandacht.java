@@ -82,7 +82,7 @@ public class Aandacht {
         closeDbConnection();
     }
 
-    private Map<String, Double> getDataForUser(String username) throws Exception {
+    public Map<String, Double> getDataForUser(String username) throws Exception {
         String script = getRelevantScriptAsString(username);
         List<Integer> likes = getDataOfLastPosts(script, "edge_liked_by", 11);
         List<Integer> timeStamps = getDataOfLastPosts(script, "taken_at_timestamp", 12);
