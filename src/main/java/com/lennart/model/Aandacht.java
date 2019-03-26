@@ -16,10 +16,10 @@ public class Aandacht {
 
     private Connection con;
 
-    public static void main(String[] args) throws Exception {
-        Aandacht aandacht = new Aandacht();
-        aandacht.updateDb();
-    }
+//    public static void main(String[] args) throws Exception {
+//        Aandacht aandacht = new Aandacht();
+//        aandacht.updateDb();
+//    }
 
     private void updateDb() throws Exception {
         List<String> users = fillUserList();
@@ -403,25 +403,27 @@ public class Aandacht {
         return users;
     }
 
-    public List<String> fillBnUserList() {
+    public List<String> fillBnUserList(boolean includingInternational) {
         List<String> users = new ArrayList<>();
 
-        users.add("champagnepapi");
-        users.add("instagram");
-        users.add("gigihadid");
-        users.add("jlo");
-        users.add("therock");
-        users.add("shawnmendes");
-        users.add("khloekardashian");
-        users.add("nickiminaj");
-        users.add("mileycyrus");
-        users.add("arianagrande");
-        users.add("beyonce");
-        users.add("cristiano");
-        users.add("kimkardashian");
-        users.add("kendalljenner");
-        users.add("kyliejenner");
-        users.add("justinbieber");
+        if(includingInternational) {
+            users.add("champagnepapi");
+            users.add("instagram");
+            users.add("gigihadid");
+            users.add("jlo");
+            users.add("therock");
+            users.add("shawnmendes");
+            users.add("khloekardashian");
+            users.add("nickiminaj");
+            users.add("mileycyrus");
+            users.add("arianagrande");
+            users.add("beyonce");
+            users.add("cristiano");
+            users.add("kimkardashian");
+            users.add("kendalljenner");
+            users.add("kyliejenner");
+            users.add("justinbieber");
+        }
 
         users.add("ferrisomogyi");
         users.add("viktor_brand");

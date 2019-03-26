@@ -7,18 +7,54 @@ public class Analysis {
 
     private Connection con;
 
-    public static void main(String[] args) throws Exception {
-        Analysis analysis = new Analysis();
+//    public static void main(String[] args) throws Exception {
+//        Analysis analysis = new Analysis();
+//        analysis.doBnAnalysis();
+//
+////        List<String> users = new ArrayList<>();
+////
+////        users.add("kimberlyesmee");
+////        users.add("carmenmattijssen");
+////        users.add("mette_sterre");
+////        users.add("cheyennehinrichs");
+////        users.add("amarenns");
+////
+////        analysis.printFollowerDataForUser(users);
+//    }
 
-        List<String> users = new ArrayList<>();
+    private void doBnAnalysis() throws Exception {
+        Map<String, Double> absFollowersMap = getTopXofFullMap(doDiffAnalysisForStat("absoluteFollowers", 1), 20);
 
-        users.add("kimberlyesmee");
-        users.add("carmenmattijssen");
-        users.add("mette_sterre");
-        users.add("cheyennehinrichs");
-        users.add("amarenns");
+        for (Map.Entry<String, Double> entry : absFollowersMap.entrySet()) {
+            System.out.println(entry.getKey());
+        }
+        for (Map.Entry<String, Double> entry : absFollowersMap.entrySet()) {
+            System.out.println(convertDoubleToPasteFriendly(entry.getValue()));
+        }
 
-        analysis.printFollowerDataForUser(users);
+        Map<String, Double> relFollowersMap = getTopXofFullMap(doDiffAnalysisForStat("relativeFollowers", 1), 20);
+
+        for (Map.Entry<String, Double> entry : relFollowersMap.entrySet()) {
+            System.out.println(entry.getKey());
+        }
+        for (Map.Entry<String, Double> entry : relFollowersMap.entrySet()) {
+            System.out.println(convertDoubleToPasteFriendly(entry.getValue() / 100));
+        }
+    }
+
+    public List<BnEr> getBnList() throws Exception {
+        Map<String, Double> bnMap = getTopXofFullMap(doDiffAnalysisForStat("absoluteFollowers", 1), 20);
+
+        List<BnEr> bnErList = new ArrayList<>();
+
+        for (Map.Entry<String, Double> entry : bnMap.entrySet()) {
+            BnEr bnEr = new BnEr();
+            bnEr.setName(entry.getKey());
+            bnEr.setFollowerGrowth(entry.getValue());
+            bnErList.add(bnEr);
+        }
+
+        return bnErList;
     }
 
     private void doTheDailyTop5Analysis() throws Exception {
@@ -161,7 +197,7 @@ public class Analysis {
     }
 
     private Map<String, Double> doDiffAnalysisForStat(String stat, int daysDifference) throws Exception {
-        List<String> allUsers = new Aandacht().fillUserList();
+        List<String> allUsers = new Aandacht().fillBnUserList(false);
 
         Map<String, Double> analysisMap = new HashMap<>();
 
@@ -233,7 +269,7 @@ public class Analysis {
         initializeDbConnection();
 
         Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM userdata WHERE username = '" + user + "' ORDER BY entry DESC;");
+        ResultSet rs = st.executeQuery("SELECT * FROM userdatabn WHERE username = '" + user + "' ORDER BY entry DESC;");
 
         while(rs.next()) {
             Map<String, Object> dataPerEntry = new HashMap<>();
