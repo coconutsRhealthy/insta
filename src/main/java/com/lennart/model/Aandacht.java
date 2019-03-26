@@ -476,7 +476,6 @@ public class Aandacht {
         users.add("vjeze_fur");
         users.add("faberyayo");
         users.add("alexandernl");
-        users.add("simonkeizer");
         users.add("arminvanbuuren");
         users.add("tiesto");
         users.add("hanwe");
@@ -595,7 +594,7 @@ public class Aandacht {
         users.add("nicolettevandam1");
         users.add("daphne_deckers");
         users.add("moniquenoell");
-        users.add("nicolettekluijver");
+        users.add("nicolettekluijver_");
         users.add("bridgetmaasland");
         users.add("katjaschuurman");
         users.add("andrehazes");
