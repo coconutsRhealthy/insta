@@ -423,6 +423,7 @@ public class Aandacht {
             users.add("kendalljenner");
             users.add("kyliejenner");
             users.add("justinbieber");
+            users.add("anitta");
         }
 
         users.add("ferrisomogyi");
@@ -641,6 +642,48 @@ public class Aandacht {
         users.add("kajstypetjes");
         users.add("maan.de.st");
         users.add("annanooshin");
+
+        users.add("fockeline");
+        users.add("angelaschijfofficial");
+        users.add("jakereesemusic");
+        users.add("ellen_hoog");
+        users.add("amyog3neofficial");
+        users.add("shelleyog3neofficial");
+        users.add("gaby.blaaser");
+        users.add("estavana");
+        users.add("airenmylene");
+        users.add("daveroelvink");
+        users.add("vajenvandenbosch");
+        users.add("chantalbles");
+        users.add("prisloelaa");
+        users.add("kimberleyklaver");
+        users.add("kelly_weekers");
+        users.add("fduijts");
+        users.add("naomivanasofficial");
+        users.add("jenniferewbank");
+        users.add("keestolofficial");
+        users.add("carloboszhard");
+        users.add("erikzwennes");
+        users.add("buddyvedder");
+        users.add("anoukmaasofficial");
+        users.add("bettina_holwerda");
+        users.add("anoukmsmulders");
+        users.add("dannyfroger");
+        users.add("lisaog3neofficial");
+        users.add("brittscholte");
+        users.add("elise_is_here");
+        users.add("thisisdo");
+        users.add("romymonteiro");
+        users.add("davinamichelleofficial");
+        users.add("thomasbergeofficial");
+        users.add("lizasips");
+        users.add("stijn_fransen");
+        users.add("marlyvd");
+        users.add("timdouwsma");
+        users.add("melissa_drost");
+        users.add("pippellens");
+        users.add("mrskeizer");
+        users.add("moniquesmit_insta");
 
         return users;
     }
