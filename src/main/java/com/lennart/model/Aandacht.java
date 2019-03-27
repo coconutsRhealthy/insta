@@ -16,13 +16,20 @@ public class Aandacht {
 
     private Connection con;
 
-//    public static void main(String[] args) throws Exception {
-//        Aandacht aandacht = new Aandacht();
-//        aandacht.updateDb();
-//    }
+    public static void main(String[] args) throws Exception {
+        Aandacht aandacht = new Aandacht();
+        aandacht.updateDb(true);
+        aandacht.updateDb(false);
+    }
 
-    private void updateDb() throws Exception {
-        List<String> users = fillUserList();
+    private void updateDb(boolean bnEr) throws Exception {
+        List<String> users;
+
+        if(bnEr) {
+            users = fillBnUserList(true);
+        } else {
+            users = fillUserList();
+        }
 
         Map<String, Map<String, Double>> allDataForAllUsers = new HashMap<>();
 
@@ -38,6 +45,14 @@ public class Aandacht {
                 System.out.println("zzzz error: " + user);
                 e.printStackTrace();
             }
+        }
+
+        String table;
+
+        if(bnEr) {
+            table = "userdatabn";
+        } else {
+            table = "userdata";
         }
 
         initializeDbConnection();
@@ -57,7 +72,7 @@ public class Aandacht {
             double engagement = dataForUser.get("engagement");
             double engagementLast24h = dataForUser.get("engagementLast24h");
 
-            st.executeUpdate("INSERT INTO userdata (" +
+            st.executeUpdate("INSERT INTO " + table + " (" +
                     "entry, " +
                     "date, " +
                     "username, " +
