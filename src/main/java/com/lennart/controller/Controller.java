@@ -1,6 +1,5 @@
 package com.lennart.controller;
 
-import com.lennart.model.Aandacht;
 import com.lennart.model.Analysis;
 import com.lennart.model.BnEr;
 import org.springframework.boot.SpringApplication;
@@ -25,7 +24,7 @@ public class Controller extends SpringBootServletInitializer {
 
     @RequestMapping(value = "/getFollowerGrowth", method = RequestMethod.GET)
     public @ResponseBody List<BnEr> getBnData() throws Exception {
-        List<BnEr> bnErList = new Analysis().getBnList();
+        List<BnEr> bnErList = new Analysis().getBnList("relativeFollowers", "2019-03-26", 1);
         return bnErList;
     }
 

@@ -7,8 +7,12 @@ public class Analysis {
 
     private Connection con;
 
-    public List<BnEr> getBnList() throws Exception {
-        Map<String, Double> bnMap = getTopXofFullMap(doDiffAnalysisForStat("absoluteFollowers", 1, true), 20);
+//    public static void main(String[] args) throws Exception {
+//        new Analysis().getBnList("absoluteFollowers", "2019-03-27", 1);
+//    }
+
+    public List<BnEr> getBnList(String stat, String date, int daysDifference) throws Exception {
+        Map<String, Double> bnMap = getTopXofFullMap(doDiffAnalysisForStat(stat, daysDifference, true, date), 20);
 
         List<BnEr> bnErList = new ArrayList<>();
 
@@ -73,7 +77,7 @@ public class Analysis {
         return pasteFriendly;
     }
 
-    private Map<String, Double> doDiffAnalysisForStat(String stat, int daysDifference, boolean bnEr) throws Exception {
+    private Map<String, Double> doDiffAnalysisForStat(String stat, int daysDifference, boolean bnEr, String date) throws Exception {
         List<String> allUsers;
 
         if(bnEr) {
@@ -85,31 +89,31 @@ public class Analysis {
         Map<String, Double> analysisMap = new HashMap<>();
 
         for(String user : allUsers) {
-            Map<Integer, Map<String, Object>> allDataOfUser = getAllDataOfUser(user);
+            LinkedHashMap<String, Map<String, Object>> allDataOfUserDateKeys = getAllDataOfUser(user);
 
             if(stat.equals("absoluteFollowers")) {
-                double absoluteFollowerDiff = getAbsoluteDifference("followers", allDataOfUser, daysDifference);
+                double absoluteFollowerDiff = getAbsoluteDifference("followers", allDataOfUserDateKeys, date, daysDifference);
                 analysisMap.put(user, absoluteFollowerDiff);
             } else if(stat.equals("relativeFollowers")) {
-                double relativeFollowerDiff = getRelativeDifference("followers", allDataOfUser, daysDifference);
+                double relativeFollowerDiff = getRelativeDifference("followers", allDataOfUserDateKeys, date, daysDifference);
                 analysisMap.put(user, relativeFollowerDiff);
             } else if(stat.equals("absoluteFollowing")) {
-                double absoluteFollowingDiff = getAbsoluteDifference("following", allDataOfUser, daysDifference);
+                double absoluteFollowingDiff = getAbsoluteDifference("following", allDataOfUserDateKeys, date, daysDifference);
                 analysisMap.put(user, absoluteFollowingDiff);
             } else if(stat.equals("relativeFollowing")) {
-                double relativeFollowingDiff = getRelativeDifference("following", allDataOfUser, daysDifference);
+                double relativeFollowingDiff = getRelativeDifference("following", allDataOfUserDateKeys, date, daysDifference);
                 analysisMap.put(user, relativeFollowingDiff);
             } else if(stat.equals("absoluteNumberOfPosts")) {
-                double absoluteNoOfPostsDiff = getAbsoluteDifference("numberOfPosts", allDataOfUser, daysDifference);
+                double absoluteNoOfPostsDiff = getAbsoluteDifference("numberOfPosts", allDataOfUserDateKeys, date, daysDifference);
                 analysisMap.put(user, absoluteNoOfPostsDiff);
             } else if(stat.equals("absoluteAvNoOfLikesPerPost")) {
-                double absoluteAvNoOfLikesPerPostDiff = getAbsoluteDifference("avNoOfLikesPerPost", allDataOfUser, daysDifference);
+                double absoluteAvNoOfLikesPerPostDiff = getAbsoluteDifference("avNoOfLikesPerPost", allDataOfUserDateKeys, date, daysDifference);
                 analysisMap.put(user, absoluteAvNoOfLikesPerPostDiff);
             } else if(stat.equals("absoluteAvNoOfPostsPerDay")) {
-                double absoluteAvNoOfPostsPerDayDiff = getAbsoluteDifference("avNoOfPostsPerDay", allDataOfUser, daysDifference);
+                double absoluteAvNoOfPostsPerDayDiff = getAbsoluteDifference("avNoOfPostsPerDay", allDataOfUserDateKeys, date, daysDifference);
                 analysisMap.put(user, absoluteAvNoOfPostsPerDayDiff);
             } else if(stat.equals("absoluteEngagement")) {
-                double absoluteEngagementDiff = getAbsoluteDifference("engagement", allDataOfUser, daysDifference);
+                double absoluteEngagementDiff = getAbsoluteDifference("engagement", allDataOfUserDateKeys, date, daysDifference);
                 analysisMap.put(user, absoluteEngagementDiff);
             }
         }
@@ -144,8 +148,8 @@ public class Analysis {
         return analysisMap;
     }
 
-    private Map<Integer, Map<String, Object>> getAllDataOfUser(String user) throws Exception {
-        Map<Integer, Map<String, Object>> allDataOfUsers = new TreeMap<>(Collections.reverseOrder());
+    private LinkedHashMap<String, Map<String, Object>> getAllDataOfUser(String user) throws Exception {
+        LinkedHashMap<String, Map<String, Object>> allDataOfUsers = new LinkedHashMap<>();
 
         initializeDbConnection();
 
@@ -155,7 +159,9 @@ public class Analysis {
         while(rs.next()) {
             Map<String, Object> dataPerEntry = new HashMap<>();
 
-            dataPerEntry.put("date", rs.getString("date"));
+            String dateInDb = rs.getString("date");
+
+            dataPerEntry.put("date", dateInDb);
             dataPerEntry.put("followers", rs.getDouble("followers"));
             dataPerEntry.put("following", rs.getDouble("following"));
             dataPerEntry.put("numberOfPosts", rs.getDouble("numberOfPosts"));
@@ -164,7 +170,9 @@ public class Analysis {
             dataPerEntry.put("avNoOfPostsPerDay", rs.getDouble("avNoOfPostsPerDay"));
             dataPerEntry.put("engagement", rs.getDouble("engagement"));
 
-            allDataOfUsers.put(rs.getInt("entry"), dataPerEntry);
+            String correctDateKey = dateInDb.substring(0, dateInDb.indexOf(" "));
+
+            allDataOfUsers.put(correctDateKey, dataPerEntry);
         }
 
         rs.close();
@@ -175,8 +183,8 @@ public class Analysis {
         return allDataOfUsers;
     }
 
-    private double getAbsoluteDifference(String stat, Map<Integer, Map<String, Object>> allDataOfUser, int daysDifference) {
-        List<Map<String, Object>> dataOfCurrentAndTargetDate = getDataOfCurrentAndTargetDateForUser(allDataOfUser, daysDifference);
+    private double getAbsoluteDifference(String stat, LinkedHashMap<String, Map<String, Object>> allDataOfUser, String date, int daysDifference) {
+        List<Map<String, Object>> dataOfCurrentAndTargetDate = getDataOfTargetDateAndOfDaysDifferenceForUser(allDataOfUser, date, daysDifference);
 
         Map<String, Object> currentDateData = dataOfCurrentAndTargetDate.get(0);
         Map<String, Object> targetDateData = dataOfCurrentAndTargetDate.get(1);
@@ -195,8 +203,8 @@ public class Analysis {
         return valueToReturn;
     }
 
-    private double getRelativeDifference(String stat, Map<Integer, Map<String, Object>> allDataOfUser, int daysDifference) {
-        List<Map<String, Object>> dataOfCurrentAndTargetDate = getDataOfCurrentAndTargetDateForUser(allDataOfUser, daysDifference);
+    private double getRelativeDifference(String stat, LinkedHashMap<String, Map<String, Object>> allDataOfUser, String date, int daysDifference) {
+        List<Map<String, Object>> dataOfCurrentAndTargetDate = getDataOfTargetDateAndOfDaysDifferenceForUser(allDataOfUser, date, daysDifference);
 
         Map<String, Object> currentDateData = dataOfCurrentAndTargetDate.get(0);
         Map<String, Object> targetDateData = dataOfCurrentAndTargetDate.get(1);
@@ -216,19 +224,21 @@ public class Analysis {
         return valueToReturn;
     }
 
-    private List<Map<String, Object>> getDataOfCurrentAndTargetDateForUser(Map<Integer, Map<String, Object>> allDataOfUser, int daysDifference) {
-        Map<String, Object> dataOfLastDate = allDataOfUser.entrySet().iterator().next().getValue();
+    private List<Map<String, Object>> getDataOfTargetDateAndOfDaysDifferenceForUser(Map<String, Map<String, Object>> allDataOfUser, String date, int daysDifference) {
+        Map<String, Object> dataOfLastDate = allDataOfUser.get(date);
 
         Map<String, Object> dataOfComparisonDate = null;
 
-        int counter = -1;
+        int counter = 0;
 
-        for (Map.Entry<Integer, Map<String, Object>> entry : allDataOfUser.entrySet()) {
-            counter++;
-
+        for (Map.Entry<String, Map<String, Object>> entry : allDataOfUser.entrySet()) {
             if(counter == daysDifference) {
                 dataOfComparisonDate = entry.getValue();
                 break;
+            }
+
+            if(entry.getKey().equals(date)) {
+                counter++;
             }
         }
 
