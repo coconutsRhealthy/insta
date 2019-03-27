@@ -7,43 +7,8 @@ public class Analysis {
 
     private Connection con;
 
-//    public static void main(String[] args) throws Exception {
-//        Analysis analysis = new Analysis();
-//        analysis.doBnAnalysis();
-//
-////        List<String> users = new ArrayList<>();
-////
-////        users.add("kimberlyesmee");
-////        users.add("carmenmattijssen");
-////        users.add("mette_sterre");
-////        users.add("cheyennehinrichs");
-////        users.add("amarenns");
-////
-////        analysis.printFollowerDataForUser(users);
-//    }
-
-    private void doBnAnalysis() throws Exception {
-        Map<String, Double> absFollowersMap = getTopXofFullMap(doDiffAnalysisForStat("absoluteFollowers", 1), 20);
-
-        for (Map.Entry<String, Double> entry : absFollowersMap.entrySet()) {
-            System.out.println(entry.getKey());
-        }
-        for (Map.Entry<String, Double> entry : absFollowersMap.entrySet()) {
-            System.out.println(convertDoubleToPasteFriendly(entry.getValue()));
-        }
-
-        Map<String, Double> relFollowersMap = getTopXofFullMap(doDiffAnalysisForStat("relativeFollowers", 1), 20);
-
-        for (Map.Entry<String, Double> entry : relFollowersMap.entrySet()) {
-            System.out.println(entry.getKey());
-        }
-        for (Map.Entry<String, Double> entry : relFollowersMap.entrySet()) {
-            System.out.println(convertDoubleToPasteFriendly(entry.getValue() / 100));
-        }
-    }
-
     public List<BnEr> getBnList() throws Exception {
-        Map<String, Double> bnMap = getTopXofFullMap(doDiffAnalysisForStat("absoluteFollowers", 1), 20);
+        Map<String, Double> bnMap = getTopXofFullMap(doDiffAnalysisForStat("absoluteFollowers", 1, true), 20);
 
         List<BnEr> bnErList = new ArrayList<>();
 
@@ -55,94 +20,6 @@ public class Analysis {
         }
 
         return bnErList;
-    }
-
-    private void doTheDailyTop5Analysis() throws Exception {
-        Map<String, Double> relFollowersMap = getTopXofFullMap(doDiffAnalysisForStat("relativeFollowers", 1), 20);
-
-        for (Map.Entry<String, Double> entry : relFollowersMap.entrySet()) {
-            System.out.println(entry.getKey());
-        }
-        for (Map.Entry<String, Double> entry : relFollowersMap.entrySet()) {
-            System.out.println(convertDoubleToPasteFriendly(entry.getValue() / 100));
-        }
-
-        Map<String, Double> absFollowerDiffMap = new LinkedHashMap<>();
-        Map<String, Double> engagementMap = new LinkedHashMap<>();
-
-        for(Map.Entry<String, Double> entry : relFollowersMap.entrySet()) {
-            String userName = entry.getKey();
-
-            Map<Integer, Map<String, Object>> allDataOfUser = getAllDataOfUser(userName);
-            double absoluteFollowerDiff = getAbsoluteDifference("followers", allDataOfUser, 1);
-
-            absFollowerDiffMap.put(entry.getKey(), absoluteFollowerDiff);
-        }
-
-        for(Map.Entry<String, Double> entry : relFollowersMap.entrySet()) {
-            String userName = entry.getKey();
-
-            Map<String, Double> dataForUser = new Aandacht().getDataForUser(userName);
-
-            double engagement = dataForUser.get("engagement");
-
-            engagementMap.put(entry.getKey(), engagement);
-        }
-
-        for(Map.Entry<String, Double> entry : absFollowerDiffMap.entrySet()) {
-            System.out.println(entry.getKey());
-        }
-        for(Map.Entry<String, Double> entry : absFollowerDiffMap.entrySet()) {
-            System.out.println(convertDoubleToPasteFriendly(entry.getValue()));
-        }
-
-        for(Map.Entry<String, Double> entry : engagementMap.entrySet()) {
-            System.out.println(entry.getKey());
-        }
-        for(Map.Entry<String, Double> entry : engagementMap.entrySet()) {
-            System.out.println(convertDoubleToPasteFriendly(entry.getValue()));
-        }
-    }
-
-    private void dailyTableTop20Analysis() throws Exception {
-        Map<String, Double> relFollowerMap = getTopXofFullMap(doDiffAnalysisForStat("relativeFollowers", 1), 5);
-        Map<String, Double> relFollowing = getTopXofFullMap(doDiffAnalysisForStat("relativeFollowing", 1), 5);
-        Map<String, Double> absPosts = getTopXofFullMap(doDiffAnalysisForStat("absoluteNumberOfPosts", 1), 5);
-        Map<String, Double> engagementLast24h = getTopXofFullMap(getEngagementLast24hFromDb(), 5);
-
-        for (Map.Entry<String, Double> entry : relFollowerMap.entrySet()) {
-            System.out.println(entry.getKey());
-        }
-        for (Map.Entry<String, Double> entry : relFollowerMap.entrySet()) {
-            System.out.println(convertDoubleToPasteFriendly(entry.getValue()));
-        }
-
-        System.out.println();
-
-        for (Map.Entry<String, Double> entry : relFollowing.entrySet()) {
-            System.out.println(entry.getKey());
-        }
-        for (Map.Entry<String, Double> entry : relFollowing.entrySet()) {
-            System.out.println(convertDoubleToPasteFriendly(entry.getValue()));
-        }
-
-        System.out.println();
-
-        for (Map.Entry<String, Double> entry : absPosts.entrySet()) {
-            System.out.println(entry.getKey());
-        }
-        for (Map.Entry<String, Double> entry : absPosts.entrySet()) {
-            System.out.println(convertDoubleToPasteFriendly(entry.getValue()));
-        }
-
-        System.out.println();
-
-        for (Map.Entry<String, Double> entry : engagementLast24h.entrySet()) {
-            System.out.println(entry.getKey());
-        }
-        for (Map.Entry<String, Double> entry : engagementLast24h.entrySet()) {
-            System.out.println(convertDoubleToPasteFriendly(entry.getValue()));
-        }
     }
 
     private void printFollowerDataForUser(List<String> users) throws Exception {
@@ -196,40 +73,44 @@ public class Analysis {
         return pasteFriendly;
     }
 
-    private Map<String, Double> doDiffAnalysisForStat(String stat, int daysDifference) throws Exception {
-        List<String> allUsers = new Aandacht().fillBnUserList(false);
+    private Map<String, Double> doDiffAnalysisForStat(String stat, int daysDifference, boolean bnEr) throws Exception {
+        List<String> allUsers;
+
+        if(bnEr) {
+            allUsers = new Aandacht().fillBnUserList(false);
+        } else {
+            allUsers = new Aandacht().fillUserList();
+        }
 
         Map<String, Double> analysisMap = new HashMap<>();
 
         for(String user : allUsers) {
-            if(!user.equals("albertdrosphotography") && !user.equals("een_wasbeer") && !user.equals("dutchtoy")) {
-                Map<Integer, Map<String, Object>> allDataOfUser = getAllDataOfUser(user);
+            Map<Integer, Map<String, Object>> allDataOfUser = getAllDataOfUser(user);
 
-                if(stat.equals("absoluteFollowers")) {
-                    double absoluteFollowerDiff = getAbsoluteDifference("followers", allDataOfUser, daysDifference);
-                    analysisMap.put(user, absoluteFollowerDiff);
-                } else if(stat.equals("relativeFollowers")) {
-                    double relativeFollowerDiff = getRelativeDifference("followers", allDataOfUser, daysDifference);
-                    analysisMap.put(user, relativeFollowerDiff);
-                } else if(stat.equals("absoluteFollowing")) {
-                    double absoluteFollowingDiff = getAbsoluteDifference("following", allDataOfUser, daysDifference);
-                    analysisMap.put(user, absoluteFollowingDiff);
-                } else if(stat.equals("relativeFollowing")) {
-                    double relativeFollowingDiff = getRelativeDifference("following", allDataOfUser, daysDifference);
-                    analysisMap.put(user, relativeFollowingDiff);
-                } else if(stat.equals("absoluteNumberOfPosts")) {
-                    double absoluteNoOfPostsDiff = getAbsoluteDifference("numberOfPosts", allDataOfUser, daysDifference);
-                    analysisMap.put(user, absoluteNoOfPostsDiff);
-                } else if(stat.equals("absoluteAvNoOfLikesPerPost")) {
-                    double absoluteAvNoOfLikesPerPostDiff = getAbsoluteDifference("avNoOfLikesPerPost", allDataOfUser, daysDifference);
-                    analysisMap.put(user, absoluteAvNoOfLikesPerPostDiff);
-                } else if(stat.equals("absoluteAvNoOfPostsPerDay")) {
-                    double absoluteAvNoOfPostsPerDayDiff = getAbsoluteDifference("avNoOfPostsPerDay", allDataOfUser, daysDifference);
-                    analysisMap.put(user, absoluteAvNoOfPostsPerDayDiff);
-                } else if(stat.equals("absoluteEngagement")) {
-                    double absoluteEngagementDiff = getAbsoluteDifference("engagement", allDataOfUser, daysDifference);
-                    analysisMap.put(user, absoluteEngagementDiff);
-                }
+            if(stat.equals("absoluteFollowers")) {
+                double absoluteFollowerDiff = getAbsoluteDifference("followers", allDataOfUser, daysDifference);
+                analysisMap.put(user, absoluteFollowerDiff);
+            } else if(stat.equals("relativeFollowers")) {
+                double relativeFollowerDiff = getRelativeDifference("followers", allDataOfUser, daysDifference);
+                analysisMap.put(user, relativeFollowerDiff);
+            } else if(stat.equals("absoluteFollowing")) {
+                double absoluteFollowingDiff = getAbsoluteDifference("following", allDataOfUser, daysDifference);
+                analysisMap.put(user, absoluteFollowingDiff);
+            } else if(stat.equals("relativeFollowing")) {
+                double relativeFollowingDiff = getRelativeDifference("following", allDataOfUser, daysDifference);
+                analysisMap.put(user, relativeFollowingDiff);
+            } else if(stat.equals("absoluteNumberOfPosts")) {
+                double absoluteNoOfPostsDiff = getAbsoluteDifference("numberOfPosts", allDataOfUser, daysDifference);
+                analysisMap.put(user, absoluteNoOfPostsDiff);
+            } else if(stat.equals("absoluteAvNoOfLikesPerPost")) {
+                double absoluteAvNoOfLikesPerPostDiff = getAbsoluteDifference("avNoOfLikesPerPost", allDataOfUser, daysDifference);
+                analysisMap.put(user, absoluteAvNoOfLikesPerPostDiff);
+            } else if(stat.equals("absoluteAvNoOfPostsPerDay")) {
+                double absoluteAvNoOfPostsPerDayDiff = getAbsoluteDifference("avNoOfPostsPerDay", allDataOfUser, daysDifference);
+                analysisMap.put(user, absoluteAvNoOfPostsPerDayDiff);
+            } else if(stat.equals("absoluteEngagement")) {
+                double absoluteEngagementDiff = getAbsoluteDifference("engagement", allDataOfUser, daysDifference);
+                analysisMap.put(user, absoluteEngagementDiff);
             }
         }
 
