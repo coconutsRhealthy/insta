@@ -6,27 +6,43 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/css/bootstrap.min.css">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
         <script src="js/script.js"></script>
+        <link rel="stylesheet" type="text/css" href="/css/style.css" />
     </head>
 
     <body>
 
-        <div class="container-fluid">
+        <div class="container-fluid pagebackground">
             <div ng-app = "mainApp" ng-controller = "buzzwordsController">
+                <div class="row rowheight"></div>
+                <div class="row datediv">28 maart 2019</div>
+                <div class="row buffer"></div>
 
-                <table class="table table-striped">
-                    <thead class="thead" style="color:white; background-color:rgb(0, 0, 0">
-                        <tr>
-                            <th scope="col">Naam</th>
-                            <th scope="col">Aantal nieuwe volgers</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="bnEr in bnData | orderBy: '-followerGrowth'">
-                            <td>{{bnEr.name}}</td>
-                            <td>{{bnEr.followerGrowth}}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="row">
+                    <div class="col-sm-3"></div>
+
+                    <div class="col-sm-6">
+                        <table class="table table-striped tablebackground">
+                            <thead class="thead" style="color:white; background-color:rgb(0, 0, 0)">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Naam</th>
+                                    <th scope="col">Aantal nieuwe volgers</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="bnEr in bnData | orderBy: '-followerGrowth' track by $index">
+                                    <td style="line-height: 0.6;">{{$index + 1}}</td>
+                                    <td style="line-height: 0.6;">{{bnEr.name}}</td>
+                                    <td style="line-height: 0.6;">{{bnEr.followerGrowth}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-sm-3"></div>
+                </div>
+
+                <div class="row rowheight"></div>
             </div>
         </div>
     </body>
