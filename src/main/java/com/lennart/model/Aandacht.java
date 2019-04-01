@@ -72,31 +72,37 @@ public class Aandacht {
             double engagement = dataForUser.get("engagement");
             double engagementLast24h = dataForUser.get("engagementLast24h");
 
-            st.executeUpdate("INSERT INTO " + table + " (" +
-                    "entry, " +
-                    "date, " +
-                    "username, " +
-                    "followers, " +
-                    "following, " +
-                    "numberOfPosts, " +
-                    "avNoOfLikesPerPost, " +
-                    "avNoOfCommentsPerPost, " +
-                    "avNoOfPostsPerDay, " +
-                    "engagement, " +
-                    "engagementLast24h) " +
-                    "VALUES ('" +
-                    (getHighestIntEntry("userdata") + 1) + "', '" +
-                    date + "', '" +
-                    userName + "', '" +
-                    followers + "', '" +
-                    following + "', '" +
-                    numberOfPosts + "', '" +
-                    avNoOfLikesPerPost + "', '" +
-                    avNoOfCommentsPerPost + "', '" +
-                    avNoOfPostsPerDay + "', '" +
-                    engagement + "', '" +
-                    engagementLast24h + "'" +
-                    ")");
+            try {
+                st.executeUpdate("INSERT INTO " + table + " (" +
+                        "entry, " +
+                        "date, " +
+                        "username, " +
+                        "followers, " +
+                        "following, " +
+                        "numberOfPosts, " +
+                        "avNoOfLikesPerPost, " +
+                        "avNoOfCommentsPerPost, " +
+                        "avNoOfPostsPerDay, " +
+                        "engagement, " +
+                        "engagementLast24h) " +
+                        "VALUES ('" +
+                        (getHighestIntEntry(table) + 1) + "', '" +
+                        date + "', '" +
+                        userName + "', '" +
+                        followers + "', '" +
+                        following + "', '" +
+                        numberOfPosts + "', '" +
+                        avNoOfLikesPerPost + "', '" +
+                        avNoOfCommentsPerPost + "', '" +
+                        avNoOfPostsPerDay + "', '" +
+                        engagement + "', '" +
+                        engagementLast24h + "'" +
+                        ")");
+            } catch (Exception e) {
+                System.out.println("error: " + userName);
+                System.out.println();
+                e.printStackTrace();
+            }
         }
 
         st.close();
@@ -207,7 +213,11 @@ public class Aandacht {
 
             postsPerDay = 1 / postsPerDay;
 
-            return postsPerDay;
+            if(Double.isInfinite(postsPerDay)) {
+                return -100;
+            } else {
+                return postsPerDay;
+            }
         } catch (Exception e) {
             System.out.println("error: " + user);
             e.printStackTrace();
@@ -588,7 +598,6 @@ public class Aandacht {
         users.add("isahoes");
         users.add("dennisweeningofficial");
         users.add("bobbieden");
-        users.add("mykillerbodymotivation");
         users.add("johnnydemolofficial");
         users.add("williamrutten");
         users.add("lecolook");
@@ -699,6 +708,75 @@ public class Aandacht {
         users.add("pippellens");
         users.add("mrskeizer");
         users.add("moniquesmit_insta");
+
+        users.add("rappersjors1");
+        users.add("rafaelvdvaart");
+        users.add("frenkiedejong");
+        users.add("jaspercillessen");
+        users.add("mdeligt_");
+        users.add("virgilvandijk");
+        users.add("clarenceseedorf");
+        users.add("gwijnaldum");
+        users.add("blinddaley");
+        users.add("edwinvandersar1");
+        users.add("memphisdepay");
+        users.add("patrickkluivert9");
+        users.add("ginasingels.official");
+        users.add("michielhuisman");
+
+        users.add("peterpannekoek");
+        users.add("najib_amhali");
+        users.add("acdathomas");
+        users.add("rick_brandsteder");
+        users.add("leonieterbraak");
+        users.add("guidoweijersofficial");
+        users.add("ronald_goedemondt");
+        users.add("deechteartrooijakkers");
+        users.add("richard_groenendijk");
+        users.add("robertdoornbos");
+        users.add("donnyvdbeek");
+        users.add("suzanneschulting");
+        users.add("chriszegersinsta");
+        users.add("dennis_schouten95");
+        users.add("daanboom");
+        users.add("timsenders");
+        users.add("doesburghbrachavan");
+        users.add("igmarfelicia");
+        users.add("alexklaasen");
+        users.add("mvg180");
+        users.add("jebroer4life");
+        users.add("jettrebel");
+        users.add("mctyphoon");
+        users.add("bitsofnaaz");
+        users.add("jurregeluk");
+        users.add("teskedeschepper");
+        users.add("lucashamming");
+        users.add("ericcorton");
+        users.add("blokhuisleo");
+        users.add("veenendaalmarcel");
+        users.add("thijsboontjes");
+        users.add("evakoreman");
+        users.add("itsduncanlaurence");
+        users.add("leoalkemade");
+        users.add("notsosadgrl");
+        users.add("timknolofficial");
+        users.add("disfordazzle");
+        users.add("abbeyhoes");
+
+        users.add("afrojack");
+        users.add("nickyromero");
+        users.add("oliverheldens");
+        users.add("laidbackluke");
+        users.add("dannic");
+        users.add("samfeldtmusic");
+        users.add("mikewilliams");
+        users.add("sandervandoornofficial");
+
+        users.add("sitavermeulen");
+        users.add("dewipechler");
+        users.add("sanderkleinenberg");
+        users.add("romeestrijd");
+        users.add("jippheldoorn");
 
         return users;
     }
