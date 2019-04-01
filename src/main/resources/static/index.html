@@ -14,13 +14,23 @@
         <div class="container-fluid">
             <div ng-app = "mainApp" ng-controller = "buzzwordsController">
                 <div class="row">
-                    <div class="col-sm-3"></div>
+                    <div class="col-sm-3">
+                        <div>
+                            <button ng-click="makeScreenshot()">Make screenshot</button>
+                        </div>
+                        <div>
+                            <input type="text" ng-model="dateToUse"><button ng-click="selectDate()">Select date</button>
+                        </div>
+                        <div>
+                            <input type="text" ng-model="writtenDate">
+                        </div>
+                    </div>
 
                     <div class="col-sm-6">
                         <table class="table table-dark">
                             <thead class="thead" style="color:white; background-color:rgb(0, 0, 0)">
                                 <tr>
-                                    <th scope="col" width="112px"># <small><i><sub>28 maart 2019</sub></i></small>
+                                    <th scope="col" width="112px"># <small><i><sub>{{writtenDate}}</sub></i></small>
                                     <th scope="col">Naam</th>
                                     <th scope="col">Aantal nieuwe volgers</th>
                                 </tr>
