@@ -40,7 +40,7 @@ public class Aandacht {
             }
         }
 
-        String table = "userdatamigrated";
+        String table = "userdatabn";
 
         initializeDbConnection();
 

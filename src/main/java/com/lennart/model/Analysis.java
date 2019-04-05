@@ -34,7 +34,7 @@ public class Analysis {
             System.out.println();
 
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM userdata WHERE username = '" + user + "' ORDER BY entry ASC;");
+            ResultSet rs = st.executeQuery("SELECT * FROM userdata WHERE username = '" + user + "' ORDER BY date ASC;");
 
             while(rs.next()) {
                 System.out.println(convertDoubleToPasteFriendly(rs.getDouble("followers")));
@@ -125,7 +125,7 @@ public class Analysis {
 
         for(String user : allUsers) {
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM userdata WHERE username = '" + user + "' ORDER BY entry DESC;");
+            ResultSet rs = st.executeQuery("SELECT * FROM userdata WHERE username = '" + user + "' ORDER BY date DESC;");
 
             if(rs.next()) {
                 double engagementLast24h = rs.getDouble("engagementLast24h");
@@ -148,7 +148,7 @@ public class Analysis {
         initializeDbConnection();
 
         Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM userdatabn WHERE username = '" + user + "' ORDER BY entry DESC;");
+        ResultSet rs = st.executeQuery("SELECT * FROM userdatabn WHERE username = '" + user + "' ORDER BY date DESC;");
 
         while(rs.next()) {
             Map<String, Object> dataPerEntry = new HashMap<>();
