@@ -709,7 +709,6 @@ public class Aandacht {
         users.add("mrskeizer");
         users.add("moniquesmit_insta");
 
-        users.add("rappersjors1");
         users.add("rafaelvdvaart");
         users.add("frenkiedejong");
         users.add("jaspercillessen");
@@ -761,7 +760,6 @@ public class Aandacht {
         users.add("notsosadgrl");
         users.add("timknolofficial");
         users.add("disfordazzle");
-        users.add("abbeyhoes");
 
         users.add("afrojack");
         users.add("nickyromero");
@@ -777,6 +775,74 @@ public class Aandacht {
         users.add("sanderkleinenberg");
         users.add("romeestrijd");
         users.add("jippheldoorn");
+
+        users.add("winne_ecktuh");
+        users.add("murdaworld");
+        users.add("mcsnelle");
+        users.add("jayjayboske");
+        users.add("alias1oak");
+        users.add("slowflowanimal");
+        users.add("nesimnajih");
+        users.add("jiri11");
+
+        users.add("nabiltime");
+        users.add("defano.holwijn");
+        users.add("ashafarofficial");
+        users.add("sxteenxvi");
+        users.add("fabiola_volkers");
+        users.add("leafssensei");
+        users.add("anouarvines");
+        users.add("touzanitv");
+        users.add("woenzelaarr");
+        users.add("murdaworld");
+        users.add("royalistiq");
+        users.add("shirak");
+        users.add("louivoss911");
+        users.add("mulamoes911");
+        users.add("vonnekebonneke");
+        users.add("idalyfaal1087");
+        users.add("jessehoefnagels");
+        users.add("ta__joela");
+        users.add("dondejong_");
+        users.add("rotjoch");
+        users.add("latifahladiva");
+        users.add("emms_bl");
+        users.add("kingsizeww");
+        users.add("rarko10");
+        users.add("therealkeiz");
+        users.add("3robimayne");
+        users.add("joeyakz6");
+        users.add("hansiehendrix");
+        users.add("dopebwoy");
+        users.add("wellouss");
+        users.add("hetismani");
+        users.add("youstoub");
+        users.add("jonnafraser");
+        users.add("yesr");
+        users.add("hannihanna");
+        users.add("fernandofunx");
+        users.add("ismaililgun");
+        users.add("tabithamusik");
+        users.add("uberquin");
+        users.add("izzlevideo");
+        users.add("monsif01");
+        users.add("sjaakofficial");
+        users.add("mertabimert");
+
+        users.add("klaasjanhuntelaar");
+        users.add("joelveltman");
+        users.add("johnheitinga");
+        users.add("jwillems15");
+        users.add("davyklaassen");
+        users.add("danidewit_");
+        users.add("siemdejong");
+        users.add("daleysinkgraven");
+        users.add("luukdejong9");
+        users.add("nigeldejong");
+
+        users.add("negin_mirsalehi");
+        users.add("hijabhills");
+        users.add("thefashionguitar");
 
         return users;
     }
