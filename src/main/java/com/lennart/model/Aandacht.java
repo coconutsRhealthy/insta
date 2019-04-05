@@ -18,18 +18,11 @@ public class Aandacht {
 
     public static void main(String[] args) throws Exception {
         Aandacht aandacht = new Aandacht();
-        aandacht.updateDb(true);
-        aandacht.updateDb(false);
+        aandacht.updateDb();
     }
 
-    private void updateDb(boolean bnEr) throws Exception {
-        List<String> users;
-
-        if(bnEr) {
-            users = fillBnUserList(true);
-        } else {
-            users = fillUserList();
-        }
+    private void updateDb() throws Exception {
+        List<String> users = fillUserList(true);
 
         Map<String, Map<String, Double>> allDataForAllUsers = new HashMap<>();
 
@@ -47,13 +40,7 @@ public class Aandacht {
             }
         }
 
-        String table;
-
-        if(bnEr) {
-            table = "userdatabn";
-        } else {
-            table = "userdata";
-        }
+        String table = "userdatamigrated";
 
         initializeDbConnection();
 
@@ -271,164 +258,7 @@ public class Aandacht {
         return engagementOfLast24h;
     }
 
-    public List<String> fillUserList() {
-        List<String> users = new ArrayList<>();
-
-        users.add("glam_by_eefje");
-        users.add("miss_k_510");
-        users.add("melikebeauty");
-        users.add("shrn__");
-        users.add("soophjee");
-        users.add("jessiejazzvuijk");
-        users.add("mw_danique");
-        users.add("manontilstra");
-        users.add("bibibreijman");
-        users.add("melanielatooy");
-        users.add("jilllvd");
-        users.add("jiami");
-        users.add("teskedeschepper");
-        users.add("disfordazzle");
-        users.add("roosmarijnbraspenning");
-        users.add("robin.balou");
-        users.add("kickiedeklijn");
-        users.add("valerierooyackers");
-        users.add("lynnvandevorst");
-        users.add("indiasuy");
-        users.add("kikiboreel");
-        users.add("juliettemesterom");
-        users.add("elinevanhaasteren");
-        users.add("meialinde");
-        users.add("sylvanadejong");
-        users.add("ishh");
-        users.add("liekevdhoorn");
-        users.add("lizachloe");
-        users.add("esmeetrouw");
-        users.add("kimberlyesmee");
-        users.add("thefashionblognl");
-        users.add("bemmay");
-        users.add("xlisadam");
-        users.add("germainepeels");
-        users.add("marijezuurveld");
-        users.add("saar");
-        users.add("allaboutkimberly");
-        users.add("cheyennehinrichs");
-        users.add("dutchfashion_freak");
-        users.add("milouhendriks");
-        users.add("miloutjioe");
-        users.add("naomivredevoort");
-        users.add("ramijntje");
-        users.add("inesgomesdefaria");
-        users.add("remke");
-        users.add("irisamberr");
-        users.add("fennleonoor");
-        users.add("brunabear");
-        users.add("maximefelicia");
-        users.add("esmeehuiden");
-        users.add("sophiamolen");
-        users.add("rebelrosey");
-        users.add("elise.bak");
-        users.add("xarisha");
-        users.add("lisannede_bruijn");
-        users.add("daphisticated");
-        users.add("sophiemay");
-        users.add("nathalieejw");
-        users.add("queenofjetlags");
-        users.add("stephsa");
-        users.add("carmenmattijssen");
-        users.add("vivianhoorn");
-        users.add("babetteroosstyling");
-        users.add("frederiqueligtvoet");
-        users.add("noahfleur");
-        users.add("martinemaureen");
-        users.add("iriskristen");
-        users.add("laurensophiemessack");
-        users.add("lyannemeijer");
-        users.add("danizijlstra");
-        users.add("femke.vermaas");
-        users.add("evaschaapp");
-        users.add("louiselutkes");
-        users.add("anouskaband");
-        users.add("nikkimarinus");
-        users.add("amakahamelijnck");
-        users.add("daniellecamille");
-        users.add("claartjerose");
-        users.add("bentheliem");
-        //users.add("elaisaya");
-        users.add("naomiavrahami");
-        users.add("lizzyperridon");
-        users.add("victoriawaldau");
-        users.add("rianne.meijer");
-        users.add("clairecampman");
-        users.add("esmeevanes");
-        users.add("marlouisee");
-        users.add("nataliadrzy");
-        users.add("lauraponticorvo");
-        users.add("clairepronk");
-        users.add("sophiemilzink");
-        users.add("daniquehogguer");
-        users.add("amarenns");
-        users.add("fabiennehekman");
-        users.add("laurawilrycx");
-        users.add("ophelievita");
-        users.add("robinsingels");
-        users.add("prishella");
-        users.add("moderosaofficial");
-        users.add("mendiewijker");
-        users.add("ninawarink");
-        users.add("laurelvuijk");
-        users.add("daelostylo");
-        users.add("laurenvansam");
-        users.add("larissabruin");
-        users.add("highonthoseheels");
-        users.add("daniellevanginkel");
-        users.add("mirthewillemsx");
-        users.add("gabrieladegraaf");
-        users.add("mailili.s");
-        users.add("nickysmol");
-        users.add("robineblickman");
-        users.add("avji_");
-        users.add("charelleschriek");
-        users.add("noaismay");
-        users.add("maudschellekens");
-        users.add("daniellederidder");
-        users.add("nadiaidder");
-        users.add("romyydb");
-        users.add("jolielot");
-        users.add("s0phieramaekers");
-        users.add("carmenleenen");
-        users.add("jamiecrafoord");
-
-        users.add("joshveldhuizen");
-        users.add("ankeglamournl");
-        users.add("noualiah");
-        users.add("fabiola_volkers");
-        users.add("daneejosephine");
-        users.add("ninaschotpoort");
-        users.add("estellehagen");
-        users.add("sterrevanwoudenberg");
-        users.add("lisevanwijk");
-        users.add("hntm_cecilia");
-        users.add("sanne");
-        users.add("beautygloss");
-        users.add("isadeejansen");
-        users.add("sophieousri");
-        users.add("louschulten");
-        users.add("lotteyvette");
-        users.add("lotteverlaat");
-        users.add("xdyonnex");
-        users.add("rachelleruwiel");
-        users.add("thedutchbandit");
-        users.add("mette_sterre");
-        users.add("yuliandvd");
-
-        users.add("albertdrosphotography");
-        users.add("een_wasbeer");
-        users.add("dutchtoy");
-
-        return users;
-    }
-
-    public List<String> fillBnUserList(boolean includingInternational) {
+    public List<String> fillUserList(boolean includingInternational) {
         List<String> users = new ArrayList<>();
 
         if(includingInternational) {
@@ -538,7 +368,6 @@ public class Aandacht {
         users.add("douwebob");
         users.add("giels");
         users.add("onnedi");
-        users.add("ninaschotpoort");
         users.add("ninahouston_");
         users.add("bibi.social_");
         users.add("liekemartens");
@@ -633,17 +462,13 @@ public class Aandacht {
         users.add("bram.krikke");
         users.add("koenkardashian");
         users.add("geraldine_kemper");
-        users.add("vivianhoorn");
         users.add("qucee");
-        users.add("claartjerose");
         users.add("thooootje");
         users.add("lizzyvdligt");
-        users.add("beautygloss");
         users.add("kalvijn");
         users.add("yolanthecabau");
         users.add("fredvanleer");
         users.add("k2im");
-        users.add("bibibreijman");
         users.add("giel");
         users.add("donnyroelvink");
         users.add("bizzey");
@@ -651,14 +476,9 @@ public class Aandacht {
         users.add("ricoverhoeven");
         users.add("chantaljanzen.official");
         users.add("nochtlii");
-        users.add("jiami");
         users.add("doutzen");
-        users.add("queenofjetlags");
         users.add("famkelouise_");
         users.add("ronnieflex010");
-        users.add("jessiejazzvuijk");
-        users.add("ninawarink");
-        users.add("sophiemilzink");
         users.add("juultjetieleman");
         users.add("nienkeplas");
         users.add("monicageuze");
@@ -666,7 +486,6 @@ public class Aandacht {
         users.add("kajstypetjes");
         users.add("maan.de.st");
         users.add("annanooshin");
-
         users.add("fockeline");
         users.add("angelaschijfofficial");
         users.add("jakereesemusic");
@@ -708,7 +527,6 @@ public class Aandacht {
         users.add("pippellens");
         users.add("mrskeizer");
         users.add("moniquesmit_insta");
-
         users.add("rafaelvdvaart");
         users.add("frenkiedejong");
         users.add("jaspercillessen");
@@ -722,7 +540,6 @@ public class Aandacht {
         users.add("patrickkluivert9");
         users.add("ginasingels.official");
         users.add("michielhuisman");
-
         users.add("peterpannekoek");
         users.add("najib_amhali");
         users.add("acdathomas");
@@ -748,7 +565,6 @@ public class Aandacht {
         users.add("mctyphoon");
         users.add("bitsofnaaz");
         users.add("jurregeluk");
-        users.add("teskedeschepper");
         users.add("lucashamming");
         users.add("ericcorton");
         users.add("blokhuisleo");
@@ -759,8 +575,6 @@ public class Aandacht {
         users.add("leoalkemade");
         users.add("notsosadgrl");
         users.add("timknolofficial");
-        users.add("disfordazzle");
-
         users.add("afrojack");
         users.add("nickyromero");
         users.add("oliverheldens");
@@ -769,27 +583,22 @@ public class Aandacht {
         users.add("samfeldtmusic");
         users.add("mikewilliams");
         users.add("sandervandoornofficial");
-
         users.add("sitavermeulen");
         users.add("dewipechler");
         users.add("sanderkleinenberg");
         users.add("romeestrijd");
         users.add("jippheldoorn");
-
         users.add("winne_ecktuh");
-        users.add("murdaworld");
         users.add("mcsnelle");
         users.add("jayjayboske");
         users.add("alias1oak");
         users.add("slowflowanimal");
         users.add("nesimnajih");
         users.add("jiri11");
-
         users.add("nabiltime");
         users.add("defano.holwijn");
         users.add("ashafarofficial");
         users.add("sxteenxvi");
-        users.add("fabiola_volkers");
         users.add("leafssensei");
         users.add("anouarvines");
         users.add("touzanitv");
@@ -828,7 +637,6 @@ public class Aandacht {
         users.add("monsif01");
         users.add("sjaakofficial");
         users.add("mertabimert");
-
         users.add("klaasjanhuntelaar");
         users.add("joelveltman");
         users.add("johnheitinga");
@@ -839,10 +647,156 @@ public class Aandacht {
         users.add("daleysinkgraven");
         users.add("luukdejong9");
         users.add("nigeldejong");
-
         users.add("negin_mirsalehi");
         users.add("hijabhills");
         users.add("thefashionguitar");
+        users.add("glam_by_eefje");
+        users.add("miss_k_510");
+        users.add("melikebeauty");
+        users.add("shrn__");
+        users.add("soophjee");
+        users.add("jessiejazzvuijk");
+        users.add("mw_danique");
+        users.add("manontilstra");
+        users.add("bibibreijman");
+        users.add("melanielatooy");
+        users.add("jilllvd");
+        users.add("jiami");
+        users.add("teskedeschepper");
+        users.add("disfordazzle");
+        users.add("roosmarijnbraspenning");
+        users.add("robin.balou");
+        users.add("kickiedeklijn");
+        users.add("valerierooyackers");
+        users.add("lynnvandevorst");
+        users.add("indiasuy");
+        users.add("kikiboreel");
+        users.add("juliettemesterom");
+        users.add("elinevanhaasteren");
+        users.add("meialinde");
+        users.add("sylvanadejong");
+        users.add("ishh");
+        users.add("liekevdhoorn");
+        users.add("lizachloe");
+        users.add("esmeetrouw");
+        users.add("kimberlyesmee");
+        users.add("thefashionblognl");
+        users.add("bemmay");
+        users.add("xlisadam");
+        users.add("germainepeels");
+        users.add("marijezuurveld");
+        users.add("saar");
+        users.add("allaboutkimberly");
+        users.add("cheyennehinrichs");
+        users.add("dutchfashion_freak");
+        users.add("milouhendriks");
+        users.add("miloutjioe");
+        users.add("naomivredevoort");
+        users.add("ramijntje");
+        users.add("inesgomesdefaria");
+        users.add("remke");
+        users.add("irisamberr");
+        users.add("fennleonoor");
+        users.add("brunabear");
+        users.add("maximefelicia");
+        users.add("esmeehuiden");
+        users.add("sophiamolen");
+        users.add("rebelrosey");
+        users.add("elise.bak");
+        users.add("xarisha");
+        users.add("lisannede_bruijn");
+        users.add("daphisticated");
+        users.add("sophiemay");
+        users.add("nathalieejw");
+        users.add("queenofjetlags");
+        users.add("stephsa");
+        users.add("carmenmattijssen");
+        users.add("vivianhoorn");
+        users.add("babetteroosstyling");
+        users.add("frederiqueligtvoet");
+        users.add("noahfleur");
+        users.add("martinemaureen");
+        users.add("iriskristen");
+        users.add("laurensophiemessack");
+        users.add("lyannemeijer");
+        users.add("danizijlstra");
+        users.add("femke.vermaas");
+        users.add("evaschaapp");
+        users.add("louiselutkes");
+        users.add("anouskaband");
+        users.add("nikkimarinus");
+        users.add("amakahamelijnck");
+        users.add("daniellecamille");
+        users.add("claartjerose");
+        users.add("bentheliem");
+        users.add("naomiavrahami");
+        users.add("lizzyperridon");
+        users.add("victoriawaldau");
+        users.add("rianne.meijer");
+        users.add("clairecampman");
+        users.add("esmeevanes");
+        users.add("marlouisee");
+        users.add("nataliadrzy");
+        users.add("lauraponticorvo");
+        users.add("clairepronk");
+        users.add("sophiemilzink");
+        users.add("daniquehogguer");
+        users.add("amarenns");
+        users.add("fabiennehekman");
+        users.add("laurawilrycx");
+        users.add("ophelievita");
+        users.add("robinsingels");
+        users.add("prishella");
+        users.add("moderosaofficial");
+        users.add("mendiewijker");
+        users.add("ninawarink");
+        users.add("laurelvuijk");
+        users.add("daelostylo");
+        users.add("laurenvansam");
+        users.add("larissabruin");
+        users.add("highonthoseheels");
+        users.add("daniellevanginkel");
+        users.add("mirthewillemsx");
+        users.add("gabrieladegraaf");
+        users.add("mailili.s");
+        users.add("nickysmol");
+        users.add("robineblickman");
+        users.add("avji_");
+        users.add("charelleschriek");
+        users.add("noaismay");
+        users.add("maudschellekens");
+        users.add("daniellederidder");
+        users.add("nadiaidder");
+        users.add("romyydb");
+        users.add("jolielot");
+        users.add("s0phieramaekers");
+        users.add("carmenleenen");
+        users.add("jamiecrafoord");
+        users.add("joshveldhuizen");
+        users.add("ankeglamournl");
+        users.add("noualiah");
+        users.add("fabiola_volkers");
+        users.add("daneejosephine");
+        users.add("ninaschotpoort");
+        users.add("estellehagen");
+        users.add("sterrevanwoudenberg");
+        users.add("lisevanwijk");
+        users.add("hntm_cecilia");
+        users.add("sanne");
+        users.add("beautygloss");
+        users.add("isadeejansen");
+        users.add("sophieousri");
+        users.add("louschulten");
+        users.add("lotteyvette");
+        users.add("lotteverlaat");
+        users.add("xdyonnex");
+        users.add("rachelleruwiel");
+        users.add("thedutchbandit");
+        users.add("mette_sterre");
+        users.add("yuliandvd");
+        users.add("albertdrosphotography");
+        users.add("een_wasbeer");
+        users.add("dutchtoy");
 
         return users;
     }

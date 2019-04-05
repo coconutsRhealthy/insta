@@ -12,7 +12,7 @@ public class Analysis {
 //    }
 
     public List<BnEr> getBnList(String stat, String date, int daysDifference) throws Exception {
-        Map<String, Double> bnMap = getTopXofFullMap(doDiffAnalysisForStat(stat, daysDifference, true, date), 20);
+        Map<String, Double> bnMap = getTopXofFullMap(doDiffAnalysisForStat(stat, daysDifference, date), 20);
 
         List<BnEr> bnErList = new ArrayList<>();
 
@@ -77,14 +77,8 @@ public class Analysis {
         return pasteFriendly;
     }
 
-    private Map<String, Double> doDiffAnalysisForStat(String stat, int daysDifference, boolean bnEr, String date) throws Exception {
-        List<String> allUsers;
-
-        if(bnEr) {
-            allUsers = new Aandacht().fillBnUserList(false);
-        } else {
-            allUsers = new Aandacht().fillUserList();
-        }
+    private Map<String, Double> doDiffAnalysisForStat(String stat, int daysDifference, String date) throws Exception {
+        List<String> allUsers = new Aandacht().fillUserList(false);
 
         Map<String, Double> analysisMap = new HashMap<>();
 
@@ -123,7 +117,7 @@ public class Analysis {
     }
 
     private Map<String, Double> getEngagementLast24hFromDb() throws Exception {
-        List<String> allUsers = new Aandacht().fillUserList();
+        List<String> allUsers = new Aandacht().fillUserList(false);
 
         Map<String, Double> analysisMap = new HashMap<>();
 
