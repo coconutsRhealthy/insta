@@ -38,7 +38,7 @@ public class Controller extends SpringBootServletInitializer {
 
         System.setProperty("java.awt.headless", "false");
 
-        BufferedImage bufferedImage = ImageProcessor.getBufferedImageScreenShot(0, 0, 200, 200);
+        BufferedImage bufferedImage = ImageProcessor.getBufferedImageScreenShot(437, 106, 805, 720);
         ImageProcessor.saveBufferedImage(bufferedImage, "/Users/lennartpopma/Documents/instaproject/screenshots_per_day/" + dateString + ".png");
     }
 
