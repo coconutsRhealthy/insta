@@ -19,7 +19,9 @@
                             <button ng-click="makeScreenshot()">Make screenshot</button>
                         </div>
                         <div>
-                            <input type="text" ng-model="dateToUse"><button ng-click="selectDate()">Select date</button>
+                            <input type="text" ng-model="dateToUse">
+                            <button ng-click="selectDate()">Select date</button>
+                            <button ng-click="selectDateBottom()">Select date bottom</button>
                         </div>
                     </div>
 
@@ -33,7 +35,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="bnEr in bnData | orderBy: '-followerGrowth' track by $index">
+                                <tr ng-repeat="bnEr in bnData | orderBy: '-followerGrowth':reverseOrder track by $index">
                                     <td style="line-height: 0.6;">{{$index + 1}}</td>
                                     <td style="line-height: 0.6;">{{bnEr.name}}</td>
                                     <td style="line-height: 0.6;">{{bnEr.followerGrowth}}</td>

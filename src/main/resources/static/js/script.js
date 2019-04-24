@@ -5,15 +5,31 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
     $scope.bnData;
     $scope.dateToUse;
     $scope.writtenDate;
+    $scope.reverseOrder = false;
 
     $scope.makeScreenshot = function() {
         $http.get('/makeScreenshot/');
     }
 
     $scope.selectDate = function() {
+        $scope.reverseOrder = false;
+
         $http.post('/getFollowersForDate', $scope.dateToUse).success(function(data) {
             $scope.bnData = data;
         })
+
+        setWrittenDate();
+    }
+
+    $scope.selectDateBottom = function() {
+        $scope.dateToUse = $scope.dateToUse + "Reverse";
+        $scope.reverseOrder = true;
+
+        $http.post('/getFollowersForDate', $scope.dateToUse).success(function(data) {
+            $scope.bnData = data;
+        })
+
+        $scope.dateToUse = $scope.dateToUse.replace("Reverse", "");
 
         setWrittenDate();
     }

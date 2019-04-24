@@ -62,8 +62,8 @@ public class Analysis {
         return 0;
     }
 
-    public List<BnEr> getBnList(String stat, String date, int daysDifference) throws Exception {
-        Map<String, Double> bnMap = getTopXofFullMap(doDiffAnalysisForStat(stat, daysDifference, date), 20);
+    public List<BnEr> getBnList(String stat, String date, int daysDifference, boolean bottom) throws Exception {
+        Map<String, Double> bnMap = getTopOrBottomXofFullMap(doDiffAnalysisForStat(stat, daysDifference, date), 20, bottom);
 
         List<BnEr> bnErList = new ArrayList<>();
 
@@ -102,7 +102,11 @@ public class Analysis {
         closeDbConnection();
     }
 
-    private Map<String, Double> getTopXofFullMap(Map<String, Double> fullMap, int topLimit) {
+    private Map<String, Double> getTopOrBottomXofFullMap(Map<String, Double> fullMap, int topLimit, boolean bottom) {
+        if(bottom) {
+            fullMap = Aandacht.sortByValueLowToHigh(fullMap);
+        }
+
         Map<String, Double> top5map = new HashMap<>();
 
         int counter = 0;

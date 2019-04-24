@@ -27,7 +27,14 @@ public class Controller extends SpringBootServletInitializer {
 
     @RequestMapping(value = "/getFollowersForDate", method = RequestMethod.POST)
     public @ResponseBody List<BnEr> getBnDataForDate(@RequestBody String date) throws Exception {
-        List<BnEr> bnErList = new Analysis().getBnList("absoluteFollowers", date, 1);
+        boolean bottom = false;
+
+        if(date.contains("Reverse")) {
+            bottom = true;
+            date = date.replace("Reverse", "");
+        }
+
+        List<BnEr> bnErList = new Analysis().getBnList("absoluteFollowers", date, 1, bottom);
         return bnErList;
     }
 
