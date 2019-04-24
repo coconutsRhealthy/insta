@@ -11,6 +11,57 @@ public class Analysis {
 //        new Analysis().getBnList("absoluteFollowers", "2019-03-27", 1);
 //    }
 
+    private void printAllFollowerDataForUser(String username) throws Exception {
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM userdatabn WHERE username = '" + username + "' ORDER BY date ASC;");
+
+        while(rs.next()) {
+            System.out.println(convertDoubleToPasteFriendly(rs.getDouble("followers")));
+        }
+
+        rs.close();
+        st.close();
+
+        closeDbConnection();
+    }
+
+    private double getFollowerDiff(String username) throws Exception {
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM userdatabn WHERE username = '" + username + "' ORDER BY date DESC;");
+
+        double lastValue = -1;
+        double secondLastValue = -1;
+
+        int counter = 0;
+
+        while(rs.next()) {
+            counter++;
+
+            if(counter == 1) {
+                lastValue = rs.getDouble("followers");
+            } else if(counter == 2) {
+                secondLastValue = rs.getDouble("followers");
+            } else {
+                break;
+            }
+        }
+
+        rs.close();
+        st.close();
+
+        closeDbConnection();
+
+        System.out.println(lastValue);
+        System.out.println(secondLastValue);
+        System.out.println(lastValue - secondLastValue);
+
+        return 0;
+    }
+
     public List<BnEr> getBnList(String stat, String date, int daysDifference) throws Exception {
         Map<String, Double> bnMap = getTopXofFullMap(doDiffAnalysisForStat(stat, daysDifference, date), 20);
 
