@@ -3,6 +3,7 @@ package com.lennart.controller;
 import com.lennart.model.Analysis;
 import com.lennart.model.BnEr;
 import com.lennart.model.ImageProcessor;
+import com.lennart.model.funda.HousePersister;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.*;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -47,6 +49,21 @@ public class Controller extends SpringBootServletInitializer {
 
         BufferedImage bufferedImage = ImageProcessor.getBufferedImageScreenShot(437, 106, 805, 720);
         ImageProcessor.saveBufferedImage(bufferedImage, "/Users/lennartpopma/Documents/instaproject/screenshots_per_day/" + dateString + ".png");
+    }
+
+    @RequestMapping(value = "/simpleHistogram", method = RequestMethod.GET)
+    public @ResponseBody List<Integer> makeSimpleHistogram() throws Exception {
+        return new HousePersister().getAllM2PricesForPostcode("1097");
+    }
+
+    @RequestMapping(value = "/doubleHistogram", method = RequestMethod.GET)
+    public @ResponseBody List<List<Integer>> makekDoubleHistogram() throws Exception {
+        List<List<Integer>> listOfLists = new ArrayList<>();
+
+        listOfLists.add(new HousePersister().getAllM2PricesForPostcode("1069"));
+        listOfLists.add(new HousePersister().getAllM2PricesForPostcode("1017"));
+
+        return listOfLists;
     }
 
     public static void main(String[] args) {

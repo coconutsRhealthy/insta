@@ -7,6 +7,9 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
     $scope.writtenDate;
     $scope.reverseOrder = false;
 
+    //simpleHistogram();
+    doubleHistogram();
+
     $scope.makeScreenshot = function() {
         $http.get('/makeScreenshot/');
     }
@@ -85,5 +88,53 @@ mainApp.controller('buzzwordsController', function($scope, $http) {
         }
 
         $scope.writtenDate = dayToUse + " " + monthToUse + " " + yearToUse;
+    }
+
+    function simpleHistogram() {
+       var x = [];
+
+       $http.get('/simpleHistogram/').success(function(data) {
+          x = data;
+
+          var trace = {
+             x: x,
+             type: 'histogram',
+          };
+
+          var plotlyData = [trace];
+          Plotly.newPlot('myDiv', plotlyData);
+       })
+    }
+
+    function doubleHistogram() {
+        var x1 = [];
+        var x2 = [];
+
+        $http.get('/doubleHistogram/').success(function(data) {
+            x1 = data[0];
+            x2 = data[1];
+
+            var trace1 = {
+              x: x1,
+              type: "histogram",
+              opacity: 0.5,
+              marker: {
+                 color: 'green',
+              },
+            };
+
+            var trace2 = {
+              x: x2,
+              type: "histogram",
+              opacity: 0.6,
+              marker: {
+                 color: 'red',
+              },
+            };
+
+            var plotlyData = [trace1, trace2];
+            var layout = {barmode: "overlay"};
+            Plotly.newPlot('myDiv2', plotlyData, layout);
+        })
     }
 });
