@@ -51,17 +51,32 @@ public class Controller extends SpringBootServletInitializer {
         ImageProcessor.saveBufferedImage(bufferedImage, "/Users/lennartpopma/Documents/instaproject/screenshots_per_day/" + dateString + ".png");
     }
 
-    @RequestMapping(value = "/simpleHistogram", method = RequestMethod.GET)
-    public @ResponseBody List<Integer> makeSimpleHistogram() throws Exception {
-        return new HousePersister().getAllM2PricesForPostcode("1097");
+    @RequestMapping(value = "/simpleHistogramM2", method = RequestMethod.GET)
+    public @ResponseBody List<Integer> makeSimpleHistogramM2() throws Exception {
+        return new HousePersister().getAllM2Prices();
+    }
+
+    @RequestMapping(value = "/simpleHistogramPrice", method = RequestMethod.GET)
+    public @ResponseBody List<Integer> makeSimpleHistogramPrice() throws Exception {
+        return new HousePersister().getAllPrices();
     }
 
     @RequestMapping(value = "/doubleHistogram", method = RequestMethod.GET)
     public @ResponseBody List<List<Integer>> makekDoubleHistogram() throws Exception {
         List<List<Integer>> listOfLists = new ArrayList<>();
 
-        listOfLists.add(new HousePersister().getAllM2PricesForPostcode("1069"));
-        listOfLists.add(new HousePersister().getAllM2PricesForPostcode("1017"));
+        listOfLists.add(new HousePersister().getAllPricesForCity("Zwolle"));
+        listOfLists.add(new HousePersister().getAllPricesForCity("Amsterdam"));
+
+        return listOfLists;
+    }
+
+    @RequestMapping(value = "/doubleHistogramM2", method = RequestMethod.GET)
+    public @ResponseBody List<List<Integer>> makekDoubleHistogramM2() throws Exception {
+        List<List<Integer>> listOfLists = new ArrayList<>();
+
+        listOfLists.add(new HousePersister().getAllM2PricesForCity("Zwolle"));
+        listOfLists.add(new HousePersister().getAllM2PricesForCity("Amsterdam"));
 
         return listOfLists;
     }

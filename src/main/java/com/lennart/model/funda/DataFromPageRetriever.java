@@ -34,7 +34,6 @@ public class DataFromPageRetriever {
             house.setPrice(getPrice(searchResult));
             house.setPriceM2(getPriceM2(house.getPrice(), house.getOppervlakte()));
             house.setDateAtPage(document.select("div.result-separator").text());
-            house.setDateAtPage("hoi");
             house.setCurrentDate(getCurrentDate());
 
             houseData.add(house);
