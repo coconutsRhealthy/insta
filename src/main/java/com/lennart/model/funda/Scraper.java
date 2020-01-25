@@ -16,6 +16,7 @@ public class Scraper {
     }
 
     private void scrape() throws Exception {
+        TimeUnit.SECONDS.sleep(2);
 
         String baseUrl = "view-source:https://www.funda.nl/koop/amsterdam/verkocht/sorteer-afmelddatum-af/p";
 
@@ -36,7 +37,7 @@ public class Scraper {
             //click paste
             click(550, 237);
 
-            TimeUnit.MILLISECONDS.sleep(5550);
+            TimeUnit.MILLISECONDS.sleep(4950);
 
             //right click
             rightClick(500, 500);
