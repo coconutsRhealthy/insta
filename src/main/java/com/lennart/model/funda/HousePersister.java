@@ -1,10 +1,7 @@
 package com.lennart.model.funda;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,7 +65,6 @@ public class HousePersister {
             System.out.println("wacht");
         }
 
-
         st.close();
     }
 
@@ -85,6 +81,94 @@ public class HousePersister {
         }
 
         return allPageHtmlFiles;
+    }
+
+    public List<Integer> getAllM2Prices() throws Exception {
+        List<Integer> allM2Prices = new ArrayList<>();
+
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM funda;");
+
+        while(rs.next()) {
+            if(rs.getDouble("prijs_m2") >= 0) {
+                allM2Prices.add((int) rs.getDouble("prijs_m2"));
+            }
+        }
+
+        rs.close();
+        st.close();
+
+        closeDbConnection();
+
+        return allM2Prices;
+    }
+
+    public List<Integer> getAllPrices() throws Exception {
+        List<Integer> allPrices = new ArrayList<>();
+
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM funda;");
+
+        while(rs.next()) {
+            if(rs.getDouble("prijs") >= 0) {
+                allPrices.add((int) rs.getDouble("prijs"));
+            }
+        }
+
+        rs.close();
+        st.close();
+
+        closeDbConnection();
+
+        return allPrices;
+    }
+
+    public List<Integer> getAllPricesForCity(String city) throws Exception {
+        List<Integer> allPrices = new ArrayList<>();
+
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM funda WHERE plaats LIKE '%" + city + "%';");
+
+        while(rs.next()) {
+            if(rs.getDouble("prijs") >= 0) {
+                allPrices.add((int) rs.getDouble("prijs"));
+            }
+        }
+
+        rs.close();
+        st.close();
+
+        closeDbConnection();
+
+        return allPrices;
+    }
+
+    public List<Integer> getAllM2PricesForCity(String city) throws Exception {
+        List<Integer> allPrices = new ArrayList<>();
+
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM funda WHERE plaats LIKE '%" + city + "%';");
+
+        while(rs.next()) {
+            if(rs.getDouble("prijs_m2") >= 0) {
+                allPrices.add((int) rs.getDouble("prijs_m2"));
+            }
+        }
+
+        rs.close();
+        st.close();
+
+        closeDbConnection();
+
+        return allPrices;
     }
 
     private void initializeDbConnection() throws Exception {
