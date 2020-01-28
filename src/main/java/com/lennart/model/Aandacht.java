@@ -16,10 +16,10 @@ public class Aandacht {
 
     private Connection con;
 
-    public static void main(String[] args) throws Exception {
-        Aandacht aandacht = new Aandacht();
-        aandacht.updateDb();
-    }
+//    public static void main(String[] args) throws Exception {
+//        Aandacht aandacht = new Aandacht();
+//        aandacht.updateDb();
+//    }
 
     private void updateDb() throws Exception {
         List<String> users = fillUserList(true);

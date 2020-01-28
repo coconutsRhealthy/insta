@@ -12,9 +12,9 @@ public class HousePersister {
 
     private Connection con;
 
-    public static void main(String[] args) throws Exception {
-        new HousePersister().fillDbFromFiles();
-    }
+//    public static void main(String[] args) throws Exception {
+//        new HousePersister().fillDbFromFiles();
+//    }
 
     private void fillDbFromFiles() throws Exception {
         List<File> allHtmlFiles = getAllHtmlFilesFromDir("/Users/LennartMac/Documents/huizen");
@@ -155,7 +155,7 @@ public class HousePersister {
         initializeDbConnection();
 
         Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM funda WHERE plaats LIKE '%" + city + "%';");
+        ResultSet rs = st.executeQuery("SELECT * FROM funda WHERE plaats LIKE '%" + city + "%' AND prijs < 2000000 AND prijs_m2 < 12500;");
 
         while(rs.next()) {
             if(rs.getDouble("prijs_m2") >= 0) {

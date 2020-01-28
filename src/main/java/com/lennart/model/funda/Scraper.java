@@ -18,9 +18,9 @@ public class Scraper {
     private void scrape() throws Exception {
         TimeUnit.SECONDS.sleep(2);
 
-        String baseUrl = "view-source:https://www.funda.nl/koop/amsterdam/verkocht/sorteer-afmelddatum-af/p";
+        String baseUrl = "view-source:https://www.funda.nl/koop/heel-nederland/verkocht/sorteer-afmelddatum-af/p";
 
-        for(int i = 624; i < 696; i++) {
+        for(int i = 795; i < 16_000; i++) {
             String url = baseUrl + i + "/";
 
             StringSelection stringSelection = new StringSelection(url);

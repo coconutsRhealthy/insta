@@ -12,9 +12,9 @@ public class Analysis {
 
     private Connection con;
 
-    public static void main(String[] args) throws Exception {
-        new Analysis().analyse();
-    }
+//    public static void main(String[] args) throws Exception {
+//        new Analysis().analyse();
+//    }
 
     //print hoeveel van totaal goedkoper zijn qua prijs/m2
 
