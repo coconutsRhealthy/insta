@@ -29,8 +29,9 @@ public class HousePersister {
 
             for(House house : houseData) {
                 storeHouseInDb(house);
-                System.out.println(counter++);
             }
+
+            System.out.println(counter++);
         }
 
         closeDbConnection();
@@ -40,11 +41,12 @@ public class HousePersister {
         Statement st = con.createStatement();
 
         try {
-            st.executeUpdate("INSERT INTO funda (" +
+            st.executeUpdate("INSERT INTO funda2 (" +
                     "adres, " +
                     "postcode, " +
                     "plaats, " +
                     "oppervlakte, " +
+                    "kamers, " +
                     "prijs, " +
                     "prijs_m2, " +
                     "makelaar, " +
@@ -55,6 +57,7 @@ public class HousePersister {
                     house.getPostCode() + "', '" +
                     house.getCity() + "', '" +
                     house.getOppervlakte() + "', '" +
+                    house.getNumberOfRooms() + "', '" +
                     house.getPrice() + "', '" +
                     house.getPriceM2() + "', '" +
                     house.getMakelaar() + "', '" +
@@ -62,6 +65,7 @@ public class HousePersister {
                     house.getCurrentDate() + "'" +
                     ")");
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("wacht");
         }
 

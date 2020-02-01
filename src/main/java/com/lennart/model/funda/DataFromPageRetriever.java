@@ -33,8 +33,9 @@ public class DataFromPageRetriever {
             house.setMakelaar(getMakelaar(searchResult));
             house.setPrice(getPrice(searchResult));
             house.setPriceM2(getPriceM2(house.getPrice(), house.getOppervlakte()));
-            house.setDateAtPage(document.select("div.result-separator").text());
+            house.setDateAtPage(document.select("div.result-separator").first().text());
             house.setCurrentDate(getCurrentDate());
+            house.setNumberOfRooms(getAantalKamers(searchResult));
 
             houseData.add(house);
         }
@@ -44,21 +45,57 @@ public class DataFromPageRetriever {
 
     private String getAddress(Element element) {
         String address = element.select("a > h3").text();
-        address = address.replaceAll("'", "");
+        address = address.replaceAll("'", "''");
         return address;
     }
 
     private String getPostCode(Element element) {
-        String postCode = element.select("a > h4").text();
-        postCode = postCode.substring(0, postCode.lastIndexOf(" "));
-        postCode = postCode.replaceAll("'", "");
-        return postCode;
+        String postcode;
+
+        String baseString = element.select("a > h4").text();
+        String[] parts = baseString.split(" ");
+
+        if(parts.length == 2) {
+            postcode = parts[0];
+        } else if(parts.length > 2) {
+            if(parts[1].length() == 2) {
+                postcode = parts[0] + " " + parts[1];
+            } else {
+                postcode = parts[0];
+            }
+        } else {
+            postcode = "-1";
+        }
+
+        while(postcode.startsWith(" ")) {
+            postcode = postcode.substring(1, postcode.length());
+        }
+
+        while(postcode.endsWith(" ")) {
+            postcode = postcode.substring(0, postcode.length() - 1);
+        }
+
+        postcode = postcode.replaceAll("'", "''");
+
+        return postcode;
     }
 
     private String getCity(Element element) {
-        String city = element.select("a > h4").text();
-        city = city.substring(city.lastIndexOf(" ") + 1);
-        city = city.replaceAll("'", "");
+        String baseString = element.select("a > h4").text();
+        String partToRemove = getPostCode(element);
+
+        String city = baseString.replace(partToRemove, "");
+
+        while(city.startsWith(" ")) {
+            city = city.substring(1, city.length());
+        }
+
+        while(city.endsWith(" ")) {
+            city = city.substring(0, city.length() - 1);
+        }
+
+        city = city.replaceAll("'", "''");
+
         return city;
     }
 
@@ -75,6 +112,20 @@ public class DataFromPageRetriever {
         }
 
         return oppervlakte;
+    }
+
+    private double getAantalKamers(Element element) {
+        String kamersString = element.select("ul.search-result-kenmerken > li:nth-child(2)").text();
+
+        double aantalKamers;
+
+        if(!kamersString.isEmpty()) {
+            aantalKamers = Double.valueOf(kamersString.substring(0, kamersString.indexOf(" ")));
+        } else {
+            aantalKamers = -1;
+        }
+
+        return aantalKamers;
     }
 
     private double getPrice(Element element) {
@@ -95,7 +146,7 @@ public class DataFromPageRetriever {
 
     private String getMakelaar(Element element) {
         String makelaar = element.select("span.search-result-makelaar-name").text();
-        makelaar = makelaar.replaceAll("'", "");
+        makelaar = makelaar.replaceAll("'", "''");
         return makelaar;
     }
 
@@ -125,88 +176,5 @@ public class DataFromPageRetriever {
         java.util.Date date = new java.util.Date();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return dateFormat.format(date);
-    }
-
-
-
-
-
-
-
-
-
-    private void printAddresses() throws Exception {
-        //initializeDbConnection();
-
-        //for(int z = 2; z < 693; z++) {
-            //Document document = Jsoup.connect("https://www.funda.nl/koop/amsterdam/verkocht/sorteer-afmelddatum-af/p" + z + "/").get();
-            File input = new File("/Users/LennartMac/Documents/aapje.htm");
-            Document document = Jsoup.parse(input, "UTF-8", "http://www.eije.com/");
-
-            Elements addressElements = document.select("a > h3");
-
-            List<String> addressList = new ArrayList<>();
-            List<String> postCodeList = new ArrayList<>();
-            List<String> oppervlakteList = new ArrayList<>();
-            List<String> makelaarList = new ArrayList<>();
-            List<String> priceList = new ArrayList<>();
-
-            for(Element addressElement : addressElements) {
-                addressList.add(addressElement.text());
-            }
-
-            Elements postCodes = document.select("a > h4");
-
-            for(Element postCode : postCodes) {
-                postCodeList.add(postCode.text());
-            }
-
-            Elements oppervlaktes = document.select("span[title~=Gebruiksoppervlakte wonen]");
-
-            for(Element oppervlak : oppervlaktes) {
-                oppervlakteList.add(oppervlak.text());
-            }
-
-            Elements makelaars = document.select("span.search-result-makelaar-name");
-
-            for(Element makelaar : makelaars) {
-                makelaarList.add(makelaar.text());
-            }
-
-            Elements prices = document.select("span.search-result-price");
-
-            for(Element price : prices) {
-                priceList.add(price.text());
-            }
-
-            ///////
-
-            System.out.println("wacht");
-
-//            initializeDbConnection();
-//            Statement st = con.createStatement();
-//
-//            for(int i = 0; i < addressList.size(); i++) {
-//                st.executeUpdate("INSERT INTO funda (" +
-//                        "straat, " +
-//                        "postcode, " +
-//                        "oppervlakte, " +
-//                        "prijs, " +
-//                        "makelaar) " +
-//                        "VALUES ('" +
-//                        addressList.get(i) + "', '" +
-//                        postCodeList.get(i) + "', '" +
-//                        oppervlakteList.get(i) + "', '" +
-//                        priceList.get(i) + "', '" +
-//                        makelaarList.get(i) + "'" +
-//                        ")");
-//            }
-//
-//            st.close();
-//
-//            //System.out.println(z);
-//        //}
-//
-//        closeDbConnection();
     }
 }

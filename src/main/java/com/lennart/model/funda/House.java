@@ -16,6 +16,7 @@ public class House {
     String dateAtPage;
     String currentDate;
     double priceM2;
+    double numberOfRooms;
 
     public String getAddress() {
         return address;
@@ -87,5 +88,13 @@ public class House {
 
     public void setPriceM2(double priceM2) {
         this.priceM2 = priceM2;
+    }
+
+    public double getNumberOfRooms() {
+        return numberOfRooms;
+    }
+
+    public void setNumberOfRooms(double numberOfRooms) {
+        this.numberOfRooms = numberOfRooms;
     }
 }
