@@ -4,11 +4,19 @@ mainApp.controller('houseController', function($scope, $http) {
 
     $scope.postCodeToUse;
 
-    $scope.getPostCodeData = function() {
-        alert("beestje")
+    $scope.makelaar;
+    $scope.avPrice;
+    $scope.avPriceM2;
+    $scope.city;
+    $scope.numberOfHouses;
 
+    $scope.getPostCodeData = function() {
         $http.post('/getPostCodeInfo', $scope.postCodeToUse).success(function(data) {
-            alert("JUP!..!");
+            $scope.makelaar = data.mostUsedMakelaar;
+            $scope.avPrice = data.averageHousePrice;
+            $scope.avPriceM2 = data.averageHousePricePerM2;
+            $scope.city = data.city;
+            $scope.numberOfHouses = data.numberOfHousesSold;
         })
     }
 });
