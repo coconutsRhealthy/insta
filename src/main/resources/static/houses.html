@@ -3,6 +3,7 @@
         <title>House prices</title>
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="/css/style.css" />
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
@@ -18,16 +19,11 @@
                     <div class="col-sm-2"></div>
 
                     <div class="col-sm-8">
-                        <table class="table table-dark">
-                            <thead class="thead" style="color:white; background-color:rgb(0, 0, 0)">
-                            <tr>
-                                <th scope="col"><center>Popma Houses</center></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr></tr>
-                            </tbody>
-                        </table>
+
+                        <div class="jumbotron" id="jumbo">
+                            <h1 class="display-4"><strong>Fofs</strong></h1>
+                            <p class="lead">Recente gemiddelde huizenprijzen per postcodegebied</p>
+                        </div>
 
                         <form>
                             <div class="form-group">
@@ -37,44 +33,35 @@
                             <button class="btn btn-primary btn-lg btn-block" ng-click="getPostCodeData()">Get info!</button>
                         </form>
 
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div><center><strong>{{city}} - Postcode: {{postCodeToUse}}</strong></center></div>
+                        <div ng-show=showPostCodeData>
+                            <div class="row" id="headerTable">
+                                <div class="col-sm-12">
+                                    <div><center><strong>{{city}} - Postcode: {{postCodeToUse}}</strong></center></div>
+                                </div>
                             </div>
+
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td>Aantal huizen verkocht</td>
+                                        <td>{{numberOfHouses}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Gemiddelde vraagprijs</td>
+                                        <td>{{avPrice}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Gemiddelde vraagprijs per m2</td>
+                                        <td>{{avPriceM2}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Meest gebruikte makelaar</td>
+                                        <td>{{makelaar}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
 
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div>Aantal huizen verkocht</div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div>{{numberOfHouses}}</div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div>Gemiddelde vraagprijs</div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div>{{avPrice}}</div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div>Gemiddelde vraagprijs per m2</div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div>{{avPriceM2}}</div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div>Meest gebruikte makelaar</div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div>{{makelaar}}</div>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="col-sm-2"></div>
