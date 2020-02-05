@@ -10,31 +10,19 @@ import java.util.stream.Collectors;
 public class PostCodeInfoRetriever {
 
     private Connection con;
-    private String city = null;
-    private double averagePrice;
-    private double averagePriceM2;
-    private String mostUsedMakelaar;
-    private int numberOfHousesSold;
+
+    private PostCode postCode = new PostCode();
 
     public PostCode getPostCodeData(String postCodeString) throws Exception {
         setAllDataForPostCode(postCodeString);
-
-        PostCode postCode = new PostCode();
-
-        postCode.setCity(city);
-        postCode.setNumberOfHousesSold(numberOfHousesSold);
-        postCode.setAverageHousePrice(averagePrice);
-        postCode.setAverageHousePricePerM2(averagePriceM2);
-        postCode.setMostUsedMakelaar(mostUsedMakelaar);
-
         return postCode;
     }
 
-    private void setAllDataForPostCode(String postCode) throws Exception {
+    private void setAllDataForPostCode(String postCodeString) throws Exception {
         initializeDbConnection();
 
         Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM funda2 WHERE postcode LIKE '%" + postCode + "%';");
+        ResultSet rs = st.executeQuery("SELECT * FROM funda2 WHERE postcode LIKE '%" + postCodeString + "%';");
 
         Double numberOfHousesCounter = 0.0;
         double totalPriceCounter = 0;
@@ -44,8 +32,8 @@ public class PostCodeInfoRetriever {
         while(rs.next()) {
             allMakelaars.add(rs.getString("makelaar"));
 
-            if(city == null) {
-                city = rs.getString("plaats");
+            if(postCode.getCity() == null) {
+                postCode.setCity(rs.getString("plaats"));
             }
 
             numberOfHousesCounter++;
@@ -63,10 +51,10 @@ public class PostCodeInfoRetriever {
 
         closeDbConnection();
 
-        averagePrice = totalPriceCounter / numberOfHousesCounter;
-        averagePriceM2 = totalPriceM2Counter / numberOfHousesCounter;
-        numberOfHousesSold = numberOfHousesCounter.intValue();
-        mostUsedMakelaar = getMostFrequentWordFromList(allMakelaars);
+        postCode.setAverageHousePrice(convertPriceToCorrectStringFormat(totalPriceCounter / numberOfHousesCounter));
+        postCode.setAverageHousePricePerM2(convertPriceToCorrectStringFormat(totalPriceM2Counter / numberOfHousesCounter));
+        postCode.setNumberOfHousesSold(numberOfHousesCounter.intValue());
+        postCode.setMostUsedMakelaar(getMostFrequentWordFromList(allMakelaars));
     }
 
     private String getMostFrequentWordFromList(List<String> list) {
@@ -80,6 +68,14 @@ public class PostCodeInfoRetriever {
                 .getKey();
 
         return mostRepeatedWord;
+    }
+
+    private String convertPriceToCorrectStringFormat(Double price) {
+        int priceInt = price.intValue();
+        String priceString = String.format("%,d", priceInt);
+        priceString = priceString.replaceAll(",", ".");
+        priceString = "€ " + priceString;
+        return priceString;
     }
 
     private void initializeDbConnection() throws Exception {

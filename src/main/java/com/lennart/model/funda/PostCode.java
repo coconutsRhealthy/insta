@@ -7,8 +7,8 @@ public class PostCode {
 
     private String city;
     private int numberOfHousesSold;
-    private double averageHousePrice;
-    private double averageHousePricePerM2;
+    private String averageHousePrice;
+    private String averageHousePricePerM2;
     private String mostUsedMakelaar;
 
     public String getCity() {
@@ -27,19 +27,19 @@ public class PostCode {
         this.numberOfHousesSold = numberOfHousesSold;
     }
 
-    public double getAverageHousePrice() {
+    public String getAverageHousePrice() {
         return averageHousePrice;
     }
 
-    public void setAverageHousePrice(double averageHousePrice) {
+    public void setAverageHousePrice(String averageHousePrice) {
         this.averageHousePrice = averageHousePrice;
     }
 
-    public double getAverageHousePricePerM2() {
+    public String getAverageHousePricePerM2() {
         return averageHousePricePerM2;
     }
 
-    public void setAverageHousePricePerM2(double averageHousePricePerM2) {
+    public void setAverageHousePricePerM2(String averageHousePricePerM2) {
         this.averageHousePricePerM2 = averageHousePricePerM2;
     }
 
