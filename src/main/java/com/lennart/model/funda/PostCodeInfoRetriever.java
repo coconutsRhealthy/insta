@@ -13,16 +13,16 @@ public class PostCodeInfoRetriever {
 
     private PostCode postCode = new PostCode();
 
-    public PostCode getPostCodeData(String postCodeString) throws Exception {
-        setAllDataForPostCode(postCodeString);
+    public PostCode getPostCodeData(String postCodeString, String searchPeriod) throws Exception {
+        setAllDataForPostCode(postCodeString, searchPeriod);
         return postCode;
     }
 
-    private void setAllDataForPostCode(String postCodeString) throws Exception {
+    private void setAllDataForPostCode(String postCodeString, String searchPeriod) throws Exception {
         initializeDbConnection();
 
         Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM funda2 WHERE postcode LIKE '%" + postCodeString + "%';");
+        ResultSet rs = st.executeQuery(getQuery(postCodeString, searchPeriod));
 
         Double numberOfHousesCounter = 0.0;
         double totalPriceCounter = 0;
@@ -55,6 +55,18 @@ public class PostCodeInfoRetriever {
         postCode.setAverageHousePricePerM2(convertPriceToCorrectStringFormat(totalPriceM2Counter / numberOfHousesCounter));
         postCode.setNumberOfHousesSold(numberOfHousesCounter.intValue());
         postCode.setMostUsedMakelaar(getMostFrequentWordFromList(allMakelaars));
+    }
+
+    private String getQuery(String postCodeString, String searchPeriod) {
+        String query = "SELECT * FROM funda3 WHERE postcode LIKE '%" + postCodeString + "%'";
+
+        if(searchPeriod.equals("6months")) {
+            query = query + " AND datum_op_pagina != 'Langer dan 6 maanden'";
+        }
+
+        query = query + ";";
+
+        return query;
     }
 
     private String getMostFrequentWordFromList(List<String> list) {

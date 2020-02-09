@@ -21,8 +21,11 @@ public class Controller extends SpringBootServletInitializer {
     }
 
     @RequestMapping(value = "/getPostCodeInfo", method = RequestMethod.POST)
-    public @ResponseBody PostCode getPostCodeInfo(@RequestBody String postCodeString) throws Exception {
-        PostCode postCode = new PostCodeInfoRetriever().getPostCodeData(postCodeString);
+    public @ResponseBody PostCode getPostCodeInfo(@RequestBody String[] dataFromClient) throws Exception {
+        String postCodeString = dataFromClient[0];
+        String searchPeriod = dataFromClient[1];
+
+        PostCode postCode = new PostCodeInfoRetriever().getPostCodeData(postCodeString, searchPeriod);
         return postCode;
     }
 
