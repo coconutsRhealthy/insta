@@ -20,37 +20,43 @@ public class Scraper {
 
         String baseUrl = "view-source:https://www.funda.nl/koop/heel-nederland/verkocht/sorteer-afmelddatum-af/p";
 
-        for(int i = 795; i < 16_000; i++) {
-            String url = baseUrl + i + "/";
+        int counter = 0;
 
-            StringSelection stringSelection = new StringSelection(url);
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
+        for(int i = 15266; i < 16_000; i++) {
+            if(counter++ < 500) {
+                String url = baseUrl + i + "/";
 
-            TimeUnit.MILLISECONDS.sleep(500);
+                StringSelection stringSelection = new StringSelection(url);
+                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                clipboard.setContents(stringSelection, null);
 
-            //click url bar
-            rightClick(801, 87);
+                TimeUnit.MILLISECONDS.sleep(500);
 
-            TimeUnit.MILLISECONDS.sleep(300);
+                //click url bar
+                rightClick(801, 87);
 
-            //click paste
-            click(550, 237);
+                TimeUnit.MILLISECONDS.sleep(300);
 
-            TimeUnit.MILLISECONDS.sleep(4950);
+                //click paste
+                click(550, 237);
 
-            //right click
-            rightClick(500, 500);
-            TimeUnit.MILLISECONDS.sleep(150);
+                TimeUnit.MILLISECONDS.sleep(4950);
 
-            //click save page as
-            TimeUnit.MILLISECONDS.sleep(500);
-            click(532 ,579);
+                //right click
+                rightClick(500, 500);
+                TimeUnit.MILLISECONDS.sleep(150);
 
-            //click save
-            TimeUnit.MILLISECONDS.sleep(2000);
-            click(807, 305);
-            click(807, 305);
+                //click save page as
+                TimeUnit.MILLISECONDS.sleep(500);
+                click(532 ,579);
+
+                //click save
+                TimeUnit.MILLISECONDS.sleep(2000);
+                click(807, 305);
+                click(807, 305);
+            } else {
+                break;
+            }
         }
     }
 
