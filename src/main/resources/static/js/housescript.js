@@ -3,6 +3,9 @@ var mainApp = angular.module("mainApp", []);
 mainApp.controller('houseController', function($scope, $http) {
 
     $scope.postCodeToUse;
+    $scope.radioButtonValue = "12months";
+
+    $scope.dataToSendToServer = [];
 
     $scope.makelaar;
     $scope.avPrice;
@@ -13,7 +16,10 @@ mainApp.controller('houseController', function($scope, $http) {
     $scope.disableGetInfoButton = true;
 
     $scope.getPostCodeData = function() {
-        $http.post('/getPostCodeInfo', $scope.postCodeToUse).success(function(data) {
+        $scope.dataToSendToServer[0] = $scope.postCodeToUse;
+        $scope.dataToSendToServer[1] = $scope.radioButtonValue;
+
+        $http.post('/getPostCodeInfo', $scope.dataToSendToServer).success(function(data) {
             $scope.makelaar = data.mostUsedMakelaar;
             $scope.avPrice = data.averageHousePrice;
             $scope.avPriceM2 = data.averageHousePricePerM2;

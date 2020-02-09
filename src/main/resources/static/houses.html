@@ -21,8 +21,7 @@
                     <div class="col-sm-8">
 
                         <div class="jumbotron" id="jumbo">
-                            <h1 class="display-4"><strong>Fofs</strong></h1>
-                            <p class="lead">Recente gemiddelde huizenprijzen per postcodegebied</p>
+                            <h1>Gemiddelde huizenprijzen per postcode</h1>
                         </div>
 
                         <form>
@@ -30,6 +29,27 @@
                                 <label for="postCodeInput">Postcode (alleen cijfers)</label>
                                 <input type="text" class="form-control" id="postCodeInput" placeholder="1234" ng-model="postCodeToUse">
                             </div>
+
+                            <fieldset class="form-group">
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-2 pt-0">Periode</legend>
+                                    <div class="col-sm-10">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="12months" ng-model="radioButtonValue">
+                                            <label class="form-check-label active" for="gridRadios1">
+                                                Afgelopen 12 maanden
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="6months" ng-model="radioButtonValue">
+                                            <label class="form-check-label" for="gridRadios2">
+                                                Afgelopen 6 maanden
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
                             <button class="btn btn-primary btn-lg btn-block" ng-click="getPostCodeData()">Get info!</button>
                         </form>
 
