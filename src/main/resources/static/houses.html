@@ -24,10 +24,10 @@
                             <h1>Gemiddelde huizenprijzen per postcode</h1>
                         </div>
 
-                        <form>
+                        <form name="postCodeForm">
                             <div class="form-group">
-                                <label for="postCodeInput">Postcode (alleen cijfers)</label>
-                                <input type="text" class="form-control" id="postCodeInput" placeholder="1234" ng-model="postCodeToUse">
+                                <label for="postCodeInputId">Postcode (alleen de 4 cijfers)</label>
+                                <input type="text" class="form-control" name="postCodeInputName" ng-pattern="/^[0-9]+$/" id="postCodeInputId" ng-model="postCodeToUse">
                             </div>
 
                             <fieldset class="form-group">
@@ -50,13 +50,13 @@
                                 </div>
                             </fieldset>
 
-                            <button class="btn btn-primary btn-lg btn-block" ng-click="getPostCodeData()">Get info!</button>
+                            <button class="btn btn-primary btn-lg btn-block" ng-click="getPostCodeData()" ng-disabled="postCodeToUse.length !== 4 || postCodeForm.postCodeInputName.$error.pattern">Get info!</button>
                         </form>
 
                         <div ng-show=showPostCodeData>
                             <div class="row" id="headerTable">
                                 <div class="col-sm-12">
-                                    <div><center><strong>{{city}} - Postcode: {{postCodeToUse}}</strong></center></div>
+                                    <div><center><strong>{{city}} - Postcode: {{requestedPostCode}}</strong></center></div>
                                 </div>
                             </div>
 

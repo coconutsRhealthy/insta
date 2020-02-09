@@ -13,7 +13,7 @@ mainApp.controller('houseController', function($scope, $http) {
     $scope.city;
     $scope.numberOfHouses;
     $scope.showPostCodeData = false;
-    $scope.disableGetInfoButton = true;
+    $scope.requestedPostCode;
 
     $scope.getPostCodeData = function() {
         $scope.dataToSendToServer[0] = $scope.postCodeToUse;
@@ -25,6 +25,8 @@ mainApp.controller('houseController', function($scope, $http) {
             $scope.avPriceM2 = data.averageHousePricePerM2;
             $scope.city = data.city;
             $scope.numberOfHouses = data.numberOfHousesSold;
+            $scope.requestedPostCode = $scope.postCodeToUse;
+            $scope.postCodeToUse = "";
             $scope.showPostCodeData = true;
         })
     }
