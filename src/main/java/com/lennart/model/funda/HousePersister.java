@@ -3,7 +3,9 @@ package com.lennart.model.funda;
 import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by LennartMac on 23/01/2020.
@@ -17,21 +19,39 @@ public class HousePersister {
 //    }
 
     private void fillDbFromFiles() throws Exception {
-        List<File> allHtmlFiles = getAllHtmlFilesFromDir("/Users/LennartMac/Documents/huizen");
+        List<File> allHtmlFiles = getAllHtmlFilesFromDir("/Users/LennartMac/Documents/allehuizen");
 
         DataFromPageRetriever dataFromPageRetriever = new DataFromPageRetriever();
         int counter = 0;
 
-        initializeDbConnection();
+        List<House> houseData = new ArrayList<>();
 
         for(File input : allHtmlFiles) {
-            List<House> houseData = dataFromPageRetriever.gatherHouseData(input);
+            houseData.addAll(dataFromPageRetriever.gatherHouseData(input));
+            System.out.println("A " + counter++);
+        }
 
-            for(House house : houseData) {
-                storeHouseInDb(house);
+        Set<House> houseDataSet = new HashSet<>();
+        houseDataSet.addAll(houseData);
+        List<House> houseDataCleaned = new ArrayList<>();
+        houseDataCleaned.addAll(houseDataSet);
+
+        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        System.out.println("old size: " + houseData.size());
+        System.out.println("new, cleaned size: " + houseDataCleaned.size());
+        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+
+        counter = 0;
+
+        initializeDbConnection();
+
+        for(House house : houseDataCleaned) {
+            storeHouseInDb(house);
+
+            counter++;
+            if(counter % 15 == 0) {
+                System.out.println("B " + counter);
             }
-
-            System.out.println(counter++);
         }
 
         closeDbConnection();
@@ -41,7 +61,7 @@ public class HousePersister {
         Statement st = con.createStatement();
 
         try {
-            st.executeUpdate("INSERT INTO funda2 (" +
+            st.executeUpdate("INSERT INTO funda3 (" +
                     "adres, " +
                     "postcode, " +
                     "plaats, " +
@@ -72,8 +92,7 @@ public class HousePersister {
         st.close();
     }
 
-
-    private List<File> getAllHtmlFilesFromDir(String path) throws Exception {
+    public List<File> getAllHtmlFilesFromDir(String path) throws Exception {
         File folder = new File(path);
         File[] listOfFiles = folder.listFiles();
         List<File> allPageHtmlFiles = new ArrayList<>();
