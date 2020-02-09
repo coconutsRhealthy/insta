@@ -1,7 +1,10 @@
 #jumbo {
   text-align: center;
-  padding: 5px;
+  padding: 21px;
   margin-bottom: 21px;
+  background-image: linear-gradient(rgba(255,255,255,.85), rgba(255,255,255,.85)), url("sitebackground.png");
+  background-size: cover;
+  filter: grayscale(100%);
 }
 
 #headerTable {
