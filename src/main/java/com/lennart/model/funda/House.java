@@ -1,6 +1,6 @@
 package com.lennart.model.funda;
 
-import java.util.Date;
+
 
 /**
  * Created by LennartMac on 23/01/2020.
@@ -96,5 +96,39 @@ public class House {
 
     public void setNumberOfRooms(double numberOfRooms) {
         this.numberOfRooms = numberOfRooms;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        House house = (House) o;
+        boolean equal = false;
+
+        if(address.equals(house.getAddress()) && price == house.getPrice() && postCode.equals(house.getPostCode())
+                && city.equals(house.getCity()) && oppervlakte == house.getOppervlakte() && makelaar.equals(house.getMakelaar())
+                && numberOfRooms == house.getNumberOfRooms() && oppervlakte == house.getOppervlakte()) {
+            equal = true;
+        }
+
+        return equal;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = address.hashCode();
+        result = 31 * result + postCode.hashCode();
+        result = 31 * result + city.hashCode();
+        temp = Double.doubleToLongBits(oppervlakte);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + makelaar.hashCode();
+        temp = Double.doubleToLongBits(price);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(numberOfRooms);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
     }
 }
