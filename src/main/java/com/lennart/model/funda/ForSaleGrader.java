@@ -16,15 +16,14 @@ public class ForSaleGrader {
         DataFromPageRetriever dataFromPageRetriever = new DataFromPageRetriever();
 
         for(File input : allHtmlFiles) {
-            allHouses.addAll(dataFromPageRetriever.gatherHouseData(input));
+            allHouses.addAll(dataFromPageRetriever.gatherHouseData(input, false));
         }
 
         Map<House, PostCode> allHousesBelowAveragePriceMap = getAllHousesBelowAveragePrice(allHouses);
-        List<House> allHousesBelowAveragePrice = new ArrayList<>(allHousesBelowAveragePriceMap.keySet());
-        Map<String, Double> sortedPriceDiffMap = getSortedMapOfPriceDiff(allHousesBelowAveragePrice, false);
-        Map<String, Double> sortedPriceDiffM2Map = getSortedMapOfPriceDiff(allHousesBelowAveragePrice, true);
+        Map<String, Double> sortedPriceDiffMap = getSortedMapOfPriceDiff(allHousesBelowAveragePriceMap, false);
+        Map<String, Double> sortedPriceDiffM2Map = getSortedMapOfPriceDiff(allHousesBelowAveragePriceMap, true);
 
-        Map<String, List<Double>> indexMap = initializeIndexMap(allHousesBelowAveragePrice);
+        Map<String, List<Double>> indexMap = initializeIndexMap(new ArrayList<>(allHousesBelowAveragePriceMap.keySet()));
 
         List<String> priceDiffMapKeyList = new ArrayList<>(sortedPriceDiffMap.keySet());
         List<String> priceDiffMapM2KeyList = new ArrayList<>(sortedPriceDiffM2Map.keySet());
@@ -34,11 +33,11 @@ public class ForSaleGrader {
         }
 
         Map<String, Double> sortedAverageMap = getSortedAverageMap(indexMap);
-        List<House> top10CheapestHouses = convertToHouseList(sortedAverageMap, allHousesBelowAveragePrice);
+        List<House> sortedCheapHouseList = convertToHouseList(sortedAverageMap, new ArrayList<>(allHousesBelowAveragePriceMap.keySet()));
 
         LinkedHashMap<House, PostCode> cheapHousePostCodeMap = new LinkedHashMap<>();
 
-        for(House house : top10CheapestHouses) {
+        for(House house : sortedCheapHouseList) {
             cheapHousePostCodeMap.put(house, allHousesBelowAveragePriceMap.get(house));
         }
 
@@ -120,15 +119,13 @@ public class ForSaleGrader {
         return housesBelowAveragePrice;
     }
 
-    private Map<String, Double> getSortedMapOfPriceDiff(List<House> allHouses, boolean m2) throws Exception {
+    private Map<String, Double> getSortedMapOfPriceDiff(Map<House, PostCode> housePostCodeMap, boolean m2) throws Exception {
         Map<String, Double> sortedPriceDiffMap = new HashMap<>();
 
-        for(House house : allHouses) {
-            String postCodeString = house.getPostCode();
-            postCodeString = postCodeString.replaceAll("[^\\d.]", "");
-            postCodeString = postCodeString.replaceAll(" ", "");
+        for(Map.Entry<House, PostCode> entry : housePostCodeMap.entrySet()) {
+            PostCode postCode = entry.getValue();
+            House house = entry.getKey();
 
-            PostCode postCode = new PostCodeInfoRetriever().getPostCodeData(postCodeString, "12months");
             double priceDiff;
 
             if(m2) {
