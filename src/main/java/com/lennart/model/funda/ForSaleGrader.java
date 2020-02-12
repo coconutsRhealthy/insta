@@ -10,12 +10,8 @@ import java.util.*;
  */
 public class ForSaleGrader {
 
-    public static void main(String[] args) throws Exception {
-        new ForSaleGrader().highLevelMethod();
-    }
-
-    private void highLevelMethod() throws Exception {
-        List<File> allHtmlFiles = new HousePersister().getAllHtmlFilesFromDir("/Users/LennartMac/Documents/tekoopleusden");
+    public LinkedHashMap<House, PostCode> getTop10CheapestHousesAndAveragePrices() throws Exception {
+        List<File> allHtmlFiles = new HousePersister().getAllHtmlFilesFromDir("/Users/LennartMac/Documents/huizenstuff/vandaagtekoop");
         List<House> allHouses = new ArrayList<>();
         DataFromPageRetriever dataFromPageRetriever = new DataFromPageRetriever();
 
@@ -23,7 +19,8 @@ public class ForSaleGrader {
             allHouses.addAll(dataFromPageRetriever.gatherHouseData(input));
         }
 
-        List<House> allHousesBelowAveragePrice = getAllHousesBelowAveragePrice(allHouses);
+        Map<House, PostCode> allHousesBelowAveragePriceMap = getAllHousesBelowAveragePrice(allHouses);
+        List<House> allHousesBelowAveragePrice = new ArrayList<>(allHousesBelowAveragePriceMap.keySet());
         Map<String, Double> sortedPriceDiffMap = getSortedMapOfPriceDiff(allHousesBelowAveragePrice, false);
         Map<String, Double> sortedPriceDiffM2Map = getSortedMapOfPriceDiff(allHousesBelowAveragePrice, true);
 
@@ -37,6 +34,31 @@ public class ForSaleGrader {
         }
 
         Map<String, Double> sortedAverageMap = getSortedAverageMap(indexMap);
+        List<House> top10CheapestHouses = convertToHouseList(sortedAverageMap, allHousesBelowAveragePrice);
+
+        LinkedHashMap<House, PostCode> cheapHousePostCodeMap = new LinkedHashMap<>();
+
+        for(House house : top10CheapestHouses) {
+            cheapHousePostCodeMap.put(house, allHousesBelowAveragePriceMap.get(house));
+        }
+
+        return cheapHousePostCodeMap;
+    }
+
+    private List<House> convertToHouseList(Map<String, Double> sortedAverageMap, List<House> allHouses) {
+        List<House> houseListToReturn = new ArrayList<>();
+
+        for(Map.Entry<String, Double> entry : sortedAverageMap.entrySet()) {
+            String address = entry.getKey();
+
+            for(House house : allHouses) {
+                if(house.getAddress().equals(address)) {
+                    houseListToReturn.add(house);
+                }
+            }
+        }
+
+        return houseListToReturn;
     }
 
     private Map<String, List<Double>> initializeIndexMap(List<House> allHousesBelow) {
@@ -75,11 +97,11 @@ public class ForSaleGrader {
         return indexList;
     }
 
-    private List<House> getAllHousesBelowAveragePrice(List<House> allHouses) throws Exception {
-        List<House> housesBelowAveragePrice = new ArrayList<>();
+    private Map<House, PostCode> getAllHousesBelowAveragePrice(List<House> allHouses) throws Exception {
+        Map<House, PostCode> housesBelowAveragePrice = new HashMap<>();
 
         for(House house : allHouses) {
-            if(house.getOppervlakte() > 0) {
+            if(house.getOppervlakte() > 0 && house.getPrice() > 0) {
                 String postCodeString = house.getPostCode();
                 postCodeString = postCodeString.replaceAll("[^\\d.]", "");
                 postCodeString = postCodeString.replaceAll(" ", "");
@@ -89,7 +111,7 @@ public class ForSaleGrader {
                 if(house.getPrice() < convertPostcodePriceStringToPrice(postCode.getAverageHousePrice())) {
                     if(house.getPrice() / house.getOppervlakte() <
                             convertPostcodePriceStringToPrice(postCode.getAverageHousePricePerM2())) {
-                        housesBelowAveragePrice.add(house);
+                        housesBelowAveragePrice.put(house, postCode);
                     }
                 }
             }
@@ -124,7 +146,7 @@ public class ForSaleGrader {
         return sortedPriceDiffMap;
     }
 
-    private double convertPostcodePriceStringToPrice(String priceString) {
+    public double convertPostcodePriceStringToPrice(String priceString) {
         String workingPriceString = priceString.replaceAll("[^0-9.]", "");
         workingPriceString = workingPriceString.replaceAll("\\.", "");
         double price = Double.valueOf(workingPriceString);
