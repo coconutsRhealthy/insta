@@ -70,7 +70,10 @@ public class PostCodeInfoRetriever {
     }
 
     private String getMostFrequentWordFromList(List<String> list) {
-        String mostRepeatedWord
+        String mostRepeatedWord;
+
+        try {
+            mostRepeatedWord
                 = list.stream()
                 .collect(Collectors.groupingBy(w -> w, Collectors.counting()))
                 .entrySet()
@@ -78,6 +81,9 @@ public class PostCodeInfoRetriever {
                 .max(Comparator.comparing(Map.Entry::getValue))
                 .get()
                 .getKey();
+        } catch (NoSuchElementException e) {
+            mostRepeatedWord = "Not Available";
+        }
 
         return mostRepeatedWord;
     }
