@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class DataFromPageRetriever {
 
-    public List<House> gatherHouseData(File input) throws Exception {
+    public List<House> gatherHouseData(File input, boolean soldHouse) throws Exception {
         List<House> houseData = new ArrayList<>();
 
         Document document = Jsoup.parse(input, "UTF-8", "http://www.eije.com/");
@@ -33,7 +33,11 @@ public class DataFromPageRetriever {
             house.setMakelaar(getMakelaar(searchResult));
             house.setPrice(getPrice(searchResult));
             house.setPriceM2(getPriceM2(house.getPrice(), house.getOppervlakte()));
-            house.setDateAtPage(document.select("div.result-separator").first().text());
+
+            if(soldHouse) {
+                house.setDateAtPage(document.select("div.result-separator").first().text());
+            }
+
             house.setCurrentDate(getCurrentDate());
             house.setNumberOfRooms(getAantalKamers(searchResult));
 

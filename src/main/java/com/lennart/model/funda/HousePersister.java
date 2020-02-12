@@ -27,7 +27,7 @@ public class HousePersister {
         List<House> houseData = new ArrayList<>();
 
         for(File input : allHtmlFiles) {
-            houseData.addAll(dataFromPageRetriever.gatherHouseData(input));
+            houseData.addAll(dataFromPageRetriever.gatherHouseData(input, true));
             System.out.println("A " + counter++);
         }
 
