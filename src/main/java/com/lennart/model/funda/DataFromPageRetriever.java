@@ -107,6 +107,10 @@ public class DataFromPageRetriever {
 
         try {
             oppervlakte = Double.valueOf(oppervlakteString);
+
+            if(oppervlakteString.contains(".")) {
+                oppervlakte = oppervlakte * 1000;
+            }
         } catch (NumberFormatException e) {
             oppervlakte = -1;
         }
