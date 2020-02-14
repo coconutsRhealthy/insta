@@ -107,10 +107,14 @@ public class ForSaleGrader {
 
                 PostCode postCode = new PostCodeInfoRetriever().getPostCodeData(postCodeString, "12months");
 
-                if(house.getPrice() < convertPostcodePriceStringToPrice(postCode.getAverageHousePrice())) {
-                    if(house.getPrice() / house.getOppervlakte() <
-                            convertPostcodePriceStringToPrice(postCode.getAverageHousePricePerM2())) {
-                        housesBelowAveragePrice.put(house, postCode);
+                if(postCode.getNumberOfHousesSold() >= 4) {
+                    if(!house.getAddress().contains("*")) {
+                        if(house.getPrice() < convertPostcodePriceStringToPrice(postCode.getAverageHousePrice())) {
+                            if(house.getPrice() / house.getOppervlakte() <
+                                    convertPostcodePriceStringToPrice(postCode.getAverageHousePricePerM2())) {
+                                housesBelowAveragePrice.put(house, postCode);
+                            }
+                        }
                     }
                 }
             }
