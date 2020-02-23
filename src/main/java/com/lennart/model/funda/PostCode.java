@@ -11,6 +11,8 @@ public class PostCode {
     private String averageHousePricePerM2;
     private String mostUsedMakelaar;
 
+    private String postCodeString;
+
     public String getCity() {
         return city;
     }
@@ -49,5 +51,13 @@ public class PostCode {
 
     public void setMostUsedMakelaar(String mostUsedMakelaar) {
         this.mostUsedMakelaar = mostUsedMakelaar;
+    }
+
+    public String getPostCodeString() {
+        return postCodeString;
+    }
+
+    public void setPostCodeString(String postCodeString) {
+        this.postCodeString = postCodeString;
     }
 }

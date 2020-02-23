@@ -25,6 +25,7 @@ public class PostCodeInfoRetriever {
         ResultSet rs = st.executeQuery(getQuery(postCodeString, searchPeriod));
 
         Double numberOfHousesCounter = 0.0;
+        Double numberOfHousesM2Counter = 0.0;
         double totalPriceCounter = 0;
         double totalPriceM2Counter = 0;
         List<String> allMakelaars = new ArrayList<>();
@@ -43,6 +44,7 @@ public class PostCodeInfoRetriever {
 
             if(priceM2 != -1) {
                 totalPriceM2Counter = totalPriceM2Counter + rs.getDouble("prijs_m2");
+                numberOfHousesM2Counter++;
             }
         }
 
@@ -52,13 +54,14 @@ public class PostCodeInfoRetriever {
         closeDbConnection();
 
         postCode.setAverageHousePrice(convertPriceToCorrectStringFormat(totalPriceCounter / numberOfHousesCounter));
-        postCode.setAverageHousePricePerM2(convertPriceToCorrectStringFormat(totalPriceM2Counter / numberOfHousesCounter));
+        postCode.setAverageHousePricePerM2(convertPriceToCorrectStringFormat(totalPriceM2Counter / numberOfHousesM2Counter));
         postCode.setNumberOfHousesSold(numberOfHousesCounter.intValue());
         postCode.setMostUsedMakelaar(getMostFrequentWordFromList(allMakelaars));
+        postCode.setPostCodeString(postCodeString);
     }
 
     private String getQuery(String postCodeString, String searchPeriod) {
-        String query = "SELECT * FROM funda3 WHERE postcode LIKE '%" + postCodeString + "%'";
+        String query = "SELECT * FROM funda3 WHERE postcode LIKE '%" + postCodeString + "%' AND prijs > 0;";
 
         if(searchPeriod.equals("6months")) {
             query = query + " AND datum_op_pagina != 'Langer dan 6 maanden'";

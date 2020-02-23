@@ -1,6 +1,8 @@
 package com.lennart.model.funda;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,22 +18,29 @@ public class ConsolePrint {
         ForSaleGrader forSaleGrader = new ForSaleGrader();
         LinkedHashMap<House, PostCode> cheapestHouses = forSaleGrader.getTop10CheapestHousesAndAveragePrices();
 
-        String format = "%-5s%-40s%-35s%-25s%-22s%-22s%-15s%n";
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+
+        String format = "%-5s%-35s%-20s%-20s%-20s%-20s%-15s%n";
         System.out.printf(format, "", "", "", "", "Gemiddelde", "", "Gemiddelde");
-        System.out.printf(format, "", "", "", "", "Vraagprijs", "", "Vraapgrijs per m2");
-        System.out.printf(format, "", "Adres", "Plaats", "Vraagprijs", "Postcode", "Vraagprijs per m2", "Postcode");
+        System.out.printf(format, "", "", "", "", "Vraagprijs", "Vraagprijs", "Vraapgrijs per m2");
+        System.out.printf(format, "", "Adres", "Plaats", "Vraagprijs", "Postcodegebied", "per m2", "Postcodegebied");
         System.out.println();
 
         int counter = 0;
 
+        List<House> weirdHouses = new ArrayList<>();
+
         for(Map.Entry<House, PostCode> entry : cheapestHouses.entrySet()) {
             double housePrice = entry.getKey().getPrice();
             double housePriceM2 = entry.getKey().getPriceM2();
-            double averagePrice = forSaleGrader.convertPostcodePriceStringToPrice(entry.getValue().getAverageHousePrice());
-            double averagePriceM2 = forSaleGrader.convertPostcodePriceStringToPrice(entry.getValue().getAverageHousePricePerM2());
+            double averagePrice = ForSaleGrader.convertPostcodePriceStringToPrice(entry.getValue().getAverageHousePrice());
+            double averagePriceM2 = ForSaleGrader.convertPostcodePriceStringToPrice(entry.getValue().getAverageHousePricePerM2());
 
             if(housePrice > averagePrice * 0.5 && housePriceM2 > averagePriceM2 * 0.5) {
-                if(counter < 10) {
+                if(entry.getValue().getNumberOfHousesSold() >= 4) {
                     counter++;
 
                     House house = entry.getKey();
@@ -42,6 +51,19 @@ public class ConsolePrint {
                 } else {
                     break;
                 }
+            } else {
+                weirdHouses.add(entry.getKey());
+            }
+        }
+
+        if(!weirdHouses.isEmpty()) {
+            for(int i = 0; i < 15; i++) {
+                System.out.println();
+            }
+
+            for(House house : weirdHouses) {
+                System.out.print(house.getAddress());
+                System.out.println(house.getCity());
             }
         }
     }

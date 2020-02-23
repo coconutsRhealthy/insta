@@ -147,7 +147,7 @@ public class ForSaleGrader {
         return sortedPriceDiffMap;
     }
 
-    public double convertPostcodePriceStringToPrice(String priceString) {
+    public static double convertPostcodePriceStringToPrice(String priceString) {
         String workingPriceString = priceString.replaceAll("[^0-9.]", "");
         workingPriceString = workingPriceString.replaceAll("\\.", "");
         double price = Double.valueOf(workingPriceString);
