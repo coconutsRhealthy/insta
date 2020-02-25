@@ -1,41 +1,54 @@
 var mainApp = angular.module("mainApp", []);
 
-mainApp.controller('houseController', function($scope, $http) {
+mainApp.controller('houseController', function($scope, $http, $timeout) {
 
-    $scope.tests = [
-    "aap",
-    "noot",
-    "mies",
-    "hoi"];
+    $timeout(function() { $scope.loaded = true; });
 
-    $scope.niggers = [
-    "wat",
-    "is",
-    "dit",
-    "doei"];
-
-    $scope.eije = {
-       naam: "sjaak",
-       adres: "watte",
-    };
+    $scope.orderType = "-prijs";
+    $scope.loaded = false;
+    $scope.price_arrow = "fa fa-sort-desc";
+    $scope.price_m2_arrow = "";
+    $scope.amount_arrow = "";
 
 
 
+    $scope.changeOrderType = function(type) {
+        $scope.loaded = false;
+        var orderTypeCheck = $scope.orderType.replace("-", "");
 
-    $scope.eijert = [
-        {
-            name: "Lennart",
-            leeftijd: 43
-        },
-        {
-            name: "Sjaak",
-            leeftijd: 98
-        },
-        {
-            name: "Piet",
-            leeftijd: 17
-        },
-    ]
+        if(orderTypeCheck !== type) {
+            if(type === "prijs") {
+                $scope.orderType = "-prijs";
+                $scope.price_arrow = "fa fa-sort-desc";
+                $scope.price_m2_arrow = "";
+                $scope.amount_arrow = "";
+            } else if(type === "prijs_m2") {
+                $scope.orderType = "-prijs_m2";
+                $scope.price_arrow = "";
+                $scope.price_m2_arrow = "fa fa-sort-desc";
+                $scope.amount_arrow = "";
+            } else if(type === "aantal") {
+                $scope.orderType = "-aantal";
+                $scope.price_arrow = "";
+                $scope.price_m2_arrow = "";
+                $scope.amount_arrow = "fa fa-sort-desc";
+            }
+        } else {
+            if($scope.orderType.indexOf("-") === -1) {
+                $scope.orderType = "-" + $scope.orderType;
+                $scope.price_arrow = $scope.price_arrow.replace("asc", "desc");
+                $scope.price_m2_arrow = $scope.price_m2_arrow.replace("asc", "desc");
+                $scope.amount_arrow = $scope.amount_arrow.replace("asc", "desc");
+            } else {
+                $scope.orderType = $scope.orderType.replace('-', '');
+                $scope.price_arrow = $scope.price_arrow.replace("desc", "asc");
+                $scope.price_m2_arrow = $scope.price_m2_arrow.replace("desc", "asc");
+                $scope.amount_arrow = $scope.amount_arrow.replace("desc", "asc");
+            }
+        }
+
+        $timeout(function() { $scope.loaded = true; });
+    }
 
     $scope.alleBuurten = [
     	{
@@ -24553,4 +24566,6 @@ mainApp.controller('houseController', function($scope, $http) {
     		aantal: 6,
     	},
     ];
+
+    //$scope.loaded = true;
 });
