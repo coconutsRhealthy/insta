@@ -2,54 +2,64 @@ var mainApp = angular.module("mainApp", []);
 
 mainApp.controller('houseController', function($scope, $http, $timeout) {
 
-    $timeout(function() { $scope.loadedInitial = true; });
+    $timeout(function() { $scope.loaded = true; });
+
+    var upArrow = "\u25B2";
+    var downArrow = "\u25BC";
 
     $scope.orderType = "-prijs";
-    $scope.loadedInitial = false;
-    $scope.price_arrow = "fa fa-sort-desc";
+    $scope.loaded = false;
+    $scope.price_arrow = downArrow;
     $scope.price_m2_arrow = "";
     $scope.amount_arrow = "";
 
-    $scope.eije = "";
-
-
-
     $scope.changeOrderType = function(type) {
-        //$scope.eije = "hmm";
+        $scope.loaded = false;
         var orderTypeCheck = $scope.orderType.replace("-", "");
 
         if(orderTypeCheck !== type) {
             if(type === "prijs") {
                 $scope.orderType = "-prijs";
-                $scope.price_arrow = "fa fa-sort-desc";
+                $scope.price_arrow = downArrow;
                 $scope.price_m2_arrow = "";
                 $scope.amount_arrow = "";
             } else if(type === "prijs_m2") {
                 $scope.orderType = "-prijs_m2";
                 $scope.price_arrow = "";
-                $scope.price_m2_arrow = "fa fa-sort-desc";
+                $scope.price_m2_arrow = downArrow;
                 $scope.amount_arrow = "";
             } else if(type === "aantal") {
                 $scope.orderType = "-aantal";
                 $scope.price_arrow = "";
                 $scope.price_m2_arrow = "";
-                $scope.amount_arrow = "fa fa-sort-desc";
+                $scope.amount_arrow = downArrow;
             }
         } else {
             if($scope.orderType.indexOf("-") === -1) {
                 $scope.orderType = "-" + $scope.orderType;
-                $scope.price_arrow = $scope.price_arrow.replace("asc", "desc");
-                $scope.price_m2_arrow = $scope.price_m2_arrow.replace("asc", "desc");
-                $scope.amount_arrow = $scope.amount_arrow.replace("asc", "desc");
+
+                if($scope.price_arrow !== "") {
+                    $scope.price_arrow = downArrow;
+                } else if($scope.price_m2_arrow !== "") {
+                    $scope.price_m2_arrow = downArrow;
+                } else {
+                    $scope.amount_arrow = downArrow;
+                }
             } else {
                 $scope.orderType = $scope.orderType.replace('-', '');
-                $scope.price_arrow = $scope.price_arrow.replace("desc", "asc");
-                $scope.price_m2_arrow = $scope.price_m2_arrow.replace("desc", "asc");
-                $scope.amount_arrow = $scope.amount_arrow.replace("desc", "asc");
+
+
+                if($scope.price_arrow !== "") {
+                    $scope.price_arrow = upArrow;
+                } else if($scope.price_m2_arrow !== "") {
+                    $scope.price_m2_arrow = upArrow;
+                } else {
+                    $scope.amount_arrow = upArrow;
+                }
             }
         }
 
-        $timeout(function() { $scope.eije = "hmm"; });
+        $timeout(function() { $scope.loaded = true; });
     }
 
     $scope.alleBuurten = [
