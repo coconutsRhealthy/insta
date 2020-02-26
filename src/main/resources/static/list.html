@@ -25,88 +25,67 @@
                         <div class="col-sm-1"></div>
                         <div class="col-sm-10">
                             <h1><center>Buurtprijzen</center></h1>
-                            <div class="row">
 
-                                <div class="col-sm-2">
-                                    <fieldset class="form-group">
-                                        <div class="row">
-                                            <!--<legend class="col-form-label col-sm-2 pt-0">Periode</legend>-->
-                                            <div class="col-sm-10">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="12months" ng-model="radioButtonValue">
-                                                    <label class="form-check-label active" for="gridRadios1">
-                                                        Postcodes
-                                                    </label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="6months" ng-model="radioButtonValue">
-                                                    <label class="form-check-label" for="gridRadios2">
-                                                        Steden
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </fieldset>
+                            <div class="spinner" ng-hide="loadedInitial"></div>
 
+
+                            <!--https://stackoverflow.com/questions/46659136/how-can-i-cover-with-overlay-specific-div-->
+
+                                <p>
+                                    content before
+                                </p>
+                                <div class="c1">
+                                    <div class="overlay"></div>
+                                    <div class="c2">
+                                        yoyoyoyo
+                                        <table class="table" ng-cloak ng-show="loadedInitial">
+                                        <thead>
+                                        <tr class="first">
+
+                                            <th>Rank</th>
+                                            <th>Postcode</th>
+                                            <th>Plaats</th>
+                                            <th><a href="" ng-click="changeOrderType('prijs')"> Prijs <i class={{price_arrow}}></i></th>
+                                            <th><a href="" ng-click="changeOrderType('prijs_m2')">Prijs m2 <i class={{price_m2_arrow}}></th>
+                                            <th><a href="" ng-click="changeOrderType('aantal')">Transacties <i class="{{amount_arrow}}"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="buurt in alleBuurten | orderBy : orderType">
+                                            <td>{{$index + 1}}</td>
+                                            <td>{{buurt.postcode}}</td>
+                                            <td>{{buurt.plaats}}</td>
+                                            <td>{{buurt.prijs}}</td>
+                                            <td>{{buurt.prijs_m2}}</td>
+                                            <td>{{buurt.aantal}}</td>
+                                        </tr>
+                                        </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                                <div class="col-sm-10">
-                                    <fieldset class="form-group">
-                                        <div class="row">
-                                            <!--<legend class="col-form-label col-sm-2 pt-0">Periode</legend>-->
-                                            <div class="col-sm-10">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="12months" ng-model="radioButtonValue">
-                                                    <label class="form-check-label active" for="gridRadios1">
-                                                        Afgelopen 12 maanden
-                                                    </label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="6months" ng-model="radioButtonValue">
-                                                    <label class="form-check-label" for="gridRadios2">
-                                                        Afgelopen 6 maanden
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </fieldset>
-
-
-                                </div>
-
-                            </div>
+                                <p>
+                                    content after
+                                </p>
 
 
 
-                            <div class="spinner" ng-hide="loaded"></div>
-                            <table class="table" ng-cloak ng-show="loaded">
-                                <thead>
-                                    <tr class="first">
 
-                                        <th>Rank</th>
-                                        <th>Postcode</th>
-                                        <th>Plaats</th>
-                                        <th><a href="" ng-click="changeOrderType('prijs')"> Prijs <i class={{price_arrow}}></i></th>
-                                        <th><a href="" ng-click="changeOrderType('prijs_m2')">Prijs m2 <i class={{price_m2_arrow}}></th>
-                                        <th><a href="" ng-click="changeOrderType('aantal')">Transacties <i class="{{amount_arrow}}"></th>
-                                    </tr>
-                                </thead>
 
-                                <tbody>
-                                    <tr ng-repeat="buurt in alleBuurten | orderBy : orderType">
-                                        <td>{{$index + 1}}</td>
-                                        <td>{{buurt.postcode}}</td>
-                                        <td>{{buurt.plaats}}</td>
-                                        <td>{{buurt.prijs}}</td>
-                                        <td>{{buurt.prijs_m2}}</td>
-                                        <td>{{buurt.aantal}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+
+
+
+
+
+
                         </div>
                         <div class="col-sm-1"></div>
                     </div>
                 </div>
             </div>
         </div>
+
+
+
+
     </body>
 </html>

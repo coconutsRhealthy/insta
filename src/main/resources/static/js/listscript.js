@@ -2,18 +2,20 @@ var mainApp = angular.module("mainApp", []);
 
 mainApp.controller('houseController', function($scope, $http, $timeout) {
 
-    $timeout(function() { $scope.loaded = true; });
+    $timeout(function() { $scope.loadedInitial = true; });
 
     $scope.orderType = "-prijs";
-    $scope.loaded = false;
+    $scope.loadedInitial = false;
     $scope.price_arrow = "fa fa-sort-desc";
     $scope.price_m2_arrow = "";
     $scope.amount_arrow = "";
 
+    $scope.eije = "";
+
 
 
     $scope.changeOrderType = function(type) {
-        $scope.loaded = false;
+        //$scope.eije = "hmm";
         var orderTypeCheck = $scope.orderType.replace("-", "");
 
         if(orderTypeCheck !== type) {
@@ -47,7 +49,7 @@ mainApp.controller('houseController', function($scope, $http, $timeout) {
             }
         }
 
-        $timeout(function() { $scope.loaded = true; });
+        $timeout(function() { $scope.eije = "hmm"; });
     }
 
     $scope.alleBuurten = [
