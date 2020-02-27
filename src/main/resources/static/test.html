@@ -1,0 +1,45 @@
+<head>
+    <title>Huizenlijst</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/test.css" />
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src = "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script src="js/test.js"></script>
+
+    <meta name="description" content="Advertentiebord.com - Het online prikbord van jouw supermarkt">
+    <title>EIJE!</title>
+</head>
+
+
+
+<div ng-app = "mainApp" ng-controller="ContactListCtrl">
+
+    <h1>Buurtprijzen</h1>
+
+    <select ng-model="sortorder" ng-change="layoutDone(sortorder)">
+        <option value="surname">Surname (A-Z)</option>
+        <option value="-surname">Surname (Z-A)</option>
+    </select>
+    <table class="table contacts">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Telephone</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="contact in contacts " repeat-done="layoutDone(null)" >
+                <td>{{contact.name}}, {{contact.surname}}</td>
+                <td>{{contact.telephone}}</td>
+            </tr>
+        </tbody>
+
+    </table>
+    <div id="veil" ng-show="isLoading"></div>
+    <div id="feedLoading" ng-show="isLoading">Loading...</div>
+</div>

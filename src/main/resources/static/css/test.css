@@ -1,0 +1,24 @@
+
+
+
+
+#veil {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height:100%;
+    width:100%;
+    cursor: not-allowed;
+    filter: alpha(opacity=60);
+    opacity: 0.6;
+    background: #000000 url(https://2.gravatar.com/avatar/f0d91e5cf8ad1ce7972cc486baa20c42?d=https%3A%2F%2Fidenticons.github.com%2Ff3377e1ac5fdd9183c13129960faedd7.png) no-repeat center;
+}
+#feedLoading {
+    position: absolute;
+    top:200px;
+    width:100%;
+    text-align: center;
+    font-size: 4em;
+    color:white;
+    text-shadow: 2px 2px 2px #021124;
+}
