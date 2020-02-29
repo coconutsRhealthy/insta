@@ -21,13 +21,13 @@
 
     <h1>Buurtprijzen</h1>
 
-    <select ng-model="sortorder" ng-change="layoutDone(sortorder)">
+    <select ng-model="sortingOrder" ng-change="layoutDone(sortingOrder)">
         <option value="aantal">Aantal up</option>
         <option value="-aantal">Aantal down</option>
         <option value="prijs">Prijs down</option>
     </select>
 
-    <table class="table contacts">
+    <table class="table contacts" ng-cloak>
         <thead>
             <tr>
                 <th>Rank</th>
