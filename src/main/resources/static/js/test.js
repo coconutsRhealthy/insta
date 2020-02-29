@@ -2,6 +2,15 @@ var mainApp = angular.module("mainApp", []);
 
 mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
 
+    var upArrow = "\u25B2";
+    var downArrow = "\u25BC";
+    $scope.price_arrow = downArrow;
+    $scope.price_m2_arrow = "";
+    $scope.amount_arrow = "";
+
+    $scope.orderType = "-prijs";
+
+
     $scope.setLoading = function (loading) {
        $scope.isLoading = loading;
     }
@@ -19,6 +28,67 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
            }
 
            $scope.setLoading(false);
+       }, 0);
+    }
+
+    $scope.layoutDone2 = function (type) {
+       $scope.setLoading(true);
+
+       $timeout(function() {
+            var orderTypeCheck = $scope.orderType.replace("-", "");
+
+            if(orderTypeCheck !== type) {
+                if(type === "prijs") {
+                    $scope.orderType = "-prijs";
+                    $scope.alleBuurten = $filter('orderBy')($scope.alleBuurten, "-prijs", false);
+                    $scope.price_arrow = downArrow;
+                    $scope.price_m2_arrow = "";
+                    $scope.amount_arrow = "";
+                } else if(type === "prijs_m2") {
+                    $scope.orderType = "-prijs_m2";
+                    $scope.alleBuurten = $filter('orderBy')($scope.alleBuurten, "-prijs_m2", false);
+                    $scope.price_arrow = "";
+                    $scope.price_m2_arrow = downArrow;
+                    $scope.amount_arrow = "";
+                } else if(type === "aantal") {
+                    $scope.orderType = "-aantal";
+                    $scope.alleBuurten = $filter('orderBy')($scope.alleBuurten, "-aantal", false);
+                    $scope.price_arrow = "";
+                    $scope.price_m2_arrow = "";
+                    $scope.amount_arrow = downArrow;
+                }
+            } else {
+                if($scope.orderType.indexOf("-") === -1) {
+                    $scope.orderType = "-" + $scope.orderType;
+
+                    if($scope.price_arrow !== "") {
+                        $scope.price_arrow = downArrow;
+                        $scope.alleBuurten = $filter('orderBy')($scope.alleBuurten, $scope.orderType, false);
+                    } else if($scope.price_m2_arrow !== "") {
+                        $scope.price_m2_arrow = downArrow;
+                        $scope.alleBuurten = $filter('orderBy')($scope.alleBuurten, $scope.orderType, false);
+                    } else {
+                        $scope.amount_arrow = downArrow;
+                        $scope.alleBuurten = $filter('orderBy')($scope.alleBuurten, $scope.orderType, false);
+                    }
+                } else {
+                    $scope.orderType = $scope.orderType.replace('-', '');
+
+
+                    if($scope.price_arrow !== "") {
+                        $scope.price_arrow = upArrow;
+                        $scope.alleBuurten = $filter('orderBy')($scope.alleBuurten, $scope.orderType, false);
+                    } else if($scope.price_m2_arrow !== "") {
+                        $scope.price_m2_arrow = upArrow;
+                        $scope.alleBuurten = $filter('orderBy')($scope.alleBuurten, $scope.orderType, false);
+                    } else {
+                        $scope.amount_arrow = upArrow;
+                        $scope.alleBuurten = $filter('orderBy')($scope.alleBuurten, $scope.orderType, false);
+                    }
+                }
+            }
+
+            $scope.setLoading(false);
        }, 0);
     }
 
