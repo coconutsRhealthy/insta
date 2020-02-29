@@ -25,17 +25,38 @@
         <option value="surname">Surname (A-Z)</option>
         <option value="-surname">Surname (Z-A)</option>
     </select>
-    <table class="table contacts">
+    <table class="table contacts" ng-cloak>
         <thead>
+            <!--<tr>-->
+                <!--<th>Name</th>-->
+                <!--<th>Telephone</th>-->
+                <!--<th>Postcode</th>-->
+            <!--</tr>-->
+
             <tr>
-                <th>Name</th>
-                <th>Telephone</th>
+                <th>Rank</th>
+                <th>Postcode</th>
+                <th>Plaats</th>
+                <th><a href="" ng-click="changeOrderType('prijs')"> Prijs {{price_arrow}}</a></th>
+                <th><a href="" ng-click="changeOrderType('prijs_m2')">Prijs m2 {{price_m2_arrow}}</a></th>
+                <th><a href="" ng-click="changeOrderType('aantal')">Transacties {{amount_arrow}}</a></th>
             </tr>
+
         </thead>
-        <tbody>
-            <tr ng-repeat="contact in contacts " repeat-done="layoutDone(null)" >
-                <td>{{contact.name}}, {{contact.surname}}</td>
-                <td>{{contact.telephone}}</td>
+        <!--<tbody>-->
+            <!--<tr ng-repeat="contact in contacts " repeat-done="layoutDone(null)" >-->
+                <!--<td>{{contact.name}}, {{contact.surname}}</td>-->
+                <!--<td>{{contact.telephone}}</td>-->
+                <!--<td>{{contact.postcode}}</td>-->
+            <!--</tr>-->
+
+            <tr ng-repeat="buurt in alleBuurten " repeat-done="layoutDone(null)" >
+                <td>{{$index + 1}}</td>
+                <td>{{buurt.postcode}}</td>
+                <td>{{buurt.plaats}}</td>
+                <td>{{buurt.prijs}}</td>
+                <td>{{buurt.prijs_m2}}</td>
+                <td>{{buurt.aantal}}</td>
             </tr>
         </tbody>
 
