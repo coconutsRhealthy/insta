@@ -17,22 +17,15 @@
 
 
 
-<div ng-app = "mainApp" ng-controller="ContactListCtrl">
+<div ng-app = "mainApp" ng-controller="buurtController">
 
     <h1>Buurtprijzen</h1>
 
-    <select ng-model="sortorder" ng-change="layoutDone(sortorder)">
-        <option value="surname">Surname (A-Z)</option>
-        <option value="-surname">Surname (Z-A)</option>
-    </select>
+    <div id="veil" ng-show=""></div>
+    <div id="feedLoading" ng-show="">ZZZ</div>
+
     <table class="table contacts" ng-cloak>
         <thead>
-            <!--<tr>-->
-                <!--<th>Name</th>-->
-                <!--<th>Telephone</th>-->
-                <!--<th>Postcode</th>-->
-            <!--</tr>-->
-
             <tr>
                 <th>Rank</th>
                 <th>Postcode</th>
@@ -43,14 +36,8 @@
             </tr>
 
         </thead>
-        <!--<tbody>-->
-            <!--<tr ng-repeat="contact in contacts " repeat-done="layoutDone(null)" >-->
-                <!--<td>{{contact.name}}, {{contact.surname}}</td>-->
-                <!--<td>{{contact.telephone}}</td>-->
-                <!--<td>{{contact.postcode}}</td>-->
-            <!--</tr>-->
-
-            <tr ng-repeat="buurt in alleBuurten " repeat-done="layoutDone(null)" >
+        <tbody>
+            <tr ng-repeat="buurt in alleBuurten | orderBy : orderType">
                 <td>{{$index + 1}}</td>
                 <td>{{buurt.postcode}}</td>
                 <td>{{buurt.plaats}}</td>
@@ -61,6 +48,5 @@
         </tbody>
 
     </table>
-    <div id="veil" ng-show="isLoading"></div>
-    <div id="feedLoading" ng-show="isLoading">Loading...</div>
+
 </div>

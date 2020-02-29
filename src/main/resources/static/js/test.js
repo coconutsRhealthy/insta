@@ -1,56 +1,59 @@
 var mainApp = angular.module("mainApp", []);
 
-mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
+mainApp.controller('buurtController', function ($scope) {
 
-    var sortingOrder = 'name';
-    $scope.sortingOrder = sortingOrder;
+    $scope.orderType = "-prijs_m2";
+    var upArrow = "\u25B2";
+    var downArrow = "\u25BC";
+    $scope.price_arrow = downArrow;
+    $scope.price_m2_arrow = "";
+    $scope.amount_arrow = "";
 
+    $scope.changeOrderType = function(type) {
+        var orderTypeCheck = $scope.orderType.replace("-", "");
 
+        if(orderTypeCheck !== type) {
+            if(type === "prijs") {
+                $scope.orderType = "-prijs";
+                $scope.price_arrow = downArrow;
+                $scope.price_m2_arrow = "";
+                $scope.amount_arrow = "";
+            } else if(type === "prijs_m2") {
+                $scope.orderType = "-prijs_m2";
+                $scope.price_arrow = "";
+                $scope.price_m2_arrow = downArrow;
+                $scope.amount_arrow = "";
+            } else if(type === "aantal") {
+                $scope.orderType = "-aantal";
+                $scope.price_arrow = "";
+                $scope.price_m2_arrow = "";
+                $scope.amount_arrow = downArrow;
+            }
+        } else {
+            if($scope.orderType.indexOf("-") === -1) {
+                $scope.orderType = "-" + $scope.orderType;
 
-    $scope.sortorder = 'surname';
-    $scope.contacts = [{
-        "name": "Richard",
-        "surname": "Stallman",
-        "telephone": "1234 98765",
-        "postcode": "1097"
-    }, {
-        "name": "Donald",
-        "surname": "Knuth",
-        "telephone": "3456 76543",
-        "postcode": "1097"
-    }, {
-        "name": "Linus",
-        "surname": "Torvalds",
-        "telephone": "2345 87654",
-        "postcode": "1097"
-    }];
-
-//    $scope.alleBuurten = [
-//        {
-//            postcode: 1071,
-//            plaats: "Amsterdam",
-//            prijs: 1412684.0,
-//            prijs_m2: 8599.0,
-//            aantal: 165,
-//        },
-//        {
-//            postcode: 2243,
-//            plaats: "Wassenaar",
-//            prijs: 1202605.0,
-//            prijs_m2: 5415.0,
-//            aantal: 76,
-//        },
-//        {
-//            postcode: 2111,
-//            plaats: "Aerdenhout",
-//            prijs: 1174357.0,
-//            prijs_m2: 5804.0,
-//            aantal: 62,
-//        },
-//    ];
+                if($scope.price_arrow !== "") {
+                    $scope.price_arrow = downArrow;
+                } else if($scope.price_m2_arrow !== "") {
+                    $scope.price_m2_arrow = downArrow;
+                } else {
+                    $scope.amount_arrow = downArrow;
+                }
+            } else {
+                $scope.orderType = $scope.orderType.replace('-', '');
 
 
-
+                if($scope.price_arrow !== "") {
+                    $scope.price_arrow = upArrow;
+                } else if($scope.price_m2_arrow !== "") {
+                    $scope.price_m2_arrow = upArrow;
+                } else {
+                    $scope.amount_arrow = upArrow;
+                }
+            }
+        }
+    }
 
     $scope.alleBuurten = [
       	{
@@ -24568,48 +24571,4 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
       		aantal: 6,
       	},
     ];
-
-
-
-
-    $scope.setLoading = function (loading) {
-        $scope.isLoading = loading;
-    }
-
-    $scope.layoutDone = function (value) {
-        console.log(value);
-        $scope.setLoading(true);
-
-        $timeout(function() {
-        // take care of the sorting order
-        if ($scope.sortingOrder !== '') {
-
-            if(value == 'surname'){
-            $scope.contacts = $filter('orderBy')($scope.contacts, $scope.sortingOrder, false);
-            }
-            else if(value == '-surname'){
-            $scope.contacts = $filter('orderBy')($scope.contacts, $scope.sortingOrder, true);
-            }
-            else{
-              $scope.contacts = $filter('orderBy')($scope.contacts, $scope.sortingOrder, false);
-            }
-        }
-
-            $scope.setLoading(false);
-        }, 1);
-    }
-
-    $scope.loadFeed = function(url) {
-	  $scope.setLoading(true);
-	}
-
-    $scope.loadFeed();
 });
-
-mainApp.directive('repeatDone', function() {
-    return function(scope, element, attrs) {
-        if (scope.$last) { // all are rendered
-            scope.$eval(attrs.repeatDone);
-        }
-    }
-})
