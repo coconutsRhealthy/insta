@@ -17,27 +17,29 @@
 
 
 
-<div ng-app = "mainApp" ng-controller="buurtController">
+<div ng-app = "mainApp" ng-controller="ContactListCtrl">
 
     <h1>Buurtprijzen</h1>
 
-    <div id="veil" ng-show=""></div>
-    <div id="feedLoading" ng-show="">ZZZ</div>
+    <select ng-model="sortorder" ng-change="layoutDone(sortorder)">
+        <option value="aantal">Aantal up</option>
+        <option value="-aantal">Aantal down</option>
+        <option value="prijs">Prijs down</option>
+    </select>
 
-    <table class="table contacts" ng-cloak>
+    <table class="table contacts">
         <thead>
             <tr>
                 <th>Rank</th>
                 <th>Postcode</th>
                 <th>Plaats</th>
-                <th><a href="" ng-click="changeOrderType('prijs')"> Prijs {{price_arrow}}</a></th>
-                <th><a href="" ng-click="changeOrderType('prijs_m2')">Prijs m2 {{price_m2_arrow}}</a></th>
-                <th><a href="" ng-click="changeOrderType('aantal')">Transacties {{amount_arrow}}</a></th>
+                <th>Prijs</th>
+                <th>Prijs m2</th>
+                <th>Transacties</a></th>
             </tr>
-
         </thead>
         <tbody>
-            <tr ng-repeat="buurt in alleBuurten | orderBy : orderType">
+            <tr ng-repeat="buurt in alleBuurten" repeat-done="layoutDone(null)" >
                 <td>{{$index + 1}}</td>
                 <td>{{buurt.postcode}}</td>
                 <td>{{buurt.plaats}}</td>
@@ -48,5 +50,6 @@
         </tbody>
 
     </table>
-
+    <div id="veil" ng-show="isLoading"></div>
+    <div id="feedLoading" ng-show="isLoading">Loading...</div>
 </div>
