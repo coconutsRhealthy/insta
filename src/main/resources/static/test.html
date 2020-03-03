@@ -19,37 +19,83 @@
 
 <div ng-app = "mainApp" ng-controller="ContactListCtrl">
 
-    <h1>Buurtprijzen</h1>
+    <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-10">
+            <h1>Gemiddelde huizenprijzen per postcode en woonplaats</h1>
 
-    <select ng-model="sortingOrder" ng-change="layoutDone(sortingOrder)">
-        <option value="aantal">Aantal up</option>
-        <option value="-aantal">Aantal down</option>
-        <option value="prijs">Prijs down</option>
-    </select>
+            <fieldset class="form-group" ng-cloak>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="col-sm-10">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" value="postcodes" ng-model="postCodesOrCities" ng-change="layoutDone2('prijs')">
+                                <label class="form-check-label active">
+                                    Postcodes
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" value="cities" ng-model="postCodesOrCities" ng-change="layoutDone2('prijs')">
+                                <label class="form-check-label">
+                                    Woonplaatsen
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="col-sm-10">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" value="12months" ng-model="period">
+                                <label class="form-check-label">
+                                    Laatste 12 maanden
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" value="6months" ng-model="period">
+                                <label class="form-check-label">
+                                    Laatste 6 maanden
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
 
-    <table class="table contacts" ng-cloak>
-        <thead>
-            <tr>
-                <th>Rank</th>
-                <th>Postcode</th>
-                <th>Plaats</th>
-                <th><a href="" ng-click="layoutDone2('prijs')"> Prijs {{price_arrow}}</a></th>
-                <th><a href="" ng-click="layoutDone2('prijs_m2')">Prijs m2 {{price_m2_arrow}}</a></th>
-                <th><a href="" ng-click="layoutDone2('aantal')">Transacties {{amount_arrow}}</a></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="buurt in alleBuurten" repeat-done="layoutDone(null)" >
-                <td>{{$index + 1}}</td>
-                <td>{{buurt.postcode}}</td>
-                <td>{{buurt.plaats}}</td>
-                <td>{{buurt.prijs}}</td>
-                <td>{{buurt.prijs_m2}}</td>
-                <td>{{buurt.aantal}}</td>
-            </tr>
-        </tbody>
+            <table class="table contacts" ng-cloak>
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Postcode</th>
+                    <th>Plaats</th>
+                    <th><a href="" ng-click="layoutDone2('prijs')"> Prijs {{price_arrow}}</a></th>
+                    <th><a href="" ng-click="layoutDone2('prijs_m2')">Prijs m2 {{price_m2_arrow}}</a></th>
+                    <th><a href="" ng-click="layoutDone2('aantal')">Transacties {{amount_arrow}}</a></th>
+                </tr>
+                </thead>
+                <tbody ng-switch="postCodesOrCities">
+                    <tr ng-switch-when="postcodes" ng-repeat="buurt in alleBuurten" repeat-done="layoutDone(null)" >
+                        <td>{{$index + 1}}</td>
+                        <td>{{buurt.postcode}}</td>
+                        <td>{{buurt.plaats}}</td>
+                        <td>{{convertToCurrency(buurt.prijs)}}</td>
+                        <td>{{convertToCurrency(buurt.prijs_m2)}}</td>
+                        <td>{{buurt.aantal}}</td>
+                    </tr>
+                    <tr ng-switch-when="cities" ng-repeat="stad in alleWoonplaatsen" repeat-done="layoutDone(null)" >
+                        <td>{{$index + 1}}</td>
+                        <td>{{stad.postcode}}</td>
+                        <td>{{stad.plaats}}</td>
+                        <td>{{convertToCurrency(stad.prijs)}}</td>
+                        <td>{{convertToCurrency(stad.prijs_m2)}}</td>
+                        <td>{{stad.aantal}}</td>
+                    </tr>
+                </tbody>
 
-    </table>
-    <div id="veil" ng-show="isLoading"></div>
-    <div id="feedLoading" ng-show="isLoading">Loading...</div>
+            </table>
+
+        </div>
+        <div class="col-sm-1"></div>
+        <div id="veil" ng-show="isLoading"></div>
+        <div class="loader" id="feedLoading" ng-show="isLoading"></div>
+    </div>
 </div>

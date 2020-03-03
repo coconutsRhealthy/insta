@@ -5,16 +5,37 @@
     height:100%;
     width:100%;
     filter: alpha(opacity=60);
-    opacity: 0.6;
+    opacity: 0.2;
     background: #000000;
 }
 
 #feedLoading {
     position: absolute;
-    top:200px;
-    width:100%;
+    top:37%;
+    left:43%;
     text-align: center;
     font-size: 4em;
     color:white;
     text-shadow: 2px 2px 2px #021124;
+}
+
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

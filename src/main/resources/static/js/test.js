@@ -9,10 +9,23 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
     $scope.amount_arrow = "";
 
     $scope.orderType = "-prijs";
-
+    $scope.postCodesOrCities = "postcodes";
+    $scope.period = "12months";
+    $scope.tableToShow = "postCodeTable";
 
     $scope.setLoading = function (loading) {
        $scope.isLoading = loading;
+    }
+
+    $scope.convertToCurrency = function(value) {
+       var formatter = new Intl.NumberFormat('nl-NL', {
+         style: 'currency',
+         currency: 'EUR',
+       });
+
+       var toReturn = formatter.format(value);
+       toReturn = toReturn.substring(0, toReturn.indexOf(","));
+       return toReturn;
     }
 
     $scope.layoutDone = function () {
@@ -74,7 +87,6 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
                 } else {
                     $scope.orderType = $scope.orderType.replace('-', '');
 
-
                     if($scope.price_arrow !== "") {
                         $scope.price_arrow = upArrow;
                         $scope.alleBuurten = $filter('orderBy')($scope.alleBuurten, $scope.orderType, false);
@@ -97,6 +109,30 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
     }
 
     $scope.loadFeed();
+
+    $scope.alleWoonplaatsen = [
+        {
+            postcode: 1071,
+            plaats: "Amsterdam",
+            prijs: 509443.0,
+            prijs_m2: 5884.0,
+            aantal: 4098,
+        },
+        {
+            postcode: 2243,
+            plaats: "Wassenaar",
+            prijs: 789000.0,
+            prijs_m2: 4098.0,
+            aantal: 907,
+        },
+        {
+            postcode: 2111,
+            plaats: "Zwolle",
+            prijs: 243007.0,
+            prijs_m2: 2490.0,
+            aantal: 1984,
+        },
+    ]
 
     $scope.alleBuurten = [
       	{
@@ -24618,7 +24654,7 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
 
 mainApp.directive('repeatDone', function() {
     return function(scope, element, attrs) {
-        if (scope.$last) { // all are rendered
+        if (scope.$last) {
             scope.$eval(attrs.repeatDone);
         }
     }
