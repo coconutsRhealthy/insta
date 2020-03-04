@@ -11,7 +11,8 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
     $scope.orderType = "-prijs";
     $scope.postCodesOrCities = "postcodes";
     $scope.period = "12months";
-    $scope.tableToShow = "postCodeTable";
+    $scope.initialPostCodesOrCities = "postcodes";
+    $scope.tableRowAmount = 10;
 
     $scope.setLoading = function (loading) {
        $scope.isLoading = loading;
@@ -28,23 +29,19 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
        return toReturn;
     }
 
-    $scope.layoutDone = function () {
+    $scope.changeList = function(value) {
        $scope.setLoading(true);
-
        $timeout(function() {
-           if($scope.sortingOrder === 'aantal') {
-               $scope.alleBuurten = $filter('orderBy')($scope.alleBuurten, "aantal", false);
-           } else if($scope.sortingOrder === '-aantal') {
-               $scope.alleBuurten = $filter('orderBy')($scope.alleBuurten, "aantal", true);
-           } else if($scope.sortingOrder === 'prijs') {
-               $scope.alleBuurten = $filter('orderBy')($scope.alleBuurten, "prijs", true);
-           }
+            $scope.tableRowAmount = 10;
+            $scope.postCodesOrCities = value;
+       }, 30);
 
-           $scope.setLoading(false);
-       }, 0);
+      $timeout(function() {
+          $scope.setLoading(false);
+      }, 30);
     }
 
-    $scope.layoutDone2 = function (type) {
+    $scope.doSorting = function (type) {
        $scope.setLoading(true);
 
        $timeout(function() {
@@ -99,16 +96,27 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
                     }
                 }
             }
+       }, 500);
 
-            $scope.setLoading(false);
-       }, 0);
+       $timeout(function() {
+          $scope.setLoading(false);
+
+       }, 500);
     }
 
-    $scope.loadFeed = function(url) {
-      $scope.setLoading(true);
-    }
+    $scope.showEntireList = function(url) {
+       $scope.setLoading(true);
 
-    $scope.loadFeed();
+       $timeout(function() {
+            $scope.tableRowAmount = 3502;
+
+       }, 30);
+
+       $timeout(function() {
+           $scope.setLoading(false);
+
+       }, 30);
+    }
 
     $scope.alleWoonplaatsen = [
         {
@@ -24651,11 +24659,3 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
       	},
     ];
 });
-
-mainApp.directive('repeatDone', function() {
-    return function(scope, element, attrs) {
-        if (scope.$last) {
-            scope.$eval(attrs.repeatDone);
-        }
-    }
-})

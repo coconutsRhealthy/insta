@@ -18,7 +18,6 @@
 
 
 <div ng-app = "mainApp" ng-controller="ContactListCtrl">
-
     <div class="row">
         <div class="col-sm-1"></div>
         <div class="col-sm-10">
@@ -29,13 +28,13 @@
                     <div class="col-sm-3">
                         <div class="col-sm-10">
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" value="postcodes" ng-model="postCodesOrCities" ng-change="layoutDone2('prijs')">
+                                <input class="form-check-input" type="radio" value="postcodes" ng-model="initialPostCodesOrCities" ng-change="changeList('postcodes')">
                                 <label class="form-check-label active">
                                     Postcodes
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" value="cities" ng-model="postCodesOrCities" ng-change="layoutDone2('prijs')">
+                                <input class="form-check-input" type="radio" value="cities" ng-model="initialPostCodesOrCities" ng-change="changeList('cities')">
                                 <label class="form-check-label">
                                     Woonplaatsen
                                 </label>
@@ -67,13 +66,13 @@
                     <th></th>
                     <th>Postcode</th>
                     <th>Plaats</th>
-                    <th><a href="" ng-click="layoutDone2('prijs')"> Prijs {{price_arrow}}</a></th>
-                    <th><a href="" ng-click="layoutDone2('prijs_m2')">Prijs m2 {{price_m2_arrow}}</a></th>
-                    <th><a href="" ng-click="layoutDone2('aantal')">Transacties {{amount_arrow}}</a></th>
+                    <th><a href="" ng-click="doSorting('prijs')"> Prijs {{price_arrow}}</a></th>
+                    <th><a href="" ng-click="doSorting('prijs_m2')">Prijs m2 {{price_m2_arrow}}</a></th>
+                    <th><a href="" ng-click="doSorting('aantal')">Transacties {{amount_arrow}}</a></th>
                 </tr>
                 </thead>
                 <tbody ng-switch="postCodesOrCities">
-                    <tr ng-switch-when="postcodes" ng-repeat="buurt in alleBuurten" repeat-done="layoutDone(null)" >
+                    <tr ng-switch-when="postcodes" ng-repeat="buurt in alleBuurten" ng-if="$index < tableRowAmount">
                         <td>{{$index + 1}}</td>
                         <td>{{buurt.postcode}}</td>
                         <td>{{buurt.plaats}}</td>
@@ -81,7 +80,7 @@
                         <td>{{convertToCurrency(buurt.prijs_m2)}}</td>
                         <td>{{buurt.aantal}}</td>
                     </tr>
-                    <tr ng-switch-when="cities" ng-repeat="stad in alleWoonplaatsen" repeat-done="layoutDone(null)" >
+                    <tr ng-switch-when="cities" ng-repeat="stad in alleWoonplaatsen" ng-if="$index < tableRowAmount">
                         <td>{{$index + 1}}</td>
                         <td>{{stad.postcode}}</td>
                         <td>{{stad.plaats}}</td>
@@ -89,9 +88,12 @@
                         <td>{{convertToCurrency(stad.prijs_m2)}}</td>
                         <td>{{stad.aantal}}</td>
                     </tr>
+
                 </tbody>
 
             </table>
+
+            <button class="btn btn-primary btn-lg btn-block" ng-click="showEntireList()">Toon hele lijst</button>
 
         </div>
         <div class="col-sm-1"></div>
