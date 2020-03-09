@@ -9,9 +9,10 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
     $scope.amount_arrow = "";
 
     $scope.orderType = "-prijs";
-    $scope.postCodesOrCities = "postcodes";
-    $scope.period = "12months";
     $scope.initialPostCodesOrCities = "postcodes";
+    $scope.postCodesOrCities = "postcodes";
+    $scope.initialPeriod = "12months";
+    $scope.period = "12months";
     $scope.tableRowAmount = 10;
 
     $scope.setLoading = function (loading) {
@@ -34,6 +35,18 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
        $timeout(function() {
             $scope.tableRowAmount = 10;
             $scope.postCodesOrCities = value;
+       }, 30);
+
+      $timeout(function() {
+          $scope.setLoading(false);
+      }, 30);
+    }
+
+    $scope.changePeriod = function(value) {
+       $scope.setLoading(true);
+       $timeout(function() {
+            $scope.tableRowAmount = 10;
+            $scope.period = value;
        }, 30);
 
       $timeout(function() {
@@ -123,21 +136,27 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
             postcode: 1071,
             plaats: "Amsterdam",
             prijs: 509443.0,
+            prijs_6m: 80000.0,
             prijs_m2: 5884.0,
+            prijs_m2_6m: 1400.0,
             aantal: 4098,
         },
         {
             postcode: 2243,
             plaats: "Wassenaar",
             prijs: 789000.0,
+            prijs_6m: 80000.0,
             prijs_m2: 4098.0,
+            prijs_m2_6m: 1400.0,
             aantal: 907,
         },
         {
             postcode: 2111,
             plaats: "Zwolle",
             prijs: 243007.0,
+            prijs_6m: 80000.0,
             prijs_m2: 2490.0,
+            prijs_m2_6m: 1400.0,
             aantal: 1984,
         },
     ]
