@@ -17,13 +17,13 @@ public class TheList {
     }
 
     private void overallMethod() throws Exception {
-        List<String> allAvailablePostCodes = getAllAvailablePostCodeNumbers();
+        List<String> allAvailablePostCodes = getAllAvailablePostCodeNumbersOrCities(false);
         List<PostCode> allPostCodeObjects = getAllPostCodeObjects(allAvailablePostCodes);
         printJsCode(allPostCodeObjects);
     }
 
-    private List<String> getAllAvailablePostCodeNumbers() throws Exception {
-        Set<String> allPostCodes = new HashSet<>();
+    private List<String> getAllAvailablePostCodeNumbersOrCities(boolean postCode) throws Exception {
+        Set<String> allDataSet = new HashSet<>();
 
         initializeDbConnection();
 
@@ -31,11 +31,16 @@ public class TheList {
         ResultSet rs = st.executeQuery("SELECT * FROM funda3;");
 
         while(rs.next()) {
-            String postCodeString = rs.getString("postcode");
+            String dataString;
 
-            postCodeString = postCodeString.replaceAll("[^\\d.]", "");
+            if(postCode) {
+                dataString = rs.getString("postcode");
+                dataString = dataString.replaceAll("[^\\d.]", "");
+            } else {
+                dataString = rs.getString("plaats");
+            }
 
-            allPostCodes.add(postCodeString);
+            allDataSet.add(dataString);
         }
 
         rs.close();
@@ -43,12 +48,12 @@ public class TheList {
 
         closeDbConnection();
 
-        List<String> allPostCodesList = new ArrayList<>();
-        allPostCodesList.addAll(allPostCodes);
+        List<String> allDataList = new ArrayList<>();
+        allDataList.addAll(allDataSet);
 
-        Collections.sort(allPostCodesList);
+        Collections.sort(allDataList);
 
-        return allPostCodesList;
+        return allDataList;
     }
 
     private List<PostCode> getAllPostCodeObjects(List<String> allPostCodeStrings) throws Exception {
