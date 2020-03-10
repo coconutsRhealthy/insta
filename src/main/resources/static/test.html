@@ -62,9 +62,9 @@
 
             <table class="table contacts" ng-cloak>
                 <thead>
-                <tr>
+                <tr ng-switch="postCodesOrCities">
                     <th></th>
-                    <th>Postcode</th>
+                    <th ng-switch-when="postcodes">Postcode</th>
                     <th>Plaats</th>
                     <th><a href="" ng-click="doSorting('prijs')"> Prijs {{price_arrow}}</a></th>
                     <th><a href="" ng-click="doSorting('prijs_m2')">Prijs m2 {{price_m2_arrow}}</a></th>
@@ -84,7 +84,6 @@
                 </tr>
                 <tr ng-switch-when="cities" ng-switch="period" ng-repeat="stad in alleWoonplaatsen" ng-if="$index < tableRowAmount">
                     <td>{{$index + 1}}</td>
-                    <td>{{stad.postcode}}</td>
                     <td>{{stad.plaats}}</td>
                     <td ng-switch-when="12months">{{convertToCurrency(stad.prijs)}}</td>
                     <td ng-switch-when="6months">{{convertToCurrency(stad.prijs_m2)}}</td>
