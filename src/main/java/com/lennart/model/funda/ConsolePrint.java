@@ -36,18 +36,18 @@ public class ConsolePrint {
         for(Map.Entry<House, PostCode> entry : cheapestHouses.entrySet()) {
             double housePrice = entry.getKey().getPrice();
             double housePriceM2 = entry.getKey().getPriceM2();
-            double averagePrice = ForSaleGrader.convertPostcodePriceStringToPrice(entry.getValue().getAverageHousePrice());
-            double averagePriceM2 = ForSaleGrader.convertPostcodePriceStringToPrice(entry.getValue().getAverageHousePricePerM2());
+            double averagePrice = ForSaleGrader.convertPostcodePriceStringToPrice(entry.getValue().getAverageHousePrice_6months());
+            double averagePriceM2 = ForSaleGrader.convertPostcodePriceStringToPrice(entry.getValue().getAverageHousePricePerM2_6months());
 
             if(housePrice > averagePrice * 0.5 && housePriceM2 > averagePriceM2 * 0.5) {
-                if(entry.getValue().getNumberOfHousesSold() >= 4) {
+                if(entry.getValue().getNumberOfHousesSold_6months() >= 4) {
                     counter++;
 
                     House house = entry.getKey();
                     PostCode postCode = entry.getValue();
 
                     System.out.printf(format, counter, house.getAddress(), house.getCity(), convertPriceToCorrectStringFormat(house.getPrice()),
-                            postCode.getAverageHousePrice(), convertPriceToCorrectStringFormat(house.getPriceM2()), postCode.getAverageHousePricePerM2());
+                            postCode.getAverageHousePrice_6months(), convertPriceToCorrectStringFormat(house.getPriceM2()), postCode.getAverageHousePricePerM2_6months());
                 } else {
                     break;
                 }

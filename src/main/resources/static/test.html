@@ -76,20 +76,22 @@
                     <td>{{$index + 1}}</td>
                     <td>{{buurt.postcode}}</td>
                     <td>{{buurt.plaats}}</td>
-                    <td ng-switch-when="12months">{{convertToCurrency(buurt.prijs)}}</td>
+                    <td ng-switch-when="12months">{{convertToCurrency(buurt.prijs_12m)}}</td>
                     <td ng-switch-when="6months">{{convertToCurrency(buurt.prijs_6m)}}</td>
-                    <td ng-switch-when="12months">{{convertToCurrency(buurt.prijs_m2)}}</td>
+                    <td ng-switch-when="12months">{{convertToCurrency(buurt.prijs_m2_12m)}}</td>
                     <td ng-switch-when="6months">{{convertToCurrency(buurt.prijs_m2_6m)}}</td>
-                    <td>{{buurt.aantal}}</td>
+                    <td ng-switch-when="12months">{{buurt.aantal_12m}}</td>
+                    <td ng-switch-when="6months">{{buurt.aantal_6m}}</td>
                 </tr>
                 <tr ng-switch-when="cities" ng-switch="period" ng-repeat="stad in alleWoonplaatsen" ng-if="$index < tableRowAmount">
                     <td>{{$index + 1}}</td>
                     <td>{{stad.plaats}}</td>
-                    <td ng-switch-when="12months">{{convertToCurrency(stad.prijs)}}</td>
-                    <td ng-switch-when="6months">{{convertToCurrency(stad.prijs_m2)}}</td>
-                    <td ng-switch-when="12months">{{convertToCurrency(stad.prijs_m2)}}</td>
+                    <td ng-switch-when="12months">{{convertToCurrency(stad.prijs_12m)}}</td>
+                    <td ng-switch-when="6months">{{convertToCurrency(stad.prijs_6m)}}</td>
+                    <td ng-switch-when="12months">{{convertToCurrency(stad.prijs_m2_12m)}}</td>
                     <td ng-switch-when="6months">{{convertToCurrency(stad.prijs_m2_6m)}}</td>
-                    <td>{{stad.aantal}}</td>
+                    <td ng-switch-when="12months">{{stad.aantal_12m}}</td>
+                    <td ng-switch-when="6months">{{stad.aantal_6m}}</td>
                 </tr>
                 </tbody>
 

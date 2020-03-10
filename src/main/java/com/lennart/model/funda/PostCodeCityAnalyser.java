@@ -31,9 +31,9 @@ public class PostCodeCityAnalyser {
             double priceToUse;
 
             if(m2) {
-                priceToUse = ForSaleGrader.convertPostcodePriceStringToPrice(postCode.getAverageHousePricePerM2());
+                priceToUse = ForSaleGrader.convertPostcodePriceStringToPrice(postCode.getAverageHousePricePerM2_6months());
             } else {
-                priceToUse = ForSaleGrader.convertPostcodePriceStringToPrice(postCode.getAverageHousePrice());
+                priceToUse = ForSaleGrader.convertPostcodePriceStringToPrice(postCode.getAverageHousePrice_6months());
             }
 
             postCodePriceMap.put(postCodeString, priceToUse);

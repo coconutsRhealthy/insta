@@ -24,10 +24,14 @@ public class PostCodeInfoRetriever {
         Statement st = con.createStatement();
         ResultSet rs = st.executeQuery(getQuery(postCodeString, searchPeriod));
 
-        Double numberOfHousesCounter = 0.0;
-        Double numberOfHousesM2Counter = 0.0;
-        double totalPriceCounter = 0;
-        double totalPriceM2Counter = 0;
+        Double numberOfHousesCounter_6months = 0.0;
+        Double numberOfHousesCounter_12months = 0.0;
+        Double numberOfHousesM2Counter_6months = 0.0;
+        Double numberOfHousesM2Counter_12months = 0.0;
+        double totalPriceCounter_6months = 0;
+        double totalPriceCounter_12months = 0;
+        double totalPriceM2Counter_6months = 0;
+        double totalPriceM2Counter_12months = 0;
         List<String> allMakelaars = new ArrayList<>();
 
         while(rs.next()) {
@@ -37,14 +41,24 @@ public class PostCodeInfoRetriever {
                 postCode.setCity(rs.getString("plaats"));
             }
 
-            numberOfHousesCounter++;
-            totalPriceCounter = totalPriceCounter + rs.getDouble("prijs");
+            numberOfHousesCounter_12months++;
+            totalPriceCounter_12months = totalPriceCounter_12months + rs.getDouble("prijs");
+
+            if(!rs.getString("datum_op_pagina").equals("Langer dan 6 maanden")) {
+                numberOfHousesCounter_6months++;
+                totalPriceCounter_6months = totalPriceCounter_6months + rs.getDouble("prijs");
+            }
 
             double priceM2 = rs.getDouble("prijs_m2");
 
             if(priceM2 != -1) {
-                totalPriceM2Counter = totalPriceM2Counter + rs.getDouble("prijs_m2");
-                numberOfHousesM2Counter++;
+                totalPriceM2Counter_12months = totalPriceM2Counter_12months + rs.getDouble("prijs_m2");
+                numberOfHousesM2Counter_12months++;
+
+                if(!rs.getString("datum_op_pagina").equals("Langer dan 6 maanden")) {
+                    numberOfHousesM2Counter_6months++;
+                    totalPriceM2Counter_6months = totalPriceM2Counter_6months + rs.getDouble("prijs_m2");
+                }
             }
         }
 
@@ -53,22 +67,18 @@ public class PostCodeInfoRetriever {
 
         closeDbConnection();
 
-        postCode.setAverageHousePrice(convertPriceToCorrectStringFormat(totalPriceCounter / numberOfHousesCounter));
-        postCode.setAverageHousePricePerM2(convertPriceToCorrectStringFormat(totalPriceM2Counter / numberOfHousesM2Counter));
-        postCode.setNumberOfHousesSold(numberOfHousesCounter.intValue());
+        postCode.setAverageHousePrice_6months(convertPriceToCorrectStringFormat(totalPriceCounter_6months / numberOfHousesCounter_6months));
+        postCode.setAverageHousePricePerM2_6months(convertPriceToCorrectStringFormat(totalPriceM2Counter_6months / numberOfHousesM2Counter_6months));
+        postCode.setAverageHousePrice_12months(convertPriceToCorrectStringFormat(totalPriceCounter_12months / numberOfHousesCounter_12months));
+        postCode.setAverageHousePricePerM2_12months(convertPriceToCorrectStringFormat(totalPriceM2Counter_12months / numberOfHousesM2Counter_12months));
+        postCode.setNumberOfHousesSold_6months(numberOfHousesCounter_6months.intValue());
+        postCode.setNumberOfHousesSold_12months(numberOfHousesCounter_12months.intValue());
         postCode.setMostUsedMakelaar(getMostFrequentWordFromList(allMakelaars));
         postCode.setPostCodeString(postCodeString);
     }
 
     String getQuery(String postCodeString, String searchPeriod) {
-        String query = "SELECT * FROM funda3 WHERE postcode LIKE '%" + postCodeString + "%' AND prijs > 0";
-
-        if(searchPeriod.equals("6months")) {
-            query = query + " AND datum_op_pagina != 'Langer dan 6 maanden'";
-        }
-
-        query = query + ";";
-
+        String query = "SELECT * FROM funda3 WHERE postcode LIKE '%" + postCodeString + "%' AND prijs > 0;";
         return query;
     }
 

@@ -107,11 +107,11 @@ public class ForSaleGrader {
 
                 PostCode postCode = new PostCodeInfoRetriever().getPostCodeData(postCodeString, "12months");
 
-                if(postCode.getNumberOfHousesSold() >= 4) {
+                if(postCode.getNumberOfHousesSold_6months() >= 4) {
                     if(!house.getAddress().contains("*")) {
-                        if(house.getPrice() < convertPostcodePriceStringToPrice(postCode.getAverageHousePrice())) {
+                        if(house.getPrice() < convertPostcodePriceStringToPrice(postCode.getAverageHousePrice_6months())) {
                             if(house.getPrice() / house.getOppervlakte() <
-                                    convertPostcodePriceStringToPrice(postCode.getAverageHousePricePerM2())) {
+                                    convertPostcodePriceStringToPrice(postCode.getAverageHousePricePerM2_6months())) {
                                 housesBelowAveragePrice.put(house, postCode);
                             }
                         }
@@ -133,10 +133,10 @@ public class ForSaleGrader {
             double priceDiff;
 
             if(m2) {
-                priceDiff = convertPostcodePriceStringToPrice(postCode.getAverageHousePricePerM2()) -
+                priceDiff = convertPostcodePriceStringToPrice(postCode.getAverageHousePricePerM2_6months()) -
                         (house.getPrice() / house.getOppervlakte());
             } else {
-                priceDiff = convertPostcodePriceStringToPrice(postCode.getAverageHousePrice()) - house.getPrice();
+                priceDiff = convertPostcodePriceStringToPrice(postCode.getAverageHousePrice_6months()) - house.getPrice();
             }
 
             sortedPriceDiffMap.put(house.getAddress(), priceDiff);
