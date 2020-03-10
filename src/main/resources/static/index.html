@@ -1,69 +1,107 @@
-<html>
-    <head>
-        <title>House prices</title>
+<head>
+    <title>Huizenlijst</title>
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-        <script src = "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-        <script src="js/script.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src = "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
 
-        <!-- Load plotly.js into the DOM -->
-        <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
-    </head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <body>
-        <div class="container-fluid">
-            <div ng-app = "mainApp" ng-controller = "buzzwordsController">
+    <script src="js/script.js"></script>
+
+    <meta name="description" content="Advertentiebord.com - Het online prikbord van jouw supermarkt">
+    <title>EIJE!</title>
+</head>
+
+
+
+<div ng-app = "mainApp" ng-controller="ContactListCtrl">
+    <div class="row">
+        <div class="col-sm-1"></div>
+        <div class="col-sm-10">
+            <h1>Gemiddelde huizenprijzen per postcode en woonplaats</h1>
+
+            <fieldset class="form-group" ng-cloak>
                 <div class="row">
-                    <div class="col-sm-2"></div>
-
-                    <div class="col-sm-8">
-                        <table class="table table-dark">
-                            <thead class="thead" style="color:white; background-color:rgb(0, 0, 0)">
-                                <tr>
-                                    <th scope="col"><center>Popma Houses</center></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr></tr>
-                            </tbody>
-                        </table>
-
-                        <form>
-                            <div class="form-group">
-                                <label for="exampleFormControlInput1">Plaats of postcode</label>
-                                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="'Amsterdam' of '1111AA' of '1111'">
+                    <div class="col-sm-3">
+                        <div class="col-sm-10">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" value="postcodes" ng-model="initialPostCodesOrCities" ng-change="changeList('postcodes')">
+                                <label class="form-check-label">
+                                    Postcodes
+                                </label>
                             </div>
-                            <div class="form-group">
-                                <label for="exampleFormControlSelect1">Prijstype</label>
-                                <select class="form-control" id="exampleFormControlSelect1">
-                                    <option>Totaalprijs</option>
-                                    <option>Prijs / m2</option>
-                                </select>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" value="cities" ng-model="initialPostCodesOrCities" ng-change="changeList('cities')">
+                                <label class="form-check-label">
+                                    Woonplaatsen
+                                </label>
                             </div>
-                            <div class="form-group">
-                                <label for="exampleFormControlSelect1">Histogram type</label>
-                                <select class="form-control" id="exampleFormControlSelect1">
-                                    <option>Absoluut</option>
-                                    <option>Relatief</option>
-                                </select>
-                            </div>
-                            <button type="button" class="btn btn-primary btn-lg btn-block">Maak Histogram</button>
-                        </form>
-
-
-                        <div id='myDiv2'><!-- Plotly chart will be drawn inside this DIV --></div>
-                        <!--<div id='myDiv1'>&lt;!&ndash; Plotly chart will be drawn inside this DIV &ndash;&gt;</div>-->
+                        </div>
                     </div>
-
-                    <div class="col-sm-2"></div>
+                    <div class="col-sm-3">
+                        <div class="col-sm-10">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" value="12months" ng-model="initialPeriod" ng-change="changePeriod('12months')">
+                                <label class="form-check-label">
+                                    Laatste 12 maanden
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" value="6months" ng-model="initialPeriod" ng-change="changePeriod('6months')">
+                                <label class="form-check-label">
+                                    Laatste 6 maanden
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </fieldset>
+
+            <table class="table contacts" ng-cloak>
+                <thead>
+                <tr ng-switch="postCodesOrCities">
+                    <th></th>
+                    <th ng-switch-when="postcodes">Postcode</th>
+                    <th>Plaats</th>
+                    <th><a href="" ng-click="doSorting('prijs')"> Prijs {{price_arrow}}</a></th>
+                    <th><a href="" ng-click="doSorting('prijs_m2')">Prijs m2 {{price_m2_arrow}}</a></th>
+                    <th><a href="" ng-click="doSorting('aantal')">Transacties {{amount_arrow}}</a></th>
+                </tr>
+                </thead>
+                <tbody ng-switch="postCodesOrCities">
+                <tr ng-switch-when="postcodes" ng-switch="period" ng-repeat="buurt in alleBuurten" ng-if="$index < tableRowAmount">
+                    <td>{{$index + 1}}</td>
+                    <td>{{buurt.postcode}}</td>
+                    <td>{{buurt.plaats}}</td>
+                    <td ng-switch-when="12months">{{convertToCurrency(buurt.prijs_12m)}}</td>
+                    <td ng-switch-when="6months">{{convertToCurrency(buurt.prijs_6m)}}</td>
+                    <td ng-switch-when="12months">{{convertToCurrency(buurt.prijs_m2_12m)}}</td>
+                    <td ng-switch-when="6months">{{convertToCurrency(buurt.prijs_m2_6m)}}</td>
+                    <td ng-switch-when="12months">{{buurt.aantal_12m}}</td>
+                    <td ng-switch-when="6months">{{buurt.aantal_6m}}</td>
+                </tr>
+                <tr ng-switch-when="cities" ng-switch="period" ng-repeat="stad in alleWoonplaatsen" ng-if="$index < tableRowAmount">
+                    <td>{{$index + 1}}</td>
+                    <td>{{stad.plaats}}</td>
+                    <td ng-switch-when="12months">{{convertToCurrency(stad.prijs_12m)}}</td>
+                    <td ng-switch-when="6months">{{convertToCurrency(stad.prijs_6m)}}</td>
+                    <td ng-switch-when="12months">{{convertToCurrency(stad.prijs_m2_12m)}}</td>
+                    <td ng-switch-when="6months">{{convertToCurrency(stad.prijs_m2_6m)}}</td>
+                    <td ng-switch-when="12months">{{stad.aantal_12m}}</td>
+                    <td ng-switch-when="6months">{{stad.aantal_6m}}</td>
+                </tr>
+                </tbody>
+
+            </table>
+
+            <button class="btn btn-primary btn-lg btn-block" ng-click="showEntireList()">Toon hele lijst</button>
+
         </div>
-
-
-    </body>
-
-</html>
+        <div class="col-sm-1"></div>
+        <div id="veil" ng-show="isLoading"></div>
+        <div class="loader" id="feedLoading" ng-show="isLoading"></div>
+    </div>
+</div>

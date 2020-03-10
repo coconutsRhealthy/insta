@@ -12,23 +12,15 @@ public class TheList {
 
     private Connection con;
 
-
     public static void main(String[] args) throws Exception {
         new TheList().printTestMethod();
     }
-
-
-    //get all cities
-    //get gegevens per city
-    //print de js code
 
     private void printTestMethod() throws Exception {
         List<String> allCities = getAllAvailablePostCodeNumbersOrCities(true);
         List<PostCode> dataPerCity = getAllPostCodeObjects(allCities, false);
         printJsCode(dataPerCity, false);
     }
-
-
 
     private List<String> getAllAvailablePostCodeNumbersOrCities(boolean postCode) throws Exception {
         Set<String> allDataSet = new HashSet<>();
@@ -88,8 +80,8 @@ public class TheList {
             }
 
             if(postCode.getNumberOfHousesSold_6months() > 2) {
-                double price = ForSaleGrader.convertPostcodePriceStringToPrice(postCode.getAverageHousePrice_6months());
-                double priceM2 =ForSaleGrader.convertPostcodePriceStringToPrice(postCode.getAverageHousePricePerM2_6months());
+                double price = convertPostcodePriceStringToPrice(postCode.getAverageHousePrice_6months());
+                double priceM2 = convertPostcodePriceStringToPrice(postCode.getAverageHousePricePerM2_6months());
 
                 if(price > 0 && priceM2 > 0) {
                     initialPostCodeList.add(postCode);
@@ -100,75 +92,13 @@ public class TheList {
         Map<PostCode, Double> postCodePriceMap = new HashMap<>();
 
         for(PostCode postCode : initialPostCodeList) {
-            postCodePriceMap.put(postCode, ForSaleGrader.convertPostcodePriceStringToPrice(postCode.getAverageHousePrice_6months()));
+            postCodePriceMap.put(postCode, convertPostcodePriceStringToPrice(postCode.getAverageHousePrice_6months()));
         }
 
         postCodePriceMap = Aandacht.sortByValueHighToLow(postCodePriceMap);
 
         return new ArrayList<>(postCodePriceMap.keySet());
     }
-
-    private void ffTestMethod() {
-        PostCode postCode = new PostCode();
-
-        postCode.setPostCodeString("3453");
-        postCode.setCity("Leeuwarden");
-        postCode.setAverageHousePrice_6months("EUR 34345");
-
-        List<PostCode> eije = new ArrayList<>();
-
-        eije.add(postCode);
-
-        printTheList(eije);
-    }
-
-    private void printTheList(List<PostCode> postCodes) {
-        //rank, postcode, city, price
-
-        String format = "%-15s%-14s%-38s%-20s%-20s";
-
-        int counter = 0;
-
-        for(PostCode postCode : postCodes) {
-            System.out.printf(format, counter++, postCode.getPostCodeString(),
-                   postCode.getCity(), postCode.getAverageHousePrice_6months(), postCode.getAverageHousePricePerM2_6months());
-            System.out.println();
-        }
-    }
-
-//    public static void main(String[] args) {
-//        PostCode postCode1 = new PostCode();
-//        postCode1.setPostCodeString("1097");
-//        postCode1.setCity("Amsterdam");
-//        postCode1.setAverageHousePrice_6months("EUR 109.874");
-//        postCode1.setAverageHousePricePerM2_6months("EUR 5400");
-//        postCode1.setNumberOfHousesSold_6months(5);
-//
-//        PostCode postCode2 = new PostCode();
-//        postCode2.setPostCodeString("3831");
-//        postCode2.setCity("Leusden");
-//        postCode2.setAverageHousePrice_6months("EUR 233.653");
-//        postCode2.setAverageHousePricePerM2_6months("EUR 2800");
-//        postCode2.setNumberOfHousesSold_6months(8);
-//
-//        List<PostCode> list = new ArrayList<>();
-//        list.add(postCode1);
-//        list.add(postCode2);
-//
-//        new TheList().printJsCode(list);
-//    }
-
-
-    //    $scope.alleWoonplaatsen = [
-//        {
-//            postcode: 1071,
-//            plaats: "Amsterdam",
-//            prijs: 509443.0,
-//            prijs_6m: 80000.0,
-//            prijs_m2: 5884.0,
-//            prijs_m2_6m: 1400.0,
-//            aantal: 4098,
-//        },
 
     private void printJsCode(List<PostCode> postCodes, boolean city) {
         if(!city) {
@@ -185,10 +115,10 @@ public class TheList {
             }
 
             System.out.println("\t\tplaats: \"" + postCodes.get(i).getCity() + "\",");
-            System.out.println("\t\tprijs_6m: " + ForSaleGrader.convertPostcodePriceStringToPrice(postCodes.get(i).getAverageHousePrice_6months()) + ",");
-            System.out.println("\t\tprijs_m2_6m: " + ForSaleGrader.convertPostcodePriceStringToPrice(postCodes.get(i).getAverageHousePricePerM2_6months()) + ",");
-            System.out.println("\t\tprijs_12m: " + ForSaleGrader.convertPostcodePriceStringToPrice(postCodes.get(i).getAverageHousePrice_12months()) + ",");
-            System.out.println("\t\tprijs_m2_12m: " + ForSaleGrader.convertPostcodePriceStringToPrice(postCodes.get(i).getAverageHousePricePerM2_12months()) + ",");
+            System.out.println("\t\tprijs_6m: " + convertPostcodePriceStringToPrice(postCodes.get(i).getAverageHousePrice_6months()) + ",");
+            System.out.println("\t\tprijs_m2_6m: " + convertPostcodePriceStringToPrice(postCodes.get(i).getAverageHousePricePerM2_6months()) + ",");
+            System.out.println("\t\tprijs_12m: " + convertPostcodePriceStringToPrice(postCodes.get(i).getAverageHousePrice_12months()) + ",");
+            System.out.println("\t\tprijs_m2_12m: " + convertPostcodePriceStringToPrice(postCodes.get(i).getAverageHousePricePerM2_12months()) + ",");
             System.out.println("\t\taantal_6m: " + postCodes.get(i).getNumberOfHousesSold_6months() + ",");
             System.out.println("\t\taantal_12m: " + postCodes.get(i).getNumberOfHousesSold_12months() + ",");
             System.out.println("\t},");
@@ -204,5 +134,28 @@ public class TheList {
 
     private void closeDbConnection() throws SQLException {
         con.close();
+    }
+
+    private static double convertPostcodePriceStringToPrice(String priceString) {
+        String workingPriceString = priceString.replaceAll("[^0-9.]", "");
+        workingPriceString = workingPriceString.replaceAll("\\.", "");
+        double price = Double.valueOf(workingPriceString);
+        return price;
+    }
+
+    public static <K, V extends Comparable<? super V>> Map<K, V> sortByValueHighToLow(Map<K, V> map) {
+        List<Map.Entry<K, V>> list = new LinkedList<>( map.entrySet() );
+        Collections.sort(list, new Comparator<Map.Entry<K, V>>() {
+            @Override
+            public int compare(Map.Entry<K, V> o1, Map.Entry<K, V> o2) {
+                return (o2.getValue() ).compareTo( o1.getValue());
+            }
+        });
+
+        Map<K, V> result = new LinkedHashMap<>();
+        for (Map.Entry<K, V> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        return result;
     }
 }
