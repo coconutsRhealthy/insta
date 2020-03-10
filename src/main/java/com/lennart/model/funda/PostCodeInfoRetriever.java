@@ -61,7 +61,7 @@ public class PostCodeInfoRetriever {
     }
 
     String getQuery(String postCodeString, String searchPeriod) {
-        String query = "SELECT * FROM funda3 WHERE postcode LIKE '%" + postCodeString + "%' AND prijs > 0;";
+        String query = "SELECT * FROM funda3 WHERE postcode LIKE '%" + postCodeString + "%' AND prijs > 0";
 
         if(searchPeriod.equals("6months")) {
             query = query + " AND datum_op_pagina != 'Langer dan 6 maanden'";

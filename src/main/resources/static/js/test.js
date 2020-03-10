@@ -131,35 +131,35 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
        }, 30);
     }
 
-    $scope.alleWoonplaatsen = [
-        {
-            postcode: 1071,
-            plaats: "Amsterdam",
-            prijs: 509443.0,
-            prijs_6m: 80000.0,
-            prijs_m2: 5884.0,
-            prijs_m2_6m: 1400.0,
-            aantal: 4098,
-        },
-        {
-            postcode: 2243,
-            plaats: "Wassenaar",
-            prijs: 789000.0,
-            prijs_6m: 80000.0,
-            prijs_m2: 4098.0,
-            prijs_m2_6m: 1400.0,
-            aantal: 907,
-        },
-        {
-            postcode: 2111,
-            plaats: "Zwolle",
-            prijs: 243007.0,
-            prijs_6m: 80000.0,
-            prijs_m2: 2490.0,
-            prijs_m2_6m: 1400.0,
-            aantal: 1984,
-        },
-    ]
+//    $scope.alleWoonplaatsen = [
+//        {
+//            postcode: 1071,
+//            plaats: "Amsterdam",
+//            prijs: 509443.0,
+//            prijs_6m: 80000.0,
+//            prijs_m2: 5884.0,
+//            prijs_m2_6m: 1400.0,
+//            aantal: 4098,
+//        },
+//        {
+//            postcode: 2243,
+//            plaats: "Wassenaar",
+//            prijs: 789000.0,
+//            prijs_6m: 80000.0,
+//            prijs_m2: 4098.0,
+//            prijs_m2_6m: 1400.0,
+//            aantal: 907,
+//        },
+//        {
+//            postcode: 2111,
+//            plaats: "Zwolle",
+//            prijs: 243007.0,
+//            prijs_6m: 80000.0,
+//            prijs_m2: 2490.0,
+//            prijs_m2_6m: 1400.0,
+//            aantal: 1984,
+//        },
+//    ]
 
     $scope.alleBuurten = [
       	{

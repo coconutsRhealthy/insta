@@ -12,13 +12,37 @@ public class TheList {
 
     private Connection con;
 
+
     public static void main(String[] args) throws Exception {
-        new TheList().overallMethod();
+        new TheList().newMethod();
     }
+
+
+    //get all cities
+    //get gegevens per city
+    //print de js code
+
+    private void newMethod() throws Exception {
+        List<String> allCities = getAllAvailablePostCodeNumbersOrCities(false);
+
+        List<PostCode> allPostCodeObjects = getAllPostCodeObjects(allCities, true);
+
+        printJsCode(allPostCodeObjects);
+
+        //System.out.println("wacht");
+
+
+    }
+
+
+
+
+
+
 
     private void overallMethod() throws Exception {
         List<String> allAvailablePostCodes = getAllAvailablePostCodeNumbersOrCities(false);
-        List<PostCode> allPostCodeObjects = getAllPostCodeObjects(allAvailablePostCodes);
+        List<PostCode> allPostCodeObjects = getAllPostCodeObjects(allAvailablePostCodes, false);
         printJsCode(allPostCodeObjects);
     }
 
@@ -56,18 +80,24 @@ public class TheList {
         return allDataList;
     }
 
-    private List<PostCode> getAllPostCodeObjects(List<String> allPostCodeStrings) throws Exception {
+    private List<PostCode> getAllPostCodeObjects(List<String> allInputStrings, boolean city) throws Exception {
         List<PostCode> initialPostCodeList = new ArrayList<>();
 
         int counter = 0;
 
-        for(String postCodeString : allPostCodeStrings) {
+        for(String inputString : allInputStrings) {
             counter++;
             if(counter % 100 == 0) {
                 System.out.println(counter);
             }
 
-            PostCode postCode = new PostCodeInfoRetriever().getPostCodeData(postCodeString, "12months");
+            PostCode postCode;
+
+            if(city) {
+                postCode = new CityInfoRetriever().getPostCodeData(inputString, "12months");
+            } else {
+                postCode = new PostCodeInfoRetriever().getPostCodeData(inputString, "12months");
+            }
 
             if(postCode.getNumberOfHousesSold() > 2) {
                 double price = ForSaleGrader.convertPostcodePriceStringToPrice(postCode.getAverageHousePrice());

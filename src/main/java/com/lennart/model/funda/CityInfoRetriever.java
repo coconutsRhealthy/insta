@@ -12,7 +12,9 @@ public class CityInfoRetriever extends PostCodeInfoRetriever {
 
     @Override
     String getQuery(String city, String searchPeriod) {
-        String query = "SELECT * FROM funda3 WHERE plaats LIKE '%" + city + "%' AND prijs > 0;";
+        city = city.replace("'", "");
+
+        String query = "SELECT * FROM funda3 WHERE plaats LIKE '%" + city + "%' AND prijs > 0";
 
         if(searchPeriod.equals("6months")) {
             query = query + " AND datum_op_pagina != 'Langer dan 6 maanden'";
