@@ -62,11 +62,8 @@ public class TheList {
         int counter = 0;
 
         for(String inputString : allInputStrings) {
-            if(counter == 100) {
-                break;
-            }
-
             counter++;
+
             if(counter % 100 == 0) {
                 System.out.println(counter);
             }
@@ -125,6 +122,87 @@ public class TheList {
         }
 
         System.out.println("];");
+    }
+
+    private void printJsCodeShortlist(List<PostCode> postCodes, boolean city, boolean sixMonths) {
+        List<PostCode> shortList = getShortList(postCodes, sixMonths);
+
+        if(city) {
+            if(sixMonths) {
+                System.out.println("$scope.alleWoonplaatsenShortlist6months = [");
+            } else {
+                System.out.println("$scope.alleWoonplaatsenShortlist12months = [");
+            }
+        } else {
+            if(sixMonths) {
+                System.out.println("$scope.alleBuurtenShortlist6months = [");
+            } else {
+                System.out.println("$scope.alleBuurtenShortlist12months = [");
+            }
+        }
+
+        if(city) {
+            for(int i = 0; i < shortList.size(); i++) {
+                System.out.println("\t{");
+                System.out.println("\t\tplaats: \"" + shortList.get(i).getCity() + "\",");
+
+                if(sixMonths) {
+                    System.out.println("\t\tprijs_6m: " + convertPostcodePriceStringToPrice(shortList.get(i).getAverageHousePrice_6months()) + ",");
+                    System.out.println("\t\tprijs_m2_6m: " + convertPostcodePriceStringToPrice(shortList.get(i).getAverageHousePricePerM2_6months()) + ",");
+                    System.out.println("\t\taantal_6m: " + shortList.get(i).getNumberOfHousesSold_6months() + ",");
+                } else {
+                    System.out.println("\t\tprijs_12m: " + convertPostcodePriceStringToPrice(shortList.get(i).getAverageHousePrice_6months()) + ",");
+                    System.out.println("\t\tprijs_m2_12m: " + convertPostcodePriceStringToPrice(shortList.get(i).getAverageHousePricePerM2_6months()) + ",");
+                    System.out.println("\t\taantal_12m: " + shortList.get(i).getNumberOfHousesSold_6months() + ",");
+                }
+
+                System.out.println("\t},");
+            }
+        } else {
+            for(int i = 0; i < shortList.size(); i++) {
+                System.out.println("\t{");
+                System.out.println("\t\tpostcode: " + shortList.get(i).getPostCodeString() + ",");
+                System.out.println("\t\tplaats: \"" + shortList.get(i).getCity() + "\",");
+
+                if(sixMonths) {
+                    System.out.println("\t\tprijs_6m: " + convertPostcodePriceStringToPrice(shortList.get(i).getAverageHousePrice_6months()) + ",");
+                    System.out.println("\t\tprijs_m2_6m: " + convertPostcodePriceStringToPrice(shortList.get(i).getAverageHousePricePerM2_6months()) + ",");
+                    System.out.println("\t\taantal_6m: " + shortList.get(i).getNumberOfHousesSold_6months() + ",");
+                } else {
+                    System.out.println("\t\tprijs_12m: " + convertPostcodePriceStringToPrice(shortList.get(i).getAverageHousePrice_12months()) + ",");
+                    System.out.println("\t\tprijs_m2_12m: " + convertPostcodePriceStringToPrice(shortList.get(i).getAverageHousePricePerM2_12months()) + ",");
+                    System.out.println("\t\taantal_12m: " + shortList.get(i).getNumberOfHousesSold_12months() + ",");
+                }
+
+                System.out.println("\t},");
+            }
+        }
+    }
+
+    private List<PostCode> getShortList(List<PostCode> longList, boolean sixMonths) {
+        List<PostCode> shortList = new ArrayList<>();
+
+        if(!sixMonths) {
+            for(int i = 0; i < 10; i++) {
+                shortList.add(longList.get(i));
+            }
+        } else {
+            Map<PostCode, Double> price6monthsMap = new HashMap<>();
+
+            for(PostCode postCode : longList) {
+                price6monthsMap.put(postCode, convertPostcodePriceStringToPrice(postCode.getAverageHousePrice_6months()));
+            }
+
+            price6monthsMap = Aandacht.sortByValueHighToLow(price6monthsMap);
+            List<PostCode> longListSortedBySixMonthsPrice = new ArrayList<>(price6monthsMap.keySet());
+
+
+            for(int i = 0; i < 10; i++) {
+                shortList.add(longListSortedBySixMonthsPrice.get(i));
+            }
+        }
+
+        return shortList;
     }
 
     private void initializeDbConnection() throws Exception {
