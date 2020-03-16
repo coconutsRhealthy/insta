@@ -18,12 +18,12 @@
 
 
 <div ng-app = "mainApp" ng-controller="ContactListCtrl">
-    <div class="row">
+    <div class="row" ng-cloak>
         <div class="col-sm-1"></div>
         <div class="col-sm-10">
             <h1>Gemiddelde huizenprijzen per postcode en woonplaats</h1>
 
-            <fieldset class="form-group" ng-cloak>
+            <fieldset class="form-group">
                 <div class="row">
                     <div class="col-sm-3">
                         <div class="col-sm-10">
@@ -44,13 +44,13 @@
                     <div class="col-sm-3">
                         <div class="col-sm-10">
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" value="12months" ng-model="initialPeriod" ng-change="changePeriod('12months')">
+                                <input class="form-check-input" type="radio" value="12months" ng-model="initialPeriod" ng-change="changeList('12months')">
                                 <label class="form-check-label">
                                     Laatste 12 maanden
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" value="6months" ng-model="initialPeriod" ng-change="changePeriod('6months')">
+                                <input class="form-check-input" type="radio" value="6months" ng-model="initialPeriod" ng-change="changeList('6months')">
                                 <label class="form-check-label">
                                     Laatste 6 maanden
                                 </label>
@@ -60,9 +60,9 @@
                 </div>
             </fieldset>
 
-            <table class="table contacts" ng-cloak>
+            <table class="table contacts">
                 <thead>
-                <tr ng-switch="postCodesOrCities">
+                <tr ng-switch="tableHead">
                     <th></th>
                     <th ng-switch-when="postcodes">Postcode</th>
                     <th>Plaats</th>
@@ -71,8 +71,39 @@
                     <th><a href="" ng-click="doSorting('aantal')">Transacties {{amount_arrow}}</a></th>
                 </tr>
                 </thead>
-                <tbody ng-switch="postCodesOrCities">
-                <tr ng-switch-when="postcodes" ng-switch="period" ng-repeat="buurt in alleBuurten" ng-if="$index < tableRowAmount">
+                <tbody ng-switch="postCodesOrCitiesPeriod">
+                <tr ng-switch-when="postcodesInitial6months" ng-repeat="buurt in alleBuurtenShortlist6months">
+                    <td>{{$index + 1}}</td>
+                    <td>{{buurt.postcode}}</td>
+                    <td>{{buurt.plaats}}</td>
+                    <td>{{convertToCurrency(buurt.prijs_6m)}}</td>
+                    <td>{{convertToCurrency(buurt.prijs_m2_6m)}}</td>
+                    <td>{{buurt.aantal_6m}}</td>
+                </tr>
+                <tr ng-switch-when="postcodesInitial12months" ng-repeat="buurt in alleBuurtenShortlist12months">
+                    <td>{{$index + 1}}</td>
+                    <td>{{buurt.postcode}}</td>
+                    <td>{{buurt.plaats}}</td>
+                    <td>{{convertToCurrency(buurt.prijs_12m)}}</td>
+                    <td>{{convertToCurrency(buurt.prijs_m2_12m)}}</td>
+                    <td>{{buurt.aantal_12m}}</td>
+                </tr>
+                <tr ng-switch-when="citiesInitial6months" ng-repeat="stad in alleWoonplaatsenShortlist6months">
+                    <td>{{$index + 1}}</td>
+                    <td>{{stad.plaats}}</td>
+                    <td>{{convertToCurrency(stad.prijs_6m)}}</td>
+                    <td>{{convertToCurrency(stad.prijs_m2_6m)}}</td>
+                    <td>{{stad.aantal_6m}}</td>
+                </tr>
+                <tr ng-switch-when="citiesInitial12months" ng-repeat="stad in alleWoonplaatsenShortlist12months">
+                    <td>{{$index + 1}}</td>
+                    <td>{{stad.plaats}}</td>
+                    <td>{{convertToCurrency(stad.prijs_12m)}}</td>
+                    <td>{{convertToCurrency(stad.prijs_m2_12m)}}</td>
+                    <td>{{stad.aantal_12m}}</td>
+                </tr>
+
+                <tr ng-switch-when="postcodes" ng-switch="period" ng-repeat="buurt in alleBuurtenTotallist">
                     <td>{{$index + 1}}</td>
                     <td>{{buurt.postcode}}</td>
                     <td>{{buurt.plaats}}</td>
@@ -83,7 +114,7 @@
                     <td ng-switch-when="12months">{{buurt.aantal_12m}}</td>
                     <td ng-switch-when="6months">{{buurt.aantal_6m}}</td>
                 </tr>
-                <tr ng-switch-when="cities" ng-switch="period" ng-repeat="stad in alleWoonplaatsen" ng-if="$index < tableRowAmount">
+                <tr ng-switch-when="cities" ng-switch="period" ng-repeat="stad in alleWoonplaatsenTotallist">
                     <td>{{$index + 1}}</td>
                     <td>{{stad.plaats}}</td>
                     <td ng-switch-when="12months">{{convertToCurrency(stad.prijs_12m)}}</td>

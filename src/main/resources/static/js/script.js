@@ -10,10 +10,10 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
 
     $scope.orderType = "-prijs_12m";
     $scope.initialPostCodesOrCities = "postcodes";
-    $scope.postCodesOrCities = "postcodes";
+    $scope.postCodesOrCitiesPeriod = "postcodesInitial12months";
+    $scope.tableHead = "postcodes";
     $scope.initialPeriod = "12months";
     $scope.period = "12months";
-    $scope.tableRowAmount = 10;
 
     $scope.setLoading = function (loading) {
        $scope.isLoading = loading;
@@ -31,21 +31,27 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
     }
 
     $scope.changeList = function(value) {
-       $scope.setLoading(true);
        $timeout(function() {
-            $scope.tableRowAmount = 10;
-            $scope.postCodesOrCities = value;
-       }, 30);
+            if(value === "cities") {
+                $scope.tableHead = "cities";
+            }
 
-      $timeout(function() {
-          $scope.setLoading(false);
-      }, 30);
+            if(value === "postcodes") {
+                $scope.tableHead = "postcodes";
+            }
+
+            if(value.includes("months")) {
+                $scope.period = value;
+            }
+
+            setPostCodesOrCitiesPeriod(value);
+       }, 30);
     }
 
     $scope.changePeriod = function(value) {
        $scope.setLoading(true);
+
        $timeout(function() {
-            $scope.tableRowAmount = 10;
             $scope.period = value;
        }, 30);
 
@@ -54,28 +60,69 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
       }, 30);
     }
 
+    function setPostCodesOrCitiesPeriod(input) {
+        if(input === "postcodes") {
+            if($scope.postCodesOrCitiesPeriod.includes("Initial")) {
+                $scope.postCodesOrCitiesPeriod = $scope.postCodesOrCitiesPeriod.replace("cities", "postcodes");
+            } else {
+                if(!$scope.postCodesOrCitiesPeriod.includes("months")) {
+                    $scope.postCodesOrCitiesPeriod = input + "Initial" + $scope.period;
+                } else {
+                    $scope.postCodesOrCitiesPeriod = $scope.postCodesOrCitiesPeriod.replace("cities", "postcodesInitial");
+                }
+            }
+        } else if(input === "cities") {
+            if($scope.postCodesOrCitiesPeriod.includes("Initial")) {
+                $scope.postCodesOrCitiesPeriod = $scope.postCodesOrCitiesPeriod.replace("postcodes", "cities");
+            } else {
+                if(!$scope.postCodesOrCitiesPeriod.includes("months")) {
+                    $scope.postCodesOrCitiesPeriod = input + "Initial" + $scope.period;
+                } else {
+                    $scope.postCodesOrCitiesPeriod = $scope.postCodesOrCitiesPeriod.replace("postcodes", "citiesInitial");
+                }
+            }
+        } else if(input === "6months") {
+            if($scope.postCodesOrCitiesPeriod.includes("12months")) {
+                $scope.postCodesOrCitiesPeriod = $scope.postCodesOrCitiesPeriod.replace("12months", "6months");
+            } else {
+                $scope.postCodesOrCitiesPeriod = $scope.postCodesOrCitiesPeriod + "Initial" + input;
+            }
+        } else if(input === "12months") {
+            if($scope.postCodesOrCitiesPeriod.includes("6months")) {
+                $scope.postCodesOrCitiesPeriod = $scope.postCodesOrCitiesPeriod.replace("6months", "12months");
+            } else {
+                $scope.postCodesOrCitiesPeriod = $scope.postCodesOrCitiesPeriod + "Initial" + input;
+            }
+        }
+    }
+
     $scope.doSorting = function (type) {
        $scope.setLoading(true);
+
+       var periodAddition = getPeriodAddition();
 
        $timeout(function() {
             var orderTypeCheck = $scope.orderType.replace("-", "");
 
+            orderTypeCheck = orderTypeCheck.replace("_6m", "");
+            orderTypeCheck = orderTypeCheck.replace("_12m", "");
+
             if(orderTypeCheck !== type) {
                 if(type === "prijs") {
-                    $scope.orderType = "-prijs";
-                    $scope.alleBuurten = $filter('orderBy')($scope.alleBuurten, "-prijs", false);
+                    $scope.orderType = "-prijs" + periodAddition;
+                    sortIndividualTable();
                     $scope.price_arrow = downArrow;
                     $scope.price_m2_arrow = "";
                     $scope.amount_arrow = "";
                 } else if(type === "prijs_m2") {
-                    $scope.orderType = "-prijs_m2";
-                    $scope.alleBuurten = $filter('orderBy')($scope.alleBuurten, "-prijs_m2", false);
+                    $scope.orderType = "-prijs_m2" + periodAddition;
+                    sortIndividualTable();
                     $scope.price_arrow = "";
                     $scope.price_m2_arrow = downArrow;
                     $scope.amount_arrow = "";
                 } else if(type === "aantal") {
-                    $scope.orderType = "-aantal";
-                    $scope.alleBuurten = $filter('orderBy')($scope.alleBuurten, "-aantal", false);
+                    $scope.orderType = "-aantal" + periodAddition;
+                    sortIndividualTable();
                     $scope.price_arrow = "";
                     $scope.price_m2_arrow = "";
                     $scope.amount_arrow = downArrow;
@@ -86,26 +133,26 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
 
                     if($scope.price_arrow !== "") {
                         $scope.price_arrow = downArrow;
-                        $scope.alleBuurten = $filter('orderBy')($scope.alleBuurten, $scope.orderType, false);
+                        sortIndividualTable();
                     } else if($scope.price_m2_arrow !== "") {
                         $scope.price_m2_arrow = downArrow;
-                        $scope.alleBuurten = $filter('orderBy')($scope.alleBuurten, $scope.orderType, false);
+                        sortIndividualTable();
                     } else {
                         $scope.amount_arrow = downArrow;
-                        $scope.alleBuurten = $filter('orderBy')($scope.alleBuurten, $scope.orderType, false);
+                        sortIndividualTable();
                     }
                 } else {
                     $scope.orderType = $scope.orderType.replace('-', '');
 
                     if($scope.price_arrow !== "") {
                         $scope.price_arrow = upArrow;
-                        $scope.alleBuurten = $filter('orderBy')($scope.alleBuurten, $scope.orderType, false);
+                        sortIndividualTable();
                     } else if($scope.price_m2_arrow !== "") {
                         $scope.price_m2_arrow = upArrow;
-                        $scope.alleBuurten = $filter('orderBy')($scope.alleBuurten, $scope.orderType, false);
+                        sortIndividualTable();
                     } else {
                         $scope.amount_arrow = upArrow;
-                        $scope.alleBuurten = $filter('orderBy')($scope.alleBuurten, $scope.orderType, false);
+                        sortIndividualTable();
                     }
                 }
             }
@@ -117,11 +164,43 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
        }, 500);
     }
 
-    $scope.showEntireList = function(url) {
+    function sortIndividualTable() {
+        if($scope.postCodesOrCitiesPeriod === "postcodesInitial6months") {
+            $scope.alleBuurtenShortlist6months = $filter('orderBy')($scope.alleBuurtenShortlist6months, $scope.orderType, false);
+        } else if($scope.postCodesOrCitiesPeriod === "postcodesInitial12months") {
+            $scope.alleBuurtenShortlist12months = $filter('orderBy')($scope.alleBuurtenShortlist12months, $scope.orderType, false);
+        } else if($scope.postCodesOrCitiesPeriod === "citiesInitial6months") {
+            $scope.alleWoonplaatsenShortlist6months = $filter('orderBy')($scope.alleWoonplaatsenShortlist6months, $scope.orderType, false);
+        } else if($scope.postCodesOrCitiesPeriod === "citiesInitial12months") {
+            $scope.alleWoonplaatsenShortlist12months = $filter('orderBy')($scope.alleWoonplaatsenShortlist12months, $scope.orderType, false);
+        } else if($scope.postCodesOrCitiesPeriod === "postcodes") {
+             $scope.alleBuurtenTotallist = $filter('orderBy')( $scope.alleBuurtenTotallist, $scope.orderType, false);
+        } else if($scope.postCodesOrCitiesPeriod === "cities") {
+            $scope.alleWoonplaatsenTotallist = $filter('orderBy')($scope.alleWoonplaatsenTotallist, $scope.orderType, false);
+        }
+    }
+
+    function getPeriodAddition() {
+        var periodAddition;
+
+        if($scope.period === "6months") {
+            periodAddition = "_6m";
+        } else {
+            periodAddition = "_12m";
+        }
+
+        return periodAddition;
+    }
+
+    $scope.showEntireList = function() {
        $scope.setLoading(true);
 
        $timeout(function() {
-            $scope.tableRowAmount = 3502;
+            if($scope.postCodesOrCitiesPeriod.includes("postcodes")) {
+                $scope.postCodesOrCitiesPeriod = "postcodes";
+            } else if($scope.postCodesOrCitiesPeriod.includes("cities")) {
+                $scope.postCodesOrCitiesPeriod = "cities";
+            }
 
        }, 30);
 
@@ -131,9 +210,279 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
        }, 30);
     }
 
+    $scope.alleWoonplaatsenShortlist6months = [
+        {
+            plaats: "woonplaatsShort6month1",
+            prijs_6m: 6800000.0,
+            prijs_m2_6m: 5945.0,
+            aantal_6m: 32,
+        },
+        {
+            plaats: "woonplaatsShort6month2",
+            prijs_6m: 6700000.0,
+            prijs_m2_6m: 4808.0,
+            aantal_6m: 60,
+        },
+        {
+            plaats: "woonplaatsShort6month3",
+            prijs_6m: 6600000.0,
+            prijs_m2_6m: 3694.0,
+            aantal_6m: 13,
+        },
+        {
+            plaats: "woonplaatsShort6month4",
+            prijs_6m: 541683.0,
+            prijs_m2_6m: 4615.0,
+            aantal_6m: 538,
+        },
+        {
+            plaats: "woonplaatsShort6month5",
+            prijs_6m: 540666.0,
+            prijs_m2_6m: 3098.0,
+            aantal_6m: 3,
+        },
+        {
+            plaats: "woonplaatsShort6month6",
+            prijs_6m: 513772.0,
+            prijs_m2_6m: 5670.0,
+            aantal_6m: 5197,
+        },
+        {
+            plaats: "woonplaatsShort6month7",
+            prijs_6m: 511000.0,
+            prijs_m2_6m: 3180.0,
+            aantal_6m: 10,
+        },
+        {
+            plaats: "woonplaatsShort6month8",
+            prijs_6m: 503675.0,
+            prijs_m2_6m: 2388.0,
+            aantal_6m: 4,
+        },
+        {
+            plaats: "woonplaatsShort6month9",
+            prijs_6m: 493333.0,
+            prijs_m2_6m: 2211.0,
+            aantal_6m: 6,
+        },
+        {
+            plaats: "woonplaatsShort6month10",
+            prijs_6m: 479250.0,
+            prijs_m2_6m: 3643.0,
+            aantal_6m: 116,
+        },
+    ];
 
+    $scope.alleWoonplaatsenShortlist12months = [
+        {
+            plaats: "woonplaatsShort12month1",
+            prijs_12m: 1269066.0,
+            prijs_m2_12m: 5945.0,
+            aantal_12m: 32,
+        },
+        {
+            plaats: "woonplaatsShort12month2",
+            prijs_12m: 707781.0,
+            prijs_m2_12m: 4808.0,
+            aantal_12m: 60,
+        },
+        {
+            plaats: "woonplaatsShort12month3",
+            prijs_12m: 560153.0,
+            prijs_m2_12m: 3694.0,
+            aantal_12m: 13,
+        },
+        {
+            plaats: "woonplaatsShort12month4",
+            prijs_12m: 541683.0,
+            prijs_m2_12m: 4615.0,
+            aantal_12m: 538,
+        },
+        {
+            plaats: "woonplaatsShort12month5",
+            prijs_12m: 540666.0,
+            prijs_m2_12m: 3098.0,
+            aantal_12m: 3,
+        },
+        {
+            plaats: "woonplaatsShort12month6",
+            prijs_12m: 513772.0,
+            prijs_m2_12m: 5670.0,
+            aantal_12m: 5197,
+        },
+        {
+            plaats: "woonplaatsShort12month7",
+            prijs_12m: 511000.0,
+            prijs_m2_12m: 3180.0,
+            aantal_12m: 10,
+        },
+        {
+            plaats: "woonplaatsShort12month8",
+            prijs_12m: 503675.0,
+            prijs_m2_12m: 2388.0,
+            aantal_12m: 4,
+        },
+        {
+            plaats: "woonplaatsShort12month9",
+            prijs_12m: 493333.0,
+            prijs_m2_12m: 2211.0,
+            aantal_12m: 6,
+        },
+        {
+            plaats: "woonplaatsShort12month10",
+            prijs_12m: 479250.0,
+            prijs_m2_12m: 3643.0,
+            aantal_12m: 116,
+        },
+    ];
 
-    $scope.alleWoonplaatsen = [
+    $scope.alleBuurtenShortlist6months = [
+    	{
+    		postcode: 1071,
+    		plaats: "buurtShort6month1",
+    		prijs_6m: 1507855.0,
+    		prijs_m2_6m: 8628.0,
+    		aantal_6m: 83,
+    	},
+    	{
+    		postcode: 1017,
+    		plaats: "buurtShort6month2",
+    		prijs_6m: 1029059.0,
+    		prijs_m2_6m: 8088.0,
+    		aantal_6m: 93,
+    	},
+    	{
+    		postcode: 1077,
+    		plaats: "buurtShort6month3",
+    		prijs_6m: 966151.0,
+    		prijs_m2_6m: 7049.0,
+    		aantal_6m: 66,
+    	},
+    	{
+    		postcode: 1182,
+    		plaats: "buurtShort6month4",
+    		prijs_6m: 948500.0,
+    		prijs_m2_6m: 6165.0,
+    		aantal_6m: 18,
+    	},
+    	{
+    		postcode: 1016,
+    		plaats: "buurtShort6month5",
+    		prijs_6m: 932359.0,
+    		prijs_m2_6m: 7818.0,
+    		aantal_6m: 81,
+    	},
+    	{
+    		postcode: 1028,
+    		plaats: "buurtShort6month6",
+    		prijs_6m: 885000.0,
+    		prijs_m2_6m: 5624.0,
+    		aantal_6m: 5,
+    	},
+    	{
+    		postcode: 1012,
+    		plaats: "buurtShort6month7",
+    		prijs_6m: 845547.0,
+    		prijs_m2_6m: 7109.0,
+    		aantal_6m: 42,
+    	},
+    	{
+    		postcode: 1075,
+    		plaats: "buurtShort6month8",
+    		prijs_6m: 821878.0,
+    		prijs_m2_6m: 7559.0,
+    		aantal_6m: 66,
+    	},
+    	{
+    		postcode: 1014,
+    		plaats: "buurtShort6month9",
+    		prijs_6m: 821446.0,
+    		prijs_m2_6m: 6454.0,
+    		aantal_6m: 66,
+    	},
+    	{
+    		postcode: 1081,
+    		plaats: "buurtShort6month10",
+    		prijs_6m: 755987.0,
+    		prijs_m2_6m: 5418.0,
+    		aantal_6m: 40,
+    	},
+    ]
+
+    $scope.alleBuurtenShortlist12months = [
+        {
+            postcode: 1071,
+            plaats: "buurtShort12month1",
+            prijs_12m: 1507855.0,
+            prijs_m2_12m: 8628.0,
+            aantal_12m: 83,
+        },
+        {
+            postcode: 1017,
+            plaats: "buurtShort12month2",
+            prijs_12m: 1029059.0,
+            prijs_m2_12m: 8088.0,
+            aantal_12m: 93,
+        },
+        {
+            postcode: 1077,
+            plaats: "buurtShort12month3",
+            prijs_12m: 966151.0,
+            prijs_m2_12m: 7049.0,
+            aantal_12m: 66,
+        },
+        {
+            postcode: 1182,
+            plaats: "buurtShort12month4",
+            prijs_12m: 948500.0,
+            prijs_m2_12m: 6165.0,
+            aantal_12m: 18,
+        },
+        {
+            postcode: 1016,
+            plaats: "buurtShort12month5",
+            prijs_12m: 932359.0,
+            prijs_m2_12m: 7818.0,
+            aantal_12m: 81,
+        },
+        {
+            postcode: 1028,
+            plaats: "buurtShort12month6",
+            prijs_12m: 885000.0,
+            prijs_m2_12m: 5624.0,
+            aantal_12m: 5,
+        },
+        {
+            postcode: 1012,
+            plaats: "buurtShort12month7",
+            prijs_12m: 845547.0,
+            prijs_m2_12m: 7109.0,
+            aantal_12m: 42,
+        },
+        {
+            postcode: 1075,
+            plaats: "buurtShort12month8",
+            prijs_12m: 821878.0,
+            prijs_m2_12m: 7559.0,
+            aantal_12m: 66,
+        },
+        {
+            postcode: 1014,
+            plaats: "buurtShort12month9",
+            prijs_12m: 821446.0,
+            prijs_m2_12m: 6454.0,
+            aantal_12m: 66,
+        },
+        {
+            postcode: 1081,
+            plaats: "buurtShort12month10",
+            prijs_12m: 755987.0,
+            prijs_m2_12m: 5418.0,
+            aantal_12m: 40,
+        },
+    ]
+
+    $scope.alleWoonplaatsenTotallist = [
     	{
     		plaats: "Aerdenhout",
     		prijs_6m: 1269066.0,
@@ -892,11 +1241,7 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
     	},
     ];
 
-
-
-
-
-    $scope.alleBuurten = [
+    $scope.alleBuurtenTotallist = [
     	{
     		postcode: 1071,
     		plaats: "Amsterdam",
@@ -1838,8 +2183,4 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
     		aantal_12m: 88,
     	},
     ];
-
-
-
-
 });
