@@ -45,6 +45,10 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
             }
 
             setPostCodesOrCitiesPeriod(value);
+
+            $scope.price_arrow = downArrow;
+            $scope.price_m2_arrow = "";
+            $scope.amount_arrow = "";
        }, 30);
     }
 
