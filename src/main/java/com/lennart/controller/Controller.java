@@ -25,7 +25,7 @@ public class Controller extends SpringBootServletInitializer {
         String postCodeString = dataFromClient[0];
         String searchPeriod = dataFromClient[1];
 
-        PostCode postCode = new PostCodeInfoRetriever().getPostCodeData(postCodeString, searchPeriod);
+        PostCode postCode = new PostCodeInfoRetriever().getPostCodeData(postCodeString);
         return postCode;
     }
 

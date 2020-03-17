@@ -13,16 +13,16 @@ public class PostCodeInfoRetriever {
 
     private PostCode postCode = new PostCode();
 
-    public PostCode getPostCodeData(String postCodeString, String searchPeriod) throws Exception {
-        setAllDataForPostCode(postCodeString, searchPeriod);
+    public PostCode getPostCodeData(String postCodeString) throws Exception {
+        setAllDataForPostCode(postCodeString);
         return postCode;
     }
 
-    private void setAllDataForPostCode(String postCodeString, String searchPeriod) throws Exception {
+    private void setAllDataForPostCode(String postCodeString) throws Exception {
         initializeDbConnection();
 
         Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery(getQuery(postCodeString, searchPeriod));
+        ResultSet rs = st.executeQuery(getQuery(postCodeString));
 
         Double numberOfHousesCounter_6months = 0.0;
         Double numberOfHousesCounter_12months = 0.0;
@@ -77,7 +77,7 @@ public class PostCodeInfoRetriever {
         postCode.setPostCodeString(postCodeString);
     }
 
-    String getQuery(String postCodeString, String searchPeriod) {
+    String getQuery(String postCodeString) {
         String query = "SELECT * FROM funda3 WHERE postcode LIKE '%" + postCodeString + "%' AND prijs > 0;";
         return query;
     }

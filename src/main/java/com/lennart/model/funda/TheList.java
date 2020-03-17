@@ -13,7 +13,26 @@ public class TheList {
     private Connection con;
 
     public static void main(String[] args) throws Exception {
-        new TheList().printTestMethod();
+        new TheList().shortlistMethod();
+    }
+
+    private void shortlistMethod() throws Exception {
+        List<String> allCities = getAllAvailablePostCodeNumbersOrCities(true);
+        List<PostCode> dataPerCity = getAllPostCodeObjects(allCities, false);
+        printJsCodeShortlist(dataPerCity, false, false);
+
+        System.out.println();
+        System.out.println("***************");
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println("***************");
+        System.out.println();
+
+        printJsCodeShortlist(dataPerCity, false, true);
     }
 
     private void printTestMethod() throws Exception {
@@ -71,9 +90,9 @@ public class TheList {
             PostCode postCode;
 
             if(city) {
-                postCode = new CityInfoRetriever().getPostCodeData(inputString, "12months");
+                postCode = new CityInfoRetriever().getPostCodeData(inputString);
             } else {
-                postCode = new PostCodeInfoRetriever().getPostCodeData(inputString, "12months");
+                postCode = new PostCodeInfoRetriever().getPostCodeData(inputString);
             }
 
             if(postCode.getNumberOfHousesSold_6months() > 2) {
@@ -89,7 +108,7 @@ public class TheList {
         Map<PostCode, Double> postCodePriceMap = new HashMap<>();
 
         for(PostCode postCode : initialPostCodeList) {
-            postCodePriceMap.put(postCode, convertPostcodePriceStringToPrice(postCode.getAverageHousePrice_6months()));
+            postCodePriceMap.put(postCode, convertPostcodePriceStringToPrice(postCode.getAverageHousePrice_12months()));
         }
 
         postCodePriceMap = Aandacht.sortByValueHighToLow(postCodePriceMap);
@@ -151,9 +170,9 @@ public class TheList {
                     System.out.println("\t\tprijs_m2_6m: " + convertPostcodePriceStringToPrice(shortList.get(i).getAverageHousePricePerM2_6months()) + ",");
                     System.out.println("\t\taantal_6m: " + shortList.get(i).getNumberOfHousesSold_6months() + ",");
                 } else {
-                    System.out.println("\t\tprijs_12m: " + convertPostcodePriceStringToPrice(shortList.get(i).getAverageHousePrice_6months()) + ",");
-                    System.out.println("\t\tprijs_m2_12m: " + convertPostcodePriceStringToPrice(shortList.get(i).getAverageHousePricePerM2_6months()) + ",");
-                    System.out.println("\t\taantal_12m: " + shortList.get(i).getNumberOfHousesSold_6months() + ",");
+                    System.out.println("\t\tprijs_12m: " + convertPostcodePriceStringToPrice(shortList.get(i).getAverageHousePrice_12months()) + ",");
+                    System.out.println("\t\tprijs_m2_12m: " + convertPostcodePriceStringToPrice(shortList.get(i).getAverageHousePricePerM2_12months()) + ",");
+                    System.out.println("\t\taantal_12m: " + shortList.get(i).getNumberOfHousesSold_12months() + ",");
                 }
 
                 System.out.println("\t},");
@@ -177,6 +196,8 @@ public class TheList {
                 System.out.println("\t},");
             }
         }
+
+        System.out.println("];");
     }
 
     private List<PostCode> getShortList(List<PostCode> longList, boolean sixMonths) {
