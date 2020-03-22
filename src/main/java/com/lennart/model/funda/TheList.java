@@ -226,6 +226,69 @@ public class TheList {
         return shortList;
     }
 
+    private void htmlMethod() throws Exception {
+        List<String> allPostcodes = getAllAvailablePostCodeNumbersOrCities(false);
+        List<PostCode> postCodeObjects = getAllPostCodeObjects(allPostcodes, true);
+        printHtml(postCodeObjects, false);
+    }
+
+    private void printHtml(List<PostCode> postCodes, boolean postcode) {
+        System.out.println("<table id=\"example\" class=\"display nowrap\" width=\"100%\">");
+        System.out.println("\t<thead>");
+        System.out.println("\t\t<tr>");
+
+        if(postcode) {
+            System.out.println("\t\t\t<th>Postcode</th>");
+        }
+
+        System.out.println("\t\t\t<th>Plaats</th>");
+        System.out.println("\t\t\t<th>Prijs</th>");
+        System.out.println("\t\t\t<th>Prijs m2</th>");
+        System.out.println("\t\t\t<th>Transacties</th>");
+        System.out.println("\t\t</tr>");
+        System.out.println("\t</thead>");
+
+        System.out.println("\t<tbody>");
+
+        for(PostCode postCode : postCodes) {
+            System.out.println("\t\t<tr>");
+
+            if(postcode) {
+                System.out.println("\t\t\t<td>" + postCode.getPostCodeString() + "</td>");
+            }
+
+            System.out.println("\t\t\t<td>" + postCode.getCity() + "</td>");
+            System.out.println("\t\t\t<td>" + postCode.getAverageHousePrice_12months() + "</td>");
+            System.out.println("\t\t\t<td>" + postCode.getAverageHousePricePerM2_12months() + "</td>");
+            System.out.println("\t\t\t<td>" + postCode.getNumberOfHousesSold_12months() + "</td>");
+            System.out.println("\t\t</tr>");
+        }
+
+        System.out.println("\t</tbody>");
+        System.out.println("</table>");
+    }
+
+    private void jsArrayMethod() throws Exception {
+        List<String> allPostcodes = getAllAvailablePostCodeNumbersOrCities(false);
+        List<PostCode> postCodeObjects = getAllPostCodeObjects(allPostcodes, true);
+        printJsArrayCities(postCodeObjects);
+    }
+
+    private void printJsArray(List<PostCode> postCodes) {
+        for(PostCode postCode : postCodes) {
+            System.out.println("[ \"\", \"" + postCode.getPostCodeString() + "\", \"" + postCode.getCity() + "\", \"" +
+                postCode.getAverageHousePrice_12months() + "\", \"" + postCode.getAverageHousePricePerM2_12months() + "\", \"" +
+                    postCode.getNumberOfHousesSold_12months() + "\" ],");
+        }
+    }
+
+    private void printJsArrayCities(List<PostCode> cities) {
+        for(PostCode city : cities) {
+            System.out.println("[ \"\", \"" + city.getCity() + "\", \"" + city.getAverageHousePrice_12months() + "\", \"" +
+                    city.getAverageHousePricePerM2_12months() + "\", \"" + city.getNumberOfHousesSold_12months() + "\" ],");
+        }
+    }
+
     private void initializeDbConnection() throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         con = DriverManager.getConnection("jdbc:mysql://localhost:3306/insta?&serverTimezone=UTC", "root", "");
