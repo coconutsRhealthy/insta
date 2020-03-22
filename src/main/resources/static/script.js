@@ -132,6 +132,12 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
                     $scope.amount_arrow = downArrow;
                 }
             } else {
+                if($scope.postCodesOrCitiesPeriod.includes("12") && !$scope.orderType.includes("12")) {
+                    $scope.orderType = $scope.orderType.replace("6", "12");
+                } else if($scope.postCodesOrCitiesPeriod.includes("6") && !$scope.orderType.includes("6")) {
+                    $scope.orderType = $scope.orderType.replace("12", "6");
+                }
+
                 if($scope.orderType.indexOf("-") === -1) {
                     $scope.orderType = "-" + $scope.orderType;
 
@@ -210,10 +216,8 @@ mainApp.controller('ContactListCtrl', function ($scope, $timeout, $filter) {
        $timeout(function() {
             if($scope.postCodesOrCitiesPeriod.includes("postcodes")) {
                 $scope.postCodesOrCitiesPeriod = "postcodes";
-                $scope.alleBuurtenTotallist = $filter('orderBy')( $scope.alleBuurtenTotallist, priceToUse, false);
             } else if($scope.postCodesOrCitiesPeriod.includes("cities")) {
                 $scope.postCodesOrCitiesPeriod = "cities";
-                $scope.alleWoonplaatsenTotallist = $filter('orderBy')( $scope.alleWoonplaatsenTotallist, priceToUse, false);
             }
 
        }, 30);
