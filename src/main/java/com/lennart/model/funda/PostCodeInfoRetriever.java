@@ -104,8 +104,7 @@ public class PostCodeInfoRetriever {
     private String convertPriceToCorrectStringFormat(Double price) {
         int priceInt = price.intValue();
         String priceString = String.format("%,d", priceInt);
-        priceString = priceString.replaceAll(",", ".");
-        priceString = "€ " + priceString;
+        priceString = "€" + priceString;
         return priceString;
     }
 
