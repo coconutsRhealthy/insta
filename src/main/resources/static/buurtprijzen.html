@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
     <meta charset=utf-8 />
     <meta name="description" content="Gemiddelde huizenprijzen per postcode en woonplaats">
     <title>Buurtprijzen</title>
@@ -31,7 +33,7 @@
     <div id="table1" class="row">
         <div class="col-sm-2"></div>
         <div class="col-sm-8 table-background">
-            <h4>Woonplaatsen (data jan 2019 - mrt 2020)</h4>
+            <h2>Woonplaatsen (data jan 2019 - mrt 2020)</h2>
             <table id="dataCitiesTable" class="display" width="100%"></table>
         </div>
         <div class="col-sm-2"></div>
@@ -40,7 +42,7 @@
     <div id="table2" class="row">
         <div class="col-sm-2"></div>
         <div class="col-sm-8 table-background">
-            <h4>Postcodes (data jan 2019 - mrt 2020)</h4>
+            <h2>Postcodes (data jan 2019 - mrt 2020)</h2>
             <table id="dataPostcodesTable" class="display" width="100%"></table>
         </div>
         <div class="col-sm-2"></div>
@@ -5151,15 +5153,19 @@ body {
 }
 
 #table1 {
-  margin-top: 3%;
+  margin-top: 35px;
 }
 
 #table2 {
-  margin-top: 5%;
+  margin-top: 60px;
 }
 
 .table-background {
   background-color: rgb(235, 249, 255);
+}
+
+h2 {
+    font-size:23px;
 }
 </style>
 
