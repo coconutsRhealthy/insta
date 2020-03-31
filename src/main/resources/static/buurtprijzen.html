@@ -13,6 +13,9 @@
 
     <meta charset=utf-8 />
     <meta name="description" content="Gemiddelde huizenprijzen per postcode en woonplaats">
+
+    <link rel="icon" href="https://img.icons8.com/ios/64/000000/home.png" type="image/png" sizes="16x16">
+
     <title>Buurtprijzen</title>
 
     <script>
@@ -26,29 +29,27 @@
     </script>
 </head>
 <body>
+    <div id="body" class="container" style="display:none;">
+        <h1><center>Gemiddelde huizenprijzen</center></h1>
 
-<div class="container">
-    <h1><center>Gemiddelde huizenprijzen</center></h1>
-
-    <div id="table1" class="row">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-8 table-background">
-            <h2>Woonplaatsen (data jan 2019 - mrt 2020)</h2>
-            <table id="dataCitiesTable" class="display" width="100%"></table>
+        <div id="table1" class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8 table-background">
+                <h2>Woonplaatsen (data jan 2019 - mrt 2020)</h2>
+                <table id="dataCitiesTable" class="display" width="100%"></table>
+            </div>
+            <div class="col-sm-2"></div>
         </div>
-        <div class="col-sm-2"></div>
-    </div>
 
-    <div id="table2" class="row">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-8 table-background">
-            <h2>Postcodes (data jan 2019 - mrt 2020)</h2>
-            <table id="dataPostcodesTable" class="display" width="100%"></table>
+        <div id="table2" class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8 table-background">
+                <h2>Postcodes (data jan 2019 - mrt 2020)</h2>
+                <table id="dataPostcodesTable" class="display" width="100%"></table>
+            </div>
+            <div class="col-sm-2"></div>
         </div>
-        <div class="col-sm-2"></div>
     </div>
-</div>
-
 </body>
 
 <script>
@@ -5364,6 +5365,8 @@ $(document).ready(function() {
             cell.innerHTML = i+1;
         } );
     } ).draw();
+
+    $('#body').show();
 } );
 </script>
 
