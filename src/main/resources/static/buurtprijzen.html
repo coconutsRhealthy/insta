@@ -37,7 +37,7 @@
     <div id="table1" class="row">
         <div class="col-sm-2"></div>
         <div class="col-sm-8 table-bordered table-background">
-            <h2>Woonplaatsen (data jan 2019 - mrt 2020)</h2>
+            <h2>Woonplaatsen<span class="h2span"> (data jan 2019 - mrt 2020)</span></h2>
             <table id="dataCitiesTable" class="table table-striped dt-responsive nowrap" width="100%"></table>
         </div>
         <div class="col-sm-2"></div>
@@ -46,7 +46,7 @@
     <div id="table2" class="row">
         <div class="col-sm-2"></div>
         <div class="col-sm-8 table-bordered table-background">
-            <h2>Postcodes (data jan 2019 - mrt 2020)</h2>
+            <h2>Postcodes<span class="h2span"> (data jan 2019 - mrt 2020)</span></h2></h2>
             <table id="dataPostcodesTable" class="table table-striped dt-responsive nowrap" width="100%"></table>
         </div>
         <div class="col-sm-2"></div>
@@ -5351,7 +5351,7 @@ $(document).ready(function() {
             "lengthMenu": "Toon _MENU_ regels per pagina",
             "zeroRecords": "Niets gevonden",
             "info": "Pagina _PAGE_ van _PAGES_",
-            "infoFiltered": "(filtered from _MAX_ total records)",
+            "infoFiltered": "",
             "search": "Zoek:",
             "paginate": {
                 "next":       "Volgende",
@@ -5392,7 +5392,7 @@ $(document).ready(function() {
             "lengthMenu": "Toon _MENU_ regels per pagina",
             "zeroRecords": "Niets gevonden",
             "info": "Pagina _PAGE_ van _PAGES_",
-            "infoFiltered": "(filtered from _MAX_ total records)",
+            "infoFiltered": "",
             "search": "Zoek:",
             "paginate": {
                 "next":       "Volgende",
@@ -5425,11 +5425,20 @@ body {
 }
 
 #table2 {
-  margin-top: 60px;
+  margin-top: 64px;
+}
+
+h1 {
+  color: rgb(0, 0, 180);
 }
 
 h2 {
     font-size:23px;
+}
+
+.h2span {
+    font-size:15px;
+    font-style: italic;
 }
 
 .site-background {
