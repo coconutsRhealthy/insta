@@ -30,28 +30,26 @@
       ga('send', 'pageview');
     </script>
 </head>
-<body>
-    <!--<div id="body" class="container" style="display:none;">-->
-        <h1><center>Gemiddelde huizenprijzen</center></h1>
+<body style="display:none;" class="site-background">
+    <h1><center>Gemiddelde huizenprijzen</center></h1>
 
-        <div id="table1" class="row table table-striped dt-responsive nowrap">
-            <!--<div class="col-sm-2"></div>-->
-            <div class="col-sm-12 table-bordered">
-                <h2>Woonplaatsen (data jan 2019 - mrt 2020)</h2>
-                <table id="dataCitiesTable" class="display" width="100%"></table>
-            </div>
-            <!--<div class="col-sm-2"></div>-->
+    <div id="table1" class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8 table-bordered table-background">
+            <h2>Woonplaatsen (data jan 2019 - mrt 2020)</h2>
+            <table id="dataCitiesTable" class="table table-striped dt-responsive nowrap" width="100%"></table>
         </div>
+        <div class="col-sm-2"></div>
+    </div>
 
-        <div id="table2" class="row table table-striped dt-responsive nowrap">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-8 table-bordered">
-                <h2>Postcodes (data jan 2019 - mrt 2020)</h2>
-                <table id="dataPostcodesTable" class="display" width="100%"></table>
-            </div>
-            <div class="col-sm-2"></div>
+    <div id="table2" class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8 table-bordered table-background">
+            <h2>Postcodes (data jan 2019 - mrt 2020)</h2>
+            <table id="dataPostcodesTable" class="table table-striped dt-responsive nowrap" width="100%"></table>
         </div>
-    <!--</div>-->
+        <div class="col-sm-2"></div>
+    </div>
 </body>
 
 <script>
@@ -5332,11 +5330,27 @@ $(document).ready(function() {
             { title: "Prijs m2" },
             { title: "Transacties" }
         ],
-        "columnDefs": [ {
-            "searchable": false,
-            "orderable": false,
-            "targets": 0
-        } ],
+        "columnDefs": [
+            {
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            },
+            { responsivePriority: 1, targets: 1 },
+            { responsivePriority: 2, targets: 2 },
+            { responsivePriority: 3, targets: 3 }
+        ],
+        "language": {
+            "lengthMenu": "Toon _MENU_ regels per pagina",
+            "zeroRecords": "Niets gevonden",
+            "info": "Pagina _PAGE_ van _PAGES_",
+            "infoFiltered": "(filtered from _MAX_ total records)",
+            "search": "Zoek:",
+            "paginate": {
+                "next":       "Volgende",
+                "previous":   "Vorige"
+            }
+        }
     } );
 
     t1.on( 'order.dt search.dt', function () {
@@ -5346,6 +5360,7 @@ $(document).ready(function() {
     } ).draw();
 
     var t2 = $('#dataPostcodesTable').DataTable( {
+        responsive: true,
         data: dataSetPostcodes,
         order: [[ 3, "desc" ]],
         columns: [
@@ -5356,11 +5371,27 @@ $(document).ready(function() {
             { title: "Prijs m2" },
             { title: "Transacties" }
         ],
-        "columnDefs": [ {
-            "searchable": false,
-            "orderable": false,
-            "targets": 0
-        } ],
+        "columnDefs": [
+            {
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            },
+            { responsivePriority: 1, targets: 1 },
+            { responsivePriority: 2, targets: 3 },
+            { responsivePriority: 3, targets: 4 }
+        ],
+       "language": {
+            "lengthMenu": "Toon _MENU_ regels per pagina",
+            "zeroRecords": "Niets gevonden",
+            "info": "Pagina _PAGE_ van _PAGES_",
+            "infoFiltered": "(filtered from _MAX_ total records)",
+            "search": "Zoek:",
+            "paginate": {
+                "next":       "Volgende",
+                "previous":   "Vorige"
+            }
+        }
     } );
 
     t2.on( 'order.dt search.dt', function () {
@@ -5369,7 +5400,7 @@ $(document).ready(function() {
         } );
     } ).draw();
 
-    $('#body').show();
+    $('body').show();
 } );
 </script>
 
@@ -5392,6 +5423,20 @@ body {
 
 h2 {
     font-size:23px;
+}
+
+.site-background {
+   background-color: rgb(235, 249, 255);
+}
+
+.table-background {
+   background-color: rgb(255, 255, 255);
+}
+
+tr {
+   line-height: 8px;
+   min-height: 8px;
+   height: 8px;
 }
 </style>
 
