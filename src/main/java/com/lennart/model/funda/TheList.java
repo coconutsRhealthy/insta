@@ -41,7 +41,7 @@ public class TheList {
         printJsCode(dataPerCity, false);
     }
 
-    private List<String> getAllAvailablePostCodeNumbersOrCities(boolean postCode) throws Exception {
+    public List<String> getAllAvailablePostCodeNumbersOrCities(boolean postCode) throws Exception {
         Set<String> allDataSet = new HashSet<>();
 
         initializeDbConnection();
@@ -75,7 +75,7 @@ public class TheList {
         return allDataList;
     }
 
-    private List<PostCode> getAllPostCodeObjects(List<String> allInputStrings, boolean city) throws Exception {
+    public List<PostCode> getAllPostCodeObjects(List<String> allInputStrings, boolean city) throws Exception {
         List<PostCode> initialPostCodeList = new ArrayList<>();
 
         int counter = 0;
@@ -298,7 +298,7 @@ public class TheList {
         con.close();
     }
 
-    private static double convertPostcodePriceStringToPrice(String priceString) {
+    public static double convertPostcodePriceStringToPrice(String priceString) {
         String workingPriceString = priceString.replaceAll("[^0-9.]", "");
         workingPriceString = workingPriceString.replaceAll("\\.", "");
         double price = Double.valueOf(workingPriceString);
