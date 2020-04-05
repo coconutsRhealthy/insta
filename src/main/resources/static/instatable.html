@@ -12,38 +12,36 @@
 <body>
     <div class="container">
         <div class="row">
+            hoi
+        </div>
+
+        <div class="row">
             <div class="col-sm-4"></div>
 
             <div class="col-sm-4">
-                <div class="card" id="tja">
-                    <div id="cityName" class="card-body">
-                        <center id="truecity">Tilburg</center>
+                <div id="top-postcode-card" class="card">
+                    <div id="top-postcode-card-body" class="card-body">
+                        <center id="city">Amsterdam</center>
+                        <center id="top-postcode">5044</center>
                     </div>
-                </div>
-                <div id="eije" class="card">
-                    <div class="card-body">
-                        <center class="yo-top">5026</center>
-                        <center class="yo-top">eije</center>
-                    </div>
-                    <div class="card-footer top-footer">
+                    <div id="top-footer" class="card-footer">
                         <small class="text-muted">
-                            <span class="floatleft top-price">gem. prijs: €505.785</span>
-                            <span class="floatright top-price">gem. prijs/m2: €3.210</span>
+                            <span id="top-price-left">gem. prijs: €505.785</span>
+                            <span id="top-price-right">gem. prijs/m2: €3.210</span>
                         </small>
                     </div>
                 </div>
-                <div id="hmm" class="card">
+                <div id="bottom-postcode-card" class="card">
                     <div class="card-body">
-                        <center class="yo-bottom">5011</center>
+                        <center id="bottom-postcode">5011</center>
                     </div>
-                    <div class="card-footer">
+                    <div id="bottom-footer" class="card-footer">
                         <small class="text-muted">
-                            <span class="floatleft bottom-price">gem. prijs: €206.082</span>
-                            <span class="floatright bottom-price">gem. prijs/m2: €1.987</span>
+                            <span id="bottom-price-left">gem. prijs: €206.082</span>
+                            <span id="bottom-price-right">gem. prijs/m2: €1.987</span>
                         </small>
                     </div>
                 </div>
-
             </div>
 
             <div class="col-sm-4"></div>
@@ -54,83 +52,71 @@
 </body>
 
 <style>
-#cityName {
-  padding-top: 5px;
-  padding-right: 5px;
-  padding-bottom: 5px;
-  padding-left: 5px;
+
+#city {
+    font-weight: bold;
 }
 
-.floatleft {
+#top-price-left {
     float: left;
-}
-
-.floatright {
-    float: right;
-}
-
-.yo-top {
-    padding-top: 1px;
-    font-size: 30px;
-    border-top: none;
     color: black;
 }
 
-.yo-bottom {
-    padding-top: 1px;
-    font-size: 30px;
-    border-top: none;
+#top-price-right {
+    float: right;
+    color: black;
+}
+
+#bottom-price-left {
+    float: left;
     color: white;
 }
 
-
-h2 {
-    font-size:23px;
+#bottom-price-right {
+    float: right;
+    color: white;
 }
 
-.h2span {
-    font-size:15px;
-    font-style: italic;
-}
-
-#eije {
+#top-footer {
     background-color: white;
     border-top: none;
-    border-color: black;
 }
 
-#hmm {
+#bottom-footer {
     background-color: black;
-    border-top: none;
-    font-color: blue;
+}
+
+#top-postcode {
+    color: black;
+    font-size:40px;
+    padding-top: 6%;
+}
+
+#top-postcode-card-body {
+    padding-top: 3%;
+}
+
+#bottom-postcode {
+    color: white;
+    font-size:40px;
+    padding-top: 9%;
+}
+
+#top-postcode-card {
+    background-color: white;
+    height: 180px;
+    width: 360px;
+}
+
+#bottom-postcode-card {
+    background-color: black;
+    height: 180px;
+    width: 360px;
 }
 
 * {
   border-radius: 0 !important;
   border-color: black !important;
-}
-
-#truecity {
-  font-weight: bold;
-  color: black;
-}
-
-#tja {
-  border-bottom: none;
-}
-
-.top-footer {
-  background-color: white;
-  border-top: none;
-  border-bottom: none;
-}
-
-.top-price {
-  color: black;
-}
-
-.bottom-price {
-  color: white;
 }
 </style>
 
