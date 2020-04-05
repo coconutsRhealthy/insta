@@ -15,30 +15,31 @@
             <div class="col-sm-4"></div>
 
             <div class="col-sm-4">
-                <div class="card">
+                <div class="card" id="tja">
                     <div id="cityName" class="card-body">
                         <center id="truecity">Tilburg</center>
                     </div>
                 </div>
                 <div id="eije" class="card">
                     <div class="card-body">
-                        <center class="yo">5026</center>
+                        <center class="yo-top">5026</center>
+                        <center class="yo-top">eije</center>
                     </div>
-                    <div class="card-footer">
+                    <div class="card-footer top-footer">
                         <small class="text-muted">
-                            <span class="floatleft">gem. prijs: €505.785</span>
-                            <span class="floatright">gem. prijs/m2: €3.210</span>
+                            <span class="floatleft top-price">gem. prijs: €505.785</span>
+                            <span class="floatright top-price">gem. prijs/m2: €3.210</span>
                         </small>
                     </div>
                 </div>
                 <div id="hmm" class="card">
                     <div class="card-body">
-                        <center class="yo">5011</center>
+                        <center class="yo-bottom">5011</center>
                     </div>
                     <div class="card-footer">
                         <small class="text-muted">
-                            <span class="floatleft">gem. prijs: €206.082</span>
-                            <span class="floatright">gem. prijs/m2: €1.987</span>
+                            <span class="floatleft bottom-price">gem. prijs: €206.082</span>
+                            <span class="floatright bottom-price">gem. prijs/m2: €1.987</span>
                         </small>
                     </div>
                 </div>
@@ -68,8 +69,18 @@
     float: right;
 }
 
-.yo {
+.yo-top {
+    padding-top: 1px;
     font-size: 30px;
+    border-top: none;
+    color: black;
+}
+
+.yo-bottom {
+    padding-top: 1px;
+    font-size: 30px;
+    border-top: none;
+    color: white;
 }
 
 
@@ -83,21 +94,43 @@ h2 {
 }
 
 #eije {
-    background-color: yellow;
+    background-color: white;
     border-top: none;
+    border-color: black;
 }
 
 #hmm {
-    background-color: gold;
+    background-color: black;
     border-top: none;
+    font-color: blue;
 }
 
 * {
   border-radius: 0 !important;
+  border-color: black !important;
 }
 
 #truecity {
   font-weight: bold;
+  color: black;
+}
+
+#tja {
+  border-bottom: none;
+}
+
+.top-footer {
+  background-color: white;
+  border-top: none;
+  border-bottom: none;
+}
+
+.top-price {
+  color: black;
+}
+
+.bottom-price {
+  color: white;
 }
 </style>
 
