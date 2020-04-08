@@ -14,9 +14,59 @@ public class HousePersister {
 
     private Connection con;
 
-//    public static void main(String[] args) throws Exception {
-//        new HousePersister().fillDbFromFiles();
-//    }
+    public static void main(String[] args) throws Exception {
+        new HousePersister().addNewHousesToDb();
+    }
+
+    private void addNewHousesToDb() throws Exception {
+        List<File> allNewHtmlFiles = getAllHtmlFilesFromDir("/Users/LennartMac/Documents/huizenstuff/update");
+
+        DataFromPageRetriever dataFromPageRetriever = new DataFromPageRetriever();
+        int counter = 0;
+
+        List<House> newHouseData = new ArrayList<>();
+
+        for(File input : allNewHtmlFiles) {
+            newHouseData.addAll(dataFromPageRetriever.gatherHouseData(input, true));
+            System.out.println("html file: " + counter++);
+        }
+
+        initializeDbConnection();
+
+        for(House house : newHouseData) {
+            if(houseIsNotPresentInDb(house)) {
+                storeHouseInDb(house);
+            }
+        }
+
+        closeDbConnection();
+    }
+
+    private boolean houseIsNotPresentInDb(House house) throws Exception {
+        boolean houseIsNotPresentInDb = false;
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM funda3 WHERE adres = '" + house.getAddress() +
+                "' AND postcode = '" + house.getPostCode() + "' AND prijs = '" + house.getPrice() + "';");
+
+        if(!rs.next()) {
+            houseIsNotPresentInDb = true;
+            System.out.println("House not present in db!");
+        } else {
+            System.out.println("new house already present in db");
+            System.out.println("Adres: " + house.getAddress());
+            System.out.println("Postcode: " + house.getPostCode());
+            System.out.println("Woonplaats: " + house.getCity());
+            System.out.println("Prijs: " + house.getPrice());
+            System.out.println("Makelaar: " + house.getMakelaar());
+            System.out.println("Aantal kamers: " + house.getNumberOfRooms());
+        }
+
+        rs.close();
+        st.close();
+
+        return houseIsNotPresentInDb;
+    }
 
     private void fillDbFromFiles() throws Exception {
         List<File> allHtmlFiles = getAllHtmlFilesFromDir("/Users/LennartMac/Documents/allehuizen");
