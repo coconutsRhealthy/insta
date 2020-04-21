@@ -1,126 +1,137 @@
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<div style="width: 50%;">
+    <!--<div class="dienstaarktje_head">-->
+        <!--<div>-->
+            <!--<span>Ma 19-08-2019</span>-->
+            <!--<span>Geldig van 19-08-2019 tot 01-09-2019</span>-->
+        <!--</div>-->
+        <!--<div>-->
+            <!--<span>S</span>-->
+            <!--<span>Vs 760</span>-->
+        <!--</div>-->
+        <!--<div>-->
+            <!--<span>23:00 - 07:00</span>-->
+            <!--<span>Laatste Blad : 1</span>-->
+            <!--<span>08:00</span>-->
+        <!--</div>-->
+    <!--</div>-->
 
-<!--<link rel="stylesheet" type="text/css" href="eije.css" />-->
 
-<div>
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="card">
-                    <div class="card-body dienstkaartje-head">
-                        <div>
-                            <span>Ma 19-08-2019</span>
-                            <span class="floatright">Geldig van 19-08-2019 tot 01-09-2019</span>
-                        </div>
-                        <div>
-                            <span>S</span>
-                            <span class="floatright">Vs 760</span>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-4">23:00 - 07:00</div>
-                            <div class="col-sm-4">
-                                <center>Laatste Blad : 1</center>
-                            </div>
-                            <div class="col-sm-4">
-                                <span class="floatright">08:00</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <table class="table dienstkaartje-body">
-                    <thead>
-                        <tr>
-                            <th>tijd</th>
-                            <th>spoor</th>
-                            <th>trein</th>
-                            <th>naar spoor</th>
-                            <th width="50%">werkzaamheden</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>00:16</td>
-                            <td>1</td>
-                            <td>402272</td>
-                            <td>708</td>
-                            <td width="50%">RANG &emsp;&emsp;V 00:16 &emsp;A 00:18</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td>Vs</td>
-                            <td></td>
-                            <td>Vs</td>
-                            <td width="50%">2272 &emsp;&emsp;: VIRM-6 1 &emsp;: 412272-1</td>
-                        </tr>
-                        <tr>
-                            <td>00:26</td>
-                            <td>708</td>
-                            <td>412272</td>
-                            <td>704</td>
-                            <td width="50%">RANG &emsp;&emsp;V 00:26 &emsp;A 00:28</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td>Vs</td>
-                            <td></td>
-                            <td>Vs</td>
-                            <td width="50%">402272-1 &emsp;&emsp;: VIRM-6 1 &emsp;: 412272-1</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+    <!--<table class="dienstkaartje_head">-->
+        <!--<tbody>-->
+            <!--<tr>-->
+                <!--<td>A</td>-->
+                <!--<td>A</td>-->
+                <!--<td>A</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td>A</td>-->
+                <!--<td>A</td>-->
+                <!--<td>A</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td>A</td>-->
+                <!--<td>A</td>-->
+                <!--<td>A</td>-->
+            <!--</tr>-->
+        <!--</tbody>-->
+    <!--</table>-->
+
+
+    <table class="dienstkaartje-top">
+        <tbody>
+            <tr>
+                <td colspan="2" class="top-table-body-cell-left">Ma 19-08-2019</td>
+                <td colspan="2" class="top-table-body-cell-right">Geldig van 19-08-2019 tot 01-09-2019</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="top-table-body-cell-left">S</td>
+                <td colspan="2" class="top-table-body-cell-right">Vs 999</td>
+            </tr>
+            <tr>
+                <td class="top-table-body-cell-left">00:01 - 23:59</td>
+                <td class="top-table-body-cell-middle">Laatste Blad : 1</td>
+                <td class="top-table-body-cell-right">23:58</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+
+    <table class="dienstkaartje-body">
+        <thead>
+            <tr>
+                <th class="bottom-table-head-cell">tijd</th>
+                <th class="bottom-table-head-cell">spoor</th>
+                <th class="bottom-table-head-cell">trein</th>
+                <th class="bottom-table-head-cell">naar spoor</th>
+                <th class="bottom-table-head-cell" style="width: 50%">werkzaamheden</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td class="bottom-table-body-cell">A</td>
+                <td class="bottom-table-body-cell">B</td>
+                <td class="bottom-table-body-cell">B</td>
+                <td class="bottom-table-body-cell">B</td>
+                <td class="bottom-table-body-cell" style="width: 50%;">C</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
 <style>
+
+.dienstkaartje-top {
+    margin-top: 1%;
+    width: 100%;
+    border: 1px solid black;
+
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.dienstkaartje-body {
+    margin-top: 1%;
+    width: 100%;
+    border: 1px solid black;
+
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.bottom-table-head-cell {
+    text-align: left;
+    border: 1px solid black;
+
+}
+
+.bottom-table-body-cell {
+    border-right: 1px solid black;
+
+}
+
+.top-table-body-cell-left {
+    text-align: left;
+}
+
+.top-table-body-cell-middle {
+    text-align: center;
+}
+
+.top-table-body-cell-right {
+    text-align: right;
+    border-right: 1px solid black;
+}
+
+
+
+
 * {
   font-family: Arial;
   font-size: 14px;
   font-weight: bold;
 }
 
-.a4_landscape {
-  background: white;
-  height: 21cm;
-  width: 29.7cm;
-  display: block;
-  margin: 0 auto;
-  margin-bottom: 0.5cm;
-  box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
-}
-
-.dienstkaartje-body {
-  margin-top: 2%;
-}
-
-table, th {
-  border: 1px solid black;
-  border-top: 1px solid black !important;
-  border-bottom: 1px solid black !important;
-}
-
-.floatright {
-  float: right;
-}
-
-.card {
-  margin-top: 3%;
-  border: 1px solid black;
-  border-radius: 0 !important;
-}
-
-.dienstkaartje-head {
-  padding: 3px;
-}
-
-th, td {
-  padding: 4px !important;
-}
-
-td {
-  border-left: 1px solid black;
-  border-top: none !important;
-}
 </style>
