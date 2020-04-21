@@ -104,17 +104,8 @@ var t, e, a, b, $ = Date.now();
 
 function Re() {
     if ($ + 5e3 < Date.now()) {
-        if ("function" == typeof pbjs.refreshAll) {
-            var _ = ["div-gpt-ad-1495620748765-0", "div-gpt-ad-ConvertCase_300x250_Belowtxtbox_1", "div-gpt-ad-ConvertCase_300x250_Belowtxtbox_2"];
-            detectWidth() < 768 && _.push("div-gpt-ad-ConvertCase_Mob_StickyFooter"), pbjs.refreshBidsAndAds(_)
-        }
         $ = Date.now()
     }
-}
-
-function Ue() {
-    var _, $ = ((_ = new XMLHttpRequest).open("GET", document.location, !1), _.send(null), _.getResponseHeader("cloudfront-viewer-country"));
-    return !!["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE", "GB"].includes($)
 }
 
 function De(_, ee) {
@@ -593,8 +584,6 @@ t = this, e = function() {
                 return e.preventDefault(), ne.value = Se(ne.value), ne.placeholder = Se(ne.placeholder), je(ne), Oe("Convert", "Alternating"), Re(), !1
             }), document.getElementById("inverse") && document.getElementById("inverse").addEventListener("click", function(e) {
                 return e.preventDefault(), ne.value = Be(ne.value), ne.placeholder = Be(ne.placeholder), je(ne), Oe("Convert", "Inverse"), Re(), !1
-            }), document.getElementById("title") && document.getElementById("title").addEventListener("click", function(e) {
-                return e.preventDefault(), ne.value = Ie(ne.value), ne.placeholder = Ie(ne.placeholder), je(ne), Oe("Convert", "Title"), Re(), !1
             }), document.getElementById("clear") && document.getElementById("clear").addEventListener("click", function(e) {
                 return e.preventDefault(), ne.value = "", ne.placeholder = Ce(ne.placeholder.toLowerCase()), He(ne), Oe("Clear", "Clear"), Re(), !1
             }), document.getElementById("smalltext")) {
@@ -1167,17 +1156,6 @@ t = this, e = function() {
                 he(!0), Re()
             })
         }
-        if (document.getElementById("titlecase")) {
-            function me() {
-                var _ = ne.value;
-                "" == _ && (_ = ne.placeholder), document.getElementById("output").innerHTML = "<p>" + Ie(_).replace(/\n/g, "<br>") + "</p>"
-            }
-            me(), ne.addEventListener("input", function(e) {
-                me(), Re()
-            }), ne.addEventListener("propertychange", function(e) {
-                me(), Re()
-            })
-        }
         ne.addEventListener("focus", function() {
             He(ne)
         }), ne.addEventListener("blur", function() {
@@ -1222,50 +1200,7 @@ t = this, e = function() {
                 if (0 == c.indexOf($)) return c.substring($.length, c.length)
             }
             return ""
-        }(be) && Ue()) {
-        var we = document.getElementById("cookiebar");
-        we.style.display = "block", document.querySelectorAll("#cookiebar .ok")[0].addEventListener("click", function(e) {
-            return we.style.display = "none",
-                function(_, $, ee, te) {
-                    var d = new Date;
-                    d.setTime(d.getTime() + 24 * ee * 60 * 60 * 1e3);
-                    var ne = "expires=" + d.toUTCString();
-                    document.cookie = _ + "=" + $ + ";" + ne + ";path=" + te
-                }(be, "y", 365, "/"), !1
-        })
+        }(be)) {
     }
-    var Le = document.getElementById("menu");
-    Le.classList.add("js");
     var ke = window.location.pathname.split("/")[1];
-
-    function Te() {
-        var _ = Le.offsetWidth,
-            $ = 0;
-        Le.classList.remove("overflowed");
-        for (var ee = Le.children, i = 0; i < ee.length; i++) ee[i].classList.remove("overflowed"), ee[i].classList.contains("more") && ee[i].parentNode.removeChild(ee[i]);
-        for (ee = Le.children, i = 0; i < ee.length; i++) {
-            var te = ee[i].childNodes[0];
-            if ("" == ke && 0 == i ? te.classList.add("active") : "" != ke && te.getAttribute("href").includes("/" + ke + "/") && !te.getAttribute("href").includes("onlinenotepad") && te.classList.add("active"), !ee[i].classList.contains("more")) {
-                var ne = $ + ee[i].offsetWidth;
-                if (_ < ne) {
-                    if (0 == document.querySelectorAll("#menu .more ul").length) {
-                        Le.innerHTML += '<li class="more"><a href="#">More Tools</a><ul></ul></li>';
-                        var re = document.querySelectorAll("#menu .more ul")[0];
-                        document.querySelectorAll("#menu .more > a")[0].addEventListener("click", function(e) {
-                            return e.preventDefault(), re.parentNode.classList.toggle("open"), !1
-                        })
-                    }
-                    Le.classList.add("overflowed"), ee[i].classList.add("overflowed"), re.innerHTML += ee[i].innerHTML
-                } else $ = ne
-            }
-        }
-        var oe = document.querySelectorAll("#menu li.overflowed");
-        if (0 < oe.length) {
-            var ie = oe[0].previousElementSibling;
-            ie.classList.add("overflowed"), re.innerHTML = ie.innerHTML + re.innerHTML
-        }
-    }
-    Te(), window.onresize = function(_) {
-        Te()
-    }
-}), "serviceWorker" in navigator && navigator.serviceWorker.register("/sw.js");
+})
