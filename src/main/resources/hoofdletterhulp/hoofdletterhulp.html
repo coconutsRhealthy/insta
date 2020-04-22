@@ -1,62 +1,51 @@
 <!doctype html>
-<html lang="en">
+<html lang="nl">
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Convert Case - Convert upper case to lower case, lower case to upper case and more!</title>
-    <meta name="description" content="Easily convert text between different letter cases: lower case, UPPER CASE, Sentence case, Capitalized Case, aLtErNaTiNg cAsE and more online.">
+    <title>Hoofdletterhulp - Zet hoofdletters om naar kleine letters, kleine letters naar hoofdletters en meer!</title>
+    <meta name="description" content="Zet tekst gemakkelijk om naar HOOFDLETTERS, kleine letters, Hoofdletters aan het begin van een zin en meer online.">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="style.css">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <meta name="apple-mobile-web-app-title" content="Convert Case">
-    <meta name="application-name" content="Convert Case">
-    <meta name="msapplication-TileImage" content="/apple-touch-icon.png">
-    <meta name="msapplication-TileColor" content="#FFFFFF">
-    <meta name="msapplication-tooltip" content="Accidentally left the caps lock on and typed something, but can't be bothered to start again and retype it all?">
-    <meta name="theme-color" content="#E0E0E0">
-
+    <meta name="apple-mobile-web-app-title" content="Hoofdletterhulp">
+    <meta name="application-name" content="Hoofdletterhulp">
     <link rel="canonical" href="https://www.hoofdletterhulp.nl">
-    <link rel="manifest" href="/manifest.json">
+
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.hoofdletterhulp.nl">
-    <meta property="og:title" content="Convert Case - Convert upper case to lower case, lower case to upper case and more!">
-    <meta property="og:image" content="https://convertcase.net/apple-touch-icon.png">
-    <meta property="og:description" content="Easily convert text between different letter cases: lower case, UPPER CASE, Sentence case, Capitalized Case, aLtErNaTiNg cAsE and more online.">
-
-
+    <meta property="og:title" content="Hoofdletterhulp - Zet hoofdletters om naar kleine letters, kleine letters naar hoofdletters en meer!">
+    <meta property="og:description" content="Zet tekst gemakkelijk om naar HOOFDLETTERS, kleine letters, Hoofdletters aan het begin van een zin en meer online.">
 </head>
 
 <body>
 <div class="wrapper" role="main">
-    <!--[if lte IE 9]><div class="message upgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/" target="_blank">upgrade your browser</a> to improve your experience.</div><![endif]-->
+    <!--[if lte IE 9]><div class="message upgrade">Je gebruikt een <strong>verouderde</strong> browser. <a href="http://browsehappy.com/" target="_blank">Upgrade je browser</a> voor een betere gebruikerservaring.</div><![endif]-->
     <noscript>
-        <div class="message upgrade">JavaScript is required to use this web site. Please turn it on in your browser or whitelist this site, then refresh the page.</div>
+        <div class="message upgrade">JavaScript is noodzakelijk voor een goede werking van deze website. Zet het aan in je browser of whitelist deze website en refresh de pagina.</div>
     </noscript>
 
     <div id="container">
-        <h1>Accidentally left the caps lock on and typed something, but can't be bothered to start again and retype it all?</h1>
+        <h1>Heb je iets getypt terwijl per ongeluk Caps Lock aanstond en wil je het liever niet opnieuw typen?</h1>
         <p>
-            <label for="content">Simply enter your text and choose the case you want to convert it to.</label>
+            <label for="content">Plaats je tekst hieronder en kies naar welke vorm je het wil omzetten.</label>
         </p>
         <form action="/" method="post">
             <div class="row">
-                <textarea id="content" placeholder="Type or paste your content here" autofocus></textarea>
+                <textarea id="content" placeholder="Typ of plak je tekst hier" autofocus></textarea>
             </div>
         </form>
         <div class="messages"></div>
         <div class="actions">
-            <button id="sentence" class="btn">Sentence case</button>
-            <button id="lower" class="btn">lower case</button>
-            <button id="upper" class="btn">UPPER CASE</button>
-            <button id="capitalized" class="btn">Capitalized Case</button>
-            <button id="alternating" class="btn">aLtErNaTiNg cAsE</button>
-            <button id="inverse" class="btn">InVeRsE CaSe</button>
-            <button id="download" class="btn" data-download-target="#content">Download Text</button>
-            <button id="copy" class="btn" data-clipboard-target="#content">Copy to Clipboard</button>
-            <button id="clear" class="btn">Clear</button>
+            <button id="sentence" class="btn">Hoofdletter begin zin</button>
+            <button id="lower" class="btn">kleine letters</button>
+            <button id="upper" class="btn">HOOFDLETTERS</button>
+            <button id="capitalized" class="btn">Hoodletter Begin Woord</button>
+            <button id="download" class="btn" data-download-target="#content">Download tekst</button>
+            <button id="copy" class="btn" data-clipboard-target="#content">Kopieer tekst</button>
+            <button id="clear" class="btn">Maak tekstveld leeg</button>
         </div>
-        <div class="row counts">Character Count: <span id="char_count">0</span> | Word Count: <span id="word_count">0</span> | Line Count: <span id="line_count">0</span></div>
+        <div class="row counts">Aantal letters: <span id="char_count">0</span> | Aantal woorden: <span id="word_count">0</span> | Aantal zinnen: <span id="line_count">0</span></div>
     </div>
 
     <p class="legal">Hoofdletterhulp.nl copyright 2020</p>
@@ -64,10 +53,10 @@
 
 
 <script>
-        var copied = "Text copied to clipboard!",
-            manual_copy = "Press Ctrl+C to copy text",
-            downloaded = "Text downloaded!",
-            no_text = "Please enter some text first!",
+        var copied = "Tekst gekopieerd!",
+            manual_copy = "Druk op Ctrl+C om de tekst te kopieren",
+            downloaded = "Tekst gedwonload!",
+            no_text = "Vul eerst wat tekst in.",
             file_name = "hoofdletterhulp.txt"
     </script>
 <script src="script.js"></script>
