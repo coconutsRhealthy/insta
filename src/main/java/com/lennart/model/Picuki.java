@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * Created by LennartMac on 01/12/2020.
@@ -22,6 +23,9 @@ public class Picuki {
 
     //ook een goede: https://gramho.com/
     //picuki, bigsta, gramho, instapiks
+    //fullinsta.photo
+
+    //https://instajust.com/
 
 //    public static void main(String[] args) throws Exception {
 //        try {
@@ -42,6 +46,21 @@ public class Picuki {
 ////        }
 //    }
 
+//    public static void main(String[] args) throws Exception {
+//        new Picuki().eije();
+//    }
+
+    private void eije() throws Exception {
+        Document document = Jsoup.connect("https://instajust.com/profile/dutchtoy").get();
+        String fullHtml = document.html();
+
+        if(fullHtml.contains("Fofs")) {
+            System.out.println("prrtzz");
+        } else {
+            System.out.println("eije");
+        }
+    }
+
     private void getPicukiH1(String userName, int counter) throws Exception {
         try {
             Document document = Jsoup.connect("https://www.picuki.com/profile/" + userName).get();
@@ -53,15 +72,17 @@ public class Picuki {
     }
 
     private void fillDbWithUsernames() throws Exception {
-        List<String> users = new Aandacht().fillUserList(false);
+        List<String> users = new Korting().fillKortingUsers();
 
         initializeDbConnection();
 
         for(String user : users) {
             Statement st = con.createStatement();
-            st.executeUpdate("INSERT INTO followers (username, amount_of_followers) VALUES ('" + user + "', -5)");
+            st.executeUpdate("INSERT INTO followers2 (username, amount_of_followers) VALUES ('" + user + "', -5)");
             st.close();
         }
+
+        closeDbConnection();
     }
 
 //    private void identifyLastKortingTime(String username) {
@@ -95,13 +116,37 @@ public class Picuki {
 //
 //    }
 
-//    public static void main(String[] args) throws Exception {
-//        new Picuki().nightlyRunKortingTest();
-//    }
+    public static void main(String[] args) throws Exception {
+        String siteName = "instajust";
+        String startKortingPostHtmlIndicator = "<span>";
+        String endKortingPostHtmlIndicator = "</span>";
+        String timeHtmlIdentifier = "<div class=\"article_time\">";
 
-    private void nightlyRunKortingTest() throws Exception {
-        List<String> users = new Aandacht().fillUserList(false);
-        Picuki picuki = new Picuki();
+        String siteNamePicu = "picuki";
+        String startKortingPostHtmlIndicatorPicu = "alt=";
+        String endKortingPostHtmlIndicatorPicu = "\">";
+        String timeHtmlIdentifierPicu = "<div class=\"time\">";
+
+        new Picuki().nightlyRunKortingTest(siteName, startKortingPostHtmlIndicator, endKortingPostHtmlIndicator, timeHtmlIdentifier);
+    }
+
+
+    //for Picuki
+    //siteName: picuki
+    //timeHtmlIdentifier: "<div class=\"time\">"
+    //startKortingPostHtmlIndicator: "alt="
+    //endKortingPostHtmlIndicator: "\">"
+
+    //for InstaJust
+    //siteName: instajust
+    //timeHtmlIdentifier: "<div class=\"article_time\">"
+    //startKortingPostHtmlIndicator: "<span>"
+    //endKortingPostHtmlIndicator: "</span>"
+
+    private void nightlyRunKortingTest(String siteName, String startKortingPostHtmlIndicator, String endKortingPostHtmlIndicator,
+                                       String timeHtmlIdentifier) throws Exception {
+        List<String> users = new Korting().fillKortingUsers();
+
         int counter = 0;
 
         for(String user : users) {
@@ -109,153 +154,205 @@ public class Picuki {
                 counter++;
                 System.out.println("**** " + counter + ") USER: " + user + " ****");
 
-                Map<String, List<String>> kortingWords = picuki.identifyKortingWordsUsed(user);
+                String fullHtmlForUser = getFullHtmlForUsername(siteName, user);
+                Set<String> kortingWordsOnPage = identifyKortingWordsUsed(fullHtmlForUser);
 
-                for(Map.Entry<String, List<String>> entry : kortingWords.entrySet()) {
-                    List<String> lastPostTimes = picuki.getKortingWordLastPostTimes(entry.getKey(), entry.getValue());
-                    lastPostTimes = picuki.sortLastPostTimesFromNewestToOldest(lastPostTimes);
+                Map<String, String> lastPostTimesPerKortingsWord =
+                        getKortingWordLastPostTimes(fullHtmlForUser, kortingWordsOnPage, timeHtmlIdentifier);
 
-                    String lastPostTimeToUse = "none";
+                lastPostTimesPerKortingsWord = lastPostTimesPerKortingsWord.entrySet()
+                        .stream()
+                        .sorted(Map.Entry.comparingByValue(new LastPostTimeComparator()))
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
-                    if(!lastPostTimes.isEmpty()) {
-                        lastPostTimeToUse = lastPostTimes.get(0);
-                    }
+                String kortingsWord = "none";
+                String lastPostTimeToUse = "none";
+                String fullKortingsWordText = "prrtzz none";
 
-                    updateKortingDb(lastPostTimeToUse, user);
+                if(!lastPostTimesPerKortingsWord.isEmpty()) {
+                    kortingsWord = lastPostTimesPerKortingsWord.keySet().stream().collect(Collectors.toList()).get(0);
+                    lastPostTimeToUse = lastPostTimesPerKortingsWord.values().stream().collect(Collectors.toList()).get(0);
+                    fullKortingsWordText = getFullKortingPostText(fullHtmlForUser, kortingsWord,
+                            startKortingPostHtmlIndicator, endKortingPostHtmlIndicator);
                 }
+
+                updateKortingDb(kortingsWord, lastPostTimeToUse, fullKortingsWordText, user);
             } catch (Exception e) {
-                System.out.println("ERREUURRR");
-                e.printStackTrace();
+                try {
+                    System.out.println("ERREUURRR");
+                    updateKortingDb("error", "error", "prrtzz error", user);
+                    e.printStackTrace();
+                } catch (Exception z) {
+                    System.out.println("ERROR 2!!!");
+                    z.printStackTrace();
+                }
             }
 
             TimeUnit.SECONDS.sleep(90);
         }
     }
 
-    private void updateKortingDb(String lastKortingPostTime, String username) throws Exception {
+    private void updateKortingDb(String kortingsWord, String lastKortingPostTime, String kortingPostFullText, String username) throws Exception {
         initializeDbConnection();
 
         Statement st = con.createStatement();
-        st.executeUpdate("UPDATE followers SET last_korting = '" + lastKortingPostTime + "' WHERE username = '" + username + "'");
+        st.executeUpdate("UPDATE followers2 SET last_korting = '" + lastKortingPostTime + "', kortingsword = '" + kortingsWord + "', kortingsword_post_fulltext = '" + kortingPostFullText + "' WHERE username = '" + username + "'");
         st.close();
 
         closeDbConnection();
     }
 
-    private Map<String, List<String>> identifyKortingWordsUsed(String username) throws Exception {
-        Document document = Jsoup.connect("https://www.picuki.com/profile/" + username).get();
+    private String getFullHtmlForUsername(String siteName, String username) throws Exception {
+        Document document = Jsoup.connect("https://www." + siteName + ".com/profile/" + username).get();
+        return document.html();
+    }
 
-        List<String> kortingsWordsPresentOnPage = new ArrayList<>();
+    public Set<String> identifyKortingWordsUsed(String fullHtml) throws Exception {
+        Set<String> kortingsWordsPresentOnPage = new HashSet<>();
 
-        String bodyText = document.html();
-
-        if(StringUtils.containsIgnoreCase(bodyText, "korting")) {
+        if(StringUtils.containsIgnoreCase(fullHtml, "korting")) {
             kortingsWordsPresentOnPage.add("korting");
         }
 
-        if(StringUtils.containsIgnoreCase(bodyText, "discount")) {
+        if(StringUtils.containsIgnoreCase(fullHtml, "discount")) {
             kortingsWordsPresentOnPage.add("discount");
         }
 
-        if(StringUtils.containsIgnoreCase(bodyText, "% off")) {
+        if(StringUtils.containsIgnoreCase(fullHtml, "% off")) {
             kortingsWordsPresentOnPage.add("% off");
         }
 
-        if(StringUtils.containsIgnoreCase(bodyText, "%off")) {
+        if(StringUtils.containsIgnoreCase(fullHtml, "%off")) {
             kortingsWordsPresentOnPage.add("%off");
         }
 
-        if(StringUtils.containsIgnoreCase(bodyText, "my code")) {
+        if(StringUtils.containsIgnoreCase(fullHtml, "my code")) {
             kortingsWordsPresentOnPage.add("my code");
         }
 
-        Map<String, List<String>> bodyWithKortingWords = new HashMap<>();
-        bodyWithKortingWords.put(bodyText, kortingsWordsPresentOnPage);
+        if(StringUtils.containsIgnoreCase(fullHtml, "mijn code")) {
+            kortingsWordsPresentOnPage.add("mijn code");
+        }
 
-        return bodyWithKortingWords;
+        if(StringUtils.containsIgnoreCase(fullHtml, "de code")) {
+            kortingsWordsPresentOnPage.add("de code");
+        }
+
+        if(StringUtils.containsIgnoreCase(fullHtml, "code:")) {
+            kortingsWordsPresentOnPage.add("code:");
+        }
+
+        if(StringUtils.containsIgnoreCase(fullHtml, "with code")) {
+            kortingsWordsPresentOnPage.add("with code");
+        }
+
+        if(StringUtils.containsIgnoreCase(fullHtml, "met code")) {
+            kortingsWordsPresentOnPage.add("met code");
+        }
+
+        return kortingsWordsPresentOnPage;
     }
 
-    private List<String> getKortingWordLastPostTimes(String bodyText, List<String> kortingsWordsOnPage) {
-        List<String> partAfterKortingWordSubstrings = new ArrayList<>();
+    public Map<String, String> getKortingWordLastPostTimes(String bodyText, Set<String> kortingsWordsOnPage,
+                                                            String timeHtmlIdentifier) {
+        Map<String, String> kortingsWordWithpartAfterKortingWordSubstrings = new HashMap<>();
 
         for(String kortingsWord : kortingsWordsOnPage) {
             String bodyCopy = bodyText;
 
-            if(StringUtils.containsIgnoreCase(bodyCopy, kortingsWord)) {
-                bodyCopy = bodyCopy.substring(bodyCopy.toLowerCase().indexOf(kortingsWord.toLowerCase()) +
-                        kortingsWord.length(), bodyCopy.length());
-                partAfterKortingWordSubstrings.add(bodyCopy);
-            }
+            bodyCopy = bodyCopy.substring(bodyCopy.toLowerCase().indexOf(kortingsWord.toLowerCase()) +
+                    kortingsWord.length(), bodyCopy.length());
+            kortingsWordWithpartAfterKortingWordSubstrings.put(kortingsWord, bodyCopy);
         }
 
-        List<String> times = new ArrayList<>();
+        Map<String, String> kortingWordLastPostTimes = new HashMap<>();
 
-        for(String partAfterKortingWord : partAfterKortingWordSubstrings) {
-            if(partAfterKortingWord.contains("<div class=\"time\">") &&
-                    partAfterKortingWord.indexOf("<div class=\"time\">") + 60 < partAfterKortingWord.length()) {
+        for (Map.Entry<String, String> entry : kortingsWordWithpartAfterKortingWordSubstrings.entrySet()) {
+            String partAfterKortingWord = entry.getValue();
+
+            if(partAfterKortingWord.contains(timeHtmlIdentifier) &&
+                    partAfterKortingWord.indexOf(timeHtmlIdentifier) + 70 < partAfterKortingWord.length()) {
                 String kortingTimeForWord = partAfterKortingWord.substring(
-                        partAfterKortingWord.indexOf("<div class=\"time\">"),
-                        partAfterKortingWord.indexOf("<div class=\"time\">") + 60);
+                        partAfterKortingWord.indexOf(timeHtmlIdentifier),
+                        partAfterKortingWord.indexOf(timeHtmlIdentifier) + 70);
 
-                kortingTimeForWord = kortingTimeForWord.substring(
-                        kortingTimeForWord.indexOf("span>") + 5, kortingTimeForWord.indexOf("</span"));
+                if(kortingTimeForWord.contains("span>") && kortingTimeForWord.contains("</span")
+                        && kortingTimeForWord.indexOf("span>") < kortingTimeForWord.indexOf("</span")) {
+                    kortingTimeForWord = kortingTimeForWord.substring(
+                            kortingTimeForWord.indexOf("span>") + 5, kortingTimeForWord.indexOf("</span"));
 
-                times.add(kortingTimeForWord);
+                    kortingWordLastPostTimes.put(entry.getKey(), kortingTimeForWord);
+                }
             }
         }
 
-        return times;
-    }
-
-    private List<String> sortLastPostTimesFromNewestToOldest(List<String> lastPostTimes) {
-        List<String> dayPostTimes = new ArrayList<>();
-        List<String> weekPostTimes = new ArrayList<>();
-        List<String> monthPostTimes = new ArrayList<>();
-        List<String> yearPostTimes = new ArrayList<>();
-
-        for(String postTime : lastPostTimes) {
-            if(postTime.contains("day")) {
-                dayPostTimes.add(postTime);
-            } else if(postTime.contains("week")) {
-                weekPostTimes.add(postTime);
-            } else if(postTime.contains("month")) {
-                monthPostTimes.add(postTime);
-            } else if(postTime.contains("year")) {
-                yearPostTimes.add(postTime);
-            }
-        }
-
-        Collections.sort(dayPostTimes, new LastPostTimeComparator());
-        Collections.sort(weekPostTimes, new LastPostTimeComparator());
-        Collections.sort(monthPostTimes, new LastPostTimeComparator());
-        Collections.sort(yearPostTimes, new LastPostTimeComparator());
-
-        List<String> sorted = new ArrayList<>();
-        sorted.addAll(dayPostTimes);
-        sorted.addAll(weekPostTimes);
-        sorted.addAll(monthPostTimes);
-        sorted.addAll(yearPostTimes);
-
-        return sorted;
+        return kortingWordLastPostTimes;
     }
 
     private class LastPostTimeComparator implements Comparator<String> {
         @Override
         public int compare(String lastPostTime1, String lastPostTime2) {
-            int lastPostTime1Integer = Integer.valueOf(lastPostTime1.substring(0, lastPostTime1.indexOf(" ")));
-            int lastPostTime2Integer = Integer.valueOf(lastPostTime2.substring(0, lastPostTime1.indexOf(" ")));
+            String lastPostTime1Period = getPeriodFromPostTimeString(lastPostTime1);
+            String lastPostTime2Period = getPeriodFromPostTimeString(lastPostTime2);
 
             int toReturn;
 
-            if(lastPostTime1Integer < lastPostTime2Integer) {
-                toReturn = -1;
-            } else if(lastPostTime1Integer == lastPostTime2Integer) {
-                toReturn = 0;
+            if(lastPostTime1Period.equals(lastPostTime2Period)) {
+                int lastPostTime1Integer = Integer.valueOf(lastPostTime1.substring(0, lastPostTime1.indexOf(" ")));
+                int lastPostTime2Integer = Integer.valueOf(lastPostTime2.substring(0, lastPostTime1.indexOf(" ")));
+
+                if(lastPostTime1Integer < lastPostTime2Integer) {
+                    toReturn = -1;
+                } else if(lastPostTime1Integer == lastPostTime2Integer) {
+                    toReturn = 0;
+                } else {
+                    toReturn = 1;
+                }
             } else {
-                toReturn = 1;
+                if(lastPostTime1Period.equals("hour")) {
+                    toReturn = -1;
+                } else if(lastPostTime1Period.equals("day")) {
+                    if(lastPostTime2Period.equals("hour")) {
+                        toReturn = 1;
+                    } else {
+                        toReturn = -1;
+                    }
+                } else if(lastPostTime1Period.equals("week")) {
+                    if(lastPostTime2Period.equals("hour") || lastPostTime2Period.equals("day")) {
+                        toReturn = 1;
+                    } else {
+                        toReturn = -1;
+                    }
+                } else if(lastPostTime1Period.equals("month")) {
+                    if(lastPostTime2Period.equals("hour") || lastPostTime2Period.equals("day") || lastPostTime2Period.equals("week")) {
+                        toReturn = 1;
+                    } else {
+                        toReturn = -1;
+                    }
+                } else {
+                    toReturn = 1;
+                }
             }
 
             return toReturn;
+        }
+
+        private String getPeriodFromPostTimeString(String postTimeString) {
+            String period = "unknown";
+
+            if(postTimeString.contains("hour")) {
+                period = "hour";
+            } else if(postTimeString.contains("day")) {
+                period = "day";
+            } else if(postTimeString.contains("week")) {
+                period = "week";
+            } else if(postTimeString.contains("month")) {
+                period = "month";
+            } else if(postTimeString.contains("year")) {
+                period = "year";
+            }
+
+            return period;
         }
     }
 
@@ -300,17 +397,24 @@ public class Picuki {
         return followers;
     }
 
-    private String getFullKortingPostText(String fullHtml, String kortingsWord) throws Exception {
+    private String getFullKortingPostText(String fullHtml, String kortingsWord, String startPostHtmlIndicator,
+                                          String endPostHtmlIndicator) throws Exception {
+        kortingsWord = kortingsWord.toLowerCase();
+        fullHtml = fullHtml.toLowerCase();
+
         String partOfHtmlBeforeKortingsWord = fullHtml.substring(0, fullHtml.indexOf(kortingsWord));
         String partOfHtmlAfterKortingsWord = fullHtml.substring(fullHtml.indexOf(kortingsWord), fullHtml.length());
 
         String firstHalfOfKortingPostText = partOfHtmlBeforeKortingsWord.substring
-                (partOfHtmlBeforeKortingsWord.lastIndexOf("alt=") + 5, partOfHtmlBeforeKortingsWord.length());
+                (partOfHtmlBeforeKortingsWord.lastIndexOf(startPostHtmlIndicator) + 5, partOfHtmlBeforeKortingsWord.length());
 
         String secondHalfOfKortingPostText = partOfHtmlAfterKortingsWord.substring
-                (0, partOfHtmlAfterKortingsWord.indexOf("\">"));
+                (0, partOfHtmlAfterKortingsWord.indexOf(endPostHtmlIndicator));
 
         String fullKortingPostText = firstHalfOfKortingPostText + secondHalfOfKortingPostText;
+
+        fullKortingPostText = "prrtzz " + fullKortingPostText;
+
         return fullKortingPostText;
     }
 
@@ -332,6 +436,4 @@ public class Picuki {
     private void closeDbConnection() throws SQLException {
         con.close();
     }
-
-
 }
