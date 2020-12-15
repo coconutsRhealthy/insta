@@ -519,7 +519,7 @@ public class Korting {
         users.add("robingaby");
         users.add("lunahoogwerf_");
         users.add("fennebraspenning");
-        users.add("iriszeistra");
+        users.add("iriszeilstra");
         users.add("amijeroos");
         users.add("jennifermaryhoffman");
         users.add("tienvanwil");
@@ -637,6 +637,61 @@ public class Korting {
         users.add("_isaluna");
         users.add("lunadubois");
         users.add("gioiaparijsofficial");
+
+        users.add("janiceblok");
+        users.add("mrsjamieli");
+        users.add("elishflesch");
+        users.add("dilansabah");
+        users.add("rodanyakalsey");
+        users.add("laviederosh");
+        users.add("mylifeaselize");
+        users.add("damiet");
+        users.add("clairepronk");
+        users.add("benteborst");
+        users.add("vonnekebonneke");
+        users.add("chicaswinnyalice");
+        users.add("lian_vijfschaft");
+        users.add("stijn_fransen");
+        users.add("lindaa_slomp");
+
+        users.add("ingewildenberg");
+
+        //emmaheesters
+        //fayaofficial
+        //demiideboer
+        //loesjerambaldo
+        //lindehighler
+        //stephanietency
+        //noahcelik
+        //kellyhamelijnck
+        //melany
+        //jaim_x
+        //bodemunk_
+        //amandabalk_
+        //lisasamanthaa
+        //douniarijkschroeff
+        //rowenakonings_
+        //kellyvanderminne
+        //boyivandenhoek
+        //jackiedeboer
+        //maximedeboer
+        //maikebeunk
+        //michellegroen
+        //annevedder
+        //mirasoeteman
+        //robindeboer_
+        //indiasuy
+        //rowantess
+        //lotteereitsma
+        //florianne.charlotte
+        //mandyvanderwardt
+        //djessyx
+        //michellemarlene
+        //estellecruijffofficial
+        //manon_kool
+        //jennifermua1
+        //gaby.blaaser
+
 
         return users;
     }
