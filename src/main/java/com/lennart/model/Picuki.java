@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -161,7 +163,7 @@ public class Picuki {
                 } catch (Exception z) {
                     System.out.println("picuki error!");
                     System.out.println("ERROR complete!!!");
-                    updateKortingDb("error", "error", "storn error", user);
+                    updateKortingDb("error", "error", "storn error", user, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(5000)));
                     z.printStackTrace();
                 }
             }
@@ -189,25 +191,59 @@ public class Picuki {
         String kortingsWord = "none";
         String lastPostTimeToUse = "none";
         String fullKortingsWordText = "storn none";
+        String dateOfPost = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(5000));
 
         if(!lastPostTimesPerKortingsWord.isEmpty()) {
+            String lastPostTimeWithoutSubscript = lastPostTimesPerKortingsWord.values().stream().collect(Collectors.toList()).get(0);
             kortingsWord = lastPostTimesPerKortingsWord.keySet().stream().collect(Collectors.toList()).get(0);
-            lastPostTimeToUse = addSubscriptToPostTimeString(lastPostTimesPerKortingsWord.values().stream().collect(Collectors.toList()).get(0));
+            lastPostTimeToUse = addSubscriptToPostTimeString(lastPostTimeWithoutSubscript);
             fullKortingsWordText = getFullKortingPostText(fullHtmlForUser, kortingsWord,
                     startKortingPostHtmlIndicator, endKortingPostHtmlIndicator);
+            dateOfPost = getDateFromTimeString(lastPostTimeWithoutSubscript);
         }
 
-        updateKortingDb(kortingsWord, lastPostTimeToUse, fullKortingsWordText, user);
+        updateKortingDb(kortingsWord, lastPostTimeToUse, fullKortingsWordText, user, dateOfPost);
+        updateKortingDbAllKortingTable(user, kortingsWord, fullKortingsWordText, dateOfPost);
     }
 
-    private void updateKortingDb(String kortingsWord, String lastKortingPostTime, String kortingPostFullText, String username) throws Exception {
-        initializeDbConnection();
+    private void updateKortingDb(String kortingsWord, String lastKortingPostTime, String kortingPostFullText,
+                                 String username, String dateOfPost) throws Exception {
+        try {
+            initializeDbConnection();
 
-        Statement st = con.createStatement();
-        st.executeUpdate("UPDATE followers2 SET last_korting = '" + lastKortingPostTime + "', kortingsword = '" + kortingsWord + "', kortingsword_post_fulltext = '" + kortingPostFullText + "' WHERE username = '" + username + "'");
-        st.close();
+            Statement st = con.createStatement();
+            st.executeUpdate("UPDATE followers2 SET " +
+                    "last_korting = '" + lastKortingPostTime + "', " +
+                    "kortingsword = '" + kortingsWord + "', " +
+                    "kortingsword_post_fulltext = '" + kortingPostFullText + "', " +
+                    "date_of_post = '" + dateOfPost + "' " +
+                    "WHERE username = '" + username + "'");
+            st.close();
 
-        closeDbConnection();
+            closeDbConnection();
+        } catch (Exception e) {
+            System.out.println("OLD DB ERROR!");
+            e.printStackTrace();
+        }
+    }
+
+    private void updateKortingDbAllKortingTable(String username, String kortingsWord, String kortingPostFullText,
+                                                String dateOfPost) throws Exception {
+        try {
+            initializeDbConnection();
+
+            Statement st = con.createStatement();
+            st.executeUpdate("INSERT INTO all_korting (" +
+                    "username, kortingsword, kortingsword_post_fulltext, date_of_post) " +
+                    "VALUES ('" + username + "', '" + kortingsWord + "', '" + kortingPostFullText + "', '" + dateOfPost + "') " +
+                    "ON DUPLICATE KEY UPDATE username=username;");
+            st.close();
+
+            closeDbConnection();
+        } catch (Exception e) {
+            System.out.println("NEW DB ERROR!");
+            e.printStackTrace();
+        }
     }
 
     private String getFullHtmlForUsername(String siteName, String username) throws Exception {
@@ -455,6 +491,43 @@ public class Picuki {
         fullKortingPostText = "storn " + fullKortingPostText;
 
         return fullKortingPostText;
+    }
+
+    private String getDateFromTimeString(String timeString) {
+        int timeStringInteger = Integer.valueOf(timeString.substring(0, timeString.indexOf(" ")));
+
+        Date dateOfPost;
+
+        if(timeString.contains("minute")) {
+            dateOfPost = new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1)
+                    - TimeUnit.MINUTES.toMillis(timeStringInteger));
+        } else if(timeString.contains("hour")) {
+            dateOfPost = new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1)
+                    - TimeUnit.HOURS.toMillis(timeStringInteger));
+        } else if(timeString.contains("day")) {
+            dateOfPost = new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1)
+                    - TimeUnit.DAYS.toMillis(timeStringInteger));
+        } else if(timeString.contains("week")) {
+            dateOfPost = new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1)
+                    - TimeUnit.DAYS.toMillis(timeStringInteger * 7));
+        } else if(timeString.contains("month")) {
+            dateOfPost = new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1)
+                    - TimeUnit.DAYS.toMillis(timeStringInteger * 30));
+        } else if(timeString.contains("year")) {
+            dateOfPost = new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1)
+                    - TimeUnit.DAYS.toMillis(timeStringInteger * 365));
+        } else {
+            dateOfPost = new Date(0);
+        }
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return dateFormat.format(dateOfPost);
+    }
+
+    private String getCurrentDate() {
+        Date date = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return dateFormat.format(date);
     }
 
     private void updateUserAndFollowerAmountInDb(String username, int amountOfFollowers) throws Exception {
