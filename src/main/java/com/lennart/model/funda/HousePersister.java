@@ -14,12 +14,77 @@ public class HousePersister {
 
     private Connection con;
 
-    public static void main(String[] args) throws Exception {
-        new HousePersister().addNewHousesToDb();
+//    public static void main(String[] args) throws Exception {
+//        new HousePersister().addNewHousesToDb();
+//    }
+
+    private void compareShit() throws Exception {
+        double beforePriceTotal = 0;
+        double beforePriceM2Total = 0;
+        double beforePriceTotalCounter = 0;
+        double beforePriceM2TotalCounter = 0;
+        double afterPriceTotal = 0;
+        double afterPriceM2Total = 0;
+        double afterPriceTotalCounter = 0;
+        double afterPriceM2TotalCounter = 0;
+
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM funda3;");
+
+        while(rs.next()) {
+            String datumOpPagina = rs.getString("datum_op_pagina");
+
+            if(datumOpPagina.contains("donderdag 23 januari 2020") && rs.getDouble("prijs") < 5_000_000) {
+                beforePriceTotal = beforePriceTotal + rs.getDouble("prijs");
+                beforePriceM2Total = beforePriceM2Total + rs.getDouble("prijs_m2");
+
+                beforePriceTotalCounter++;
+                beforePriceM2TotalCounter++;
+            }
+        }
+
+        rs.close();
+        st.close();
+
+        Statement st2 = con.createStatement();
+        ResultSet rs2 = st2.executeQuery("SELECT * FROM eije;");
+
+        while(rs2.next()) {
+            String datumOpPagina = rs2.getString("datum_op_pagina");
+
+            if(datumOpPagina.equals("donderdag 9 april 2020") && rs2.getDouble("prijs") < 5_000_000) {
+                afterPriceTotal = afterPriceTotal + rs2.getDouble("prijs");
+                afterPriceM2Total = afterPriceM2Total + rs2.getDouble("prijs_m2");
+
+                afterPriceTotalCounter++;
+                afterPriceM2TotalCounter++;
+            }
+
+        }
+
+        rs2.close();
+        st2.close();
+
+        closeDbConnection();
+
+//        System.out.println("before gemiddelde: " + (beforePriceTotal / beforeCounter));
+//        System.out.println("after gemiddelde: " + (afterPriceTotal / afterCounter));
+
+        System.out.println("before prijs gemiddelde: " + (beforePriceTotal / beforePriceTotalCounter));
+        System.out.println("before prijs_m2 gemiddelde: " + (beforePriceM2Total / beforePriceM2TotalCounter));
+        System.out.println("total: " + beforePriceTotalCounter);
+
+        System.out.println();
+
+        System.out.println("after prijs gemiddelde: " + (afterPriceTotal / afterPriceTotalCounter));
+        System.out.println("after prijs_m2 gemiddelde: " + (afterPriceM2Total / afterPriceM2TotalCounter));
+        System.out.println("total: " + afterPriceTotalCounter);
     }
 
     private void addNewHousesToDb() throws Exception {
-        List<File> allNewHtmlFiles = getAllHtmlFilesFromDir("/Users/LennartMac/Documents/huizenstuff/update");
+        List<File> allNewHtmlFiles = getAllHtmlFilesFromDir("/Users/LennartMac/Documents/huizenstuff/update_3_mei");
 
         DataFromPageRetriever dataFromPageRetriever = new DataFromPageRetriever();
         int counter = 0;
@@ -31,12 +96,18 @@ public class HousePersister {
             System.out.println("html file: " + counter++);
         }
 
+        System.out.println("aantal huizen: " + newHouseData.size());
         initializeDbConnection();
 
+        int total = newHouseData.size();
+        counter = 0;
+
         for(House house : newHouseData) {
-            if(houseIsNotPresentInDb(house)) {
+            //if(houseIsNotPresentInDb(house)) {
                 storeHouseInDb(house);
-            }
+            //}
+
+            System.out.println(counter++ + "      " + total);
         }
 
         closeDbConnection();
@@ -69,7 +140,7 @@ public class HousePersister {
     }
 
     private void fillDbFromFiles() throws Exception {
-        List<File> allHtmlFiles = getAllHtmlFilesFromDir("/Users/LennartMac/Documents/allehuizen");
+        List<File> allHtmlFiles = getAllHtmlFilesFromDir("/Users/LennartMac/Documents/huizenstuff/update_april");
 
         DataFromPageRetriever dataFromPageRetriever = new DataFromPageRetriever();
         int counter = 0;
@@ -134,6 +205,13 @@ public class HousePersister {
                     house.getDateAtPage() + "', '" +
                     house.getCurrentDate() + "'" +
                     ")");
+        } catch (SQLIntegrityConstraintViolationException e) {
+            System.out.print("house already present in db: ");
+            System.out.print(house.getAddress() + " ");
+            System.out.print(house.getPostCode() + " ");
+            System.out.print(house.getCity() + " ");
+            System.out.print(house.getPrice() + " ");
+            System.out.println(house.getMakelaar() + " ");
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("wacht");
