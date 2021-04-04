@@ -17,16 +17,16 @@ import java.util.stream.Collectors;
 /**
  * Created by LennartMac on 01/12/2020.
  */
-public class Picuki {
+public class KortingIdentifierPersister {
 
     private Connection con;
 
     public static void main(String[] args) throws Exception {
-        Picuki picuki = new Picuki();
+        KortingIdentifierPersister kortingIdentifierPersister = new KortingIdentifierPersister();
         InstaAccounts instaAccounts = new InstaAccounts();
 
         while(true) {
-            picuki.continuousRunKorting(instaAccounts);
+            kortingIdentifierPersister.continuousRunKorting(instaAccounts);
         }
     }
 
