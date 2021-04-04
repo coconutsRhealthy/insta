@@ -3,8 +3,6 @@ package com.lennart.model;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -38,25 +36,19 @@ public class Picuki {
         int counter = 0;
 
         for(String user : users) {
-//            try {
-//                nightlyRunLogic(counter, user, "instajust", "<div class=\"article_time\">", "<span>", "</span>");
-//            } catch (Exception e) {
-//                System.out.println("instajust error!");
+            try {
+                nightlyRunLogic(counter, user, "picuki", "<div class=\"time\">", "alt=", "\">");
+            } catch (Exception z) {
+                System.out.println("picuki error!");
 
                 try {
-                    nightlyRunLogic(counter, user, "picuki", "<div class=\"time\">", "alt=", "\">");
-                } catch (Exception z) {
-                    System.out.println("picuki error!");
-
-                    try {
-                        nightlyRunLogic(counter, user, "instajust", "<div class=\"article_time\">", "<span>", "</span>");
-                    } catch (Exception y) {
-                        System.out.println("ERROR complete!!!");
-                        updateKortingDb("error", "error", "stipo error", user, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(5000)));
-                        z.printStackTrace();
-                    }
+                    nightlyRunLogic(counter, user, "instajust", "<div class=\"article_time\">", "<span>", "</span>");
+                } catch (Exception y) {
+                    System.out.println("ERROR complete!!!");
+                    updateKortingDb("error", "error", "stipo error", user, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(5000)));
+                    z.printStackTrace();
                 }
-//            }
+            }
 
             TimeUnit.SECONDS.sleep(90);
         }
@@ -343,24 +335,6 @@ public class Picuki {
         }
 
         return timeStringWithSubscript;
-    }
-
-    private int getPicukiFollowers(String username) throws Exception {
-        int followers = -1;
-
-        Document document = Jsoup.connect("https://www.picuki.com/profile/" + username).get();
-        Elements allSpanElements = document.select("span.bold");
-
-        for(Element spanElement : allSpanElements) {
-            if(spanElement.text().contains("Followers")) {
-                String followerString = spanElement.text();
-                followerString = followerString.substring(0, followerString.indexOf(" "));
-                followerString = followerString.replace(",", "");
-                followers = Integer.valueOf(followerString);
-            }
-        }
-
-        return followers;
     }
 
     private String getFullKortingPostText(String fullHtml, String kortingsWord, String startPostHtmlIndicator,
