@@ -5,9 +5,9 @@ import java.util.*;
 /**
  * Created by LennartMac on 18/11/2020.
  */
-public class Korting {
+public class InstaAccounts {
 
-    public List<String> fillKortingUsers() {
+    public List<String> getAllInstaAccounts() {
         List<String> users = new ArrayList<>();
 
         users.add("juliamekkes");

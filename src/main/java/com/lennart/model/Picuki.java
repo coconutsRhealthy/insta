@@ -23,15 +23,15 @@ public class Picuki {
 
     public static void main(String[] args) throws Exception {
         Picuki picuki = new Picuki();
-        Korting korting = new Korting();
+        InstaAccounts instaAccounts = new InstaAccounts();
 
         while(true) {
-            picuki.continuousRunKorting(korting);
+            picuki.continuousRunKorting(instaAccounts);
         }
     }
 
-    private void continuousRunKorting(Korting korting) throws Exception {
-        List<String> users = korting.fillKortingUsers();
+    private void continuousRunKorting(InstaAccounts instaAccounts) throws Exception {
+        List<String> users = instaAccounts.getAllInstaAccounts();
 
         int counter = 0;
 
