@@ -11,9 +11,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class Scraper {
 
-    public static void main(String[] args) throws Exception {
-        new Scraper().scrape();
-    }
+//    public static void main(String[] args) throws Exception {
+//        new Scraper().scrape();
+//    }
 
     private void scrape() throws Exception {
         TimeUnit.SECONDS.sleep(2);
@@ -22,7 +22,7 @@ public class Scraper {
 
         int counter = 0;
 
-        for(int i = 15266; i < 16_000; i++) {
+        for(int i = 286; i < 7000; i++) {
             if(counter++ < 500) {
                 String url = baseUrl + i + "/";
 
@@ -33,7 +33,7 @@ public class Scraper {
                 TimeUnit.MILLISECONDS.sleep(500);
 
                 //click url bar
-                rightClick(801, 87);
+                rightClick(801, 80);
 
                 TimeUnit.MILLISECONDS.sleep(300);
 
@@ -43,12 +43,12 @@ public class Scraper {
                 TimeUnit.MILLISECONDS.sleep(4950);
 
                 //right click
-                rightClick(500, 500);
+                rightClick(500, 300);
                 TimeUnit.MILLISECONDS.sleep(150);
 
                 //click save page as
                 TimeUnit.MILLISECONDS.sleep(500);
-                click(532 ,579);
+                click(547, 377);
 
                 //click save
                 TimeUnit.MILLISECONDS.sleep(2000);
