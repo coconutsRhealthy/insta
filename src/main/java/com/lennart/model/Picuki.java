@@ -23,150 +23,40 @@ public class Picuki {
 
     private Connection con;
 
-    //ook een goede: https://gramho.com/
-    //picuki, bigsta, gramho, instapiks
-    //fullinsta.photo
-
-    //https://instajust.com/
-
-//    public static void main(String[] args) throws Exception {
-//        try {
-//            new Picuki().nightlyRunOfFollowersTest();
-//        } catch (Exception e) {
-//            System.out.println("vage timeunit excepzion!");
-//            e.printStackTrace();
-//        }
-//
-////        List<String> users = new Aandacht().fillUserList(false);
-////        Picuki picuki = new Picuki();
-////        int counter = 0;
-////
-////        for(String user : users) {
-////            counter++;
-////            picuki.getPicukiH1(user, counter);
-////            TimeUnit.SECONDS.sleep(90);
-////        }
-//    }
-
-//    public static void main(String[] args) throws Exception {
-//        new Picuki().eije();
-//    }
-
-    private void eije() throws Exception {
-        Document document = Jsoup.connect("https://instajust.com/profile/dutchtoy").get();
-        String fullHtml = document.html();
-
-        if(fullHtml.contains("Fofs")) {
-            System.out.println("storn");
-        } else {
-            System.out.println("eije");
-        }
-    }
-
-    private void getPicukiH1(String userName, int counter) throws Exception {
-        try {
-            Document document = Jsoup.connect("https://www.picuki.com/profile/" + userName).get();
-            System.out.println("" + counter + " " + document.getElementsByTag("h2").get(0).text());
-        } catch (Exception e) {
-            System.out.println("" + counter + " Error!");
-            e.printStackTrace();
-        }
-    }
-
-    private void fillDbWithUsernames() throws Exception {
-        List<String> users = new Korting().fillKortingUsers();
-
-        initializeDbConnection();
-
-        for(String user : users) {
-            Statement st = con.createStatement();
-            st.executeUpdate("INSERT INTO followers2 (username, amount_of_followers) VALUES ('" + user + "', -5)");
-            st.close();
-        }
-
-        closeDbConnection();
-    }
-
-//    private void identifyLastKortingTime(String username) {
-//        Document document = Jsoup.connect("https://www.picuki.com/profile/" + username).get();
-//        String fullHtml = document.html();
-//
-//
-//
-//
-//
-//    }
-
-//    public static void main(String[] args) throws Exception {
-//        new Picuki().testje();
-//    }
-//
-//    private void testje() throws Exception {
-//        Map<String, List<String>> kortingWords = new Picuki().identifyKortingWordsUsed("moderosaofficial");
-//
-//        for(Map.Entry<String, List<String>> entry : kortingWords.entrySet()) {
-//            List<String> lastPostTimes = new Picuki().getKortingWordLastPostTime(entry.getKey(), entry.getValue());
-//
-//            String lastPostTimeToUse = "none";
-//
-//            if(!lastPostTimes.isEmpty()) {
-//                lastPostTimeToUse = lastPostTimes.get(0);
-//            }
-//
-//            System.out.println("wacht");
-//        }
-//
-//    }
-
     public static void main(String[] args) throws Exception {
-        String siteName = "instajust";
-        String startKortingPostHtmlIndicator = "<span>";
-        String endKortingPostHtmlIndicator = "</span>";
-        String timeHtmlIdentifier = "<div class=\"article_time\">";
-
-        String siteNamePicu = "picuki";
-        String startKortingPostHtmlIndicatorPicu = "alt=";
-        String endKortingPostHtmlIndicatorPicu = "\">";
-        String timeHtmlIdentifierPicu = "<div class=\"time\">";
+        Picuki picuki = new Picuki();
+        Korting korting = new Korting();
 
         while(true) {
-            new Picuki().continuousRunKorting();
+            picuki.continuousRunKorting(korting);
         }
     }
 
-
-    //for Picuki
-    //siteName: picuki
-    //timeHtmlIdentifier: "<div class=\"time\">"
-    //startKortingPostHtmlIndicator: "alt="
-    //endKortingPostHtmlIndicator: "\">"
-
-    //for InstaJust
-    //siteName: instajust
-    //timeHtmlIdentifier: "<div class=\"article_time\">"
-    //startKortingPostHtmlIndicator: "<span>"
-    //endKortingPostHtmlIndicator: "</span>"
-
-    private void continuousRunKorting() throws Exception {
-        List<String> users = new Korting().fillKortingUsers();
+    private void continuousRunKorting(Korting korting) throws Exception {
+        List<String> users = korting.fillKortingUsers();
 
         int counter = 0;
 
         for(String user : users) {
-            try {
-                nightlyRunLogic(counter, user, "instajust", "<div class=\"article_time\">", "<span>", "</span>");
-            } catch (Exception e) {
-                System.out.println("instajust error!");
+//            try {
+//                nightlyRunLogic(counter, user, "instajust", "<div class=\"article_time\">", "<span>", "</span>");
+//            } catch (Exception e) {
+//                System.out.println("instajust error!");
 
                 try {
                     nightlyRunLogic(counter, user, "picuki", "<div class=\"time\">", "alt=", "\">");
                 } catch (Exception z) {
                     System.out.println("picuki error!");
-                    System.out.println("ERROR complete!!!");
-                    updateKortingDb("error", "error", "storn error", user, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(5000)));
-                    z.printStackTrace();
+
+                    try {
+                        nightlyRunLogic(counter, user, "instajust", "<div class=\"article_time\">", "<span>", "</span>");
+                    } catch (Exception y) {
+                        System.out.println("ERROR complete!!!");
+                        updateKortingDb("error", "error", "stipo error", user, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(5000)));
+                        z.printStackTrace();
+                    }
                 }
-            }
+//            }
 
             TimeUnit.SECONDS.sleep(90);
         }
@@ -190,8 +80,10 @@ public class Picuki {
 
         String kortingsWord = "none";
         String lastPostTimeToUse = "none";
-        String fullKortingsWordText = "storn none";
+        String fullKortingsWordText = "stipo none";
         String dateOfPost = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(5000));
+        String company = "dunno";
+        String kortingsCode = "dunno";
 
         if(!lastPostTimesPerKortingsWord.isEmpty()) {
             String lastPostTimeWithoutSubscript = lastPostTimesPerKortingsWord.values().stream().collect(Collectors.toList()).get(0);
@@ -200,14 +92,23 @@ public class Picuki {
             fullKortingsWordText = getFullKortingPostText(fullHtmlForUser, kortingsWord,
                     startKortingPostHtmlIndicator, endKortingPostHtmlIndicator);
             dateOfPost = getDateFromTimeString(lastPostTimeWithoutSubscript);
+            fullKortingsWordText = cleanHtmlFromDiscountPosttext(fullKortingsWordText);
+            company = identifyCompaniesThatGiveDiscount(fullKortingsWordText);
+            kortingsCode = identifyDiscountCode(fullKortingsWordText);
         }
 
         updateKortingDb(kortingsWord, lastPostTimeToUse, fullKortingsWordText, user, dateOfPost);
-        updateKortingDbAllKortingTable(user, kortingsWord, fullKortingsWordText, dateOfPost);
+        updateKortingDbAllKortingTable(user, kortingsWord, fullKortingsWordText, dateOfPost, company, kortingsCode);
     }
 
     private void updateKortingDb(String kortingsWord, String lastKortingPostTime, String kortingPostFullText,
                                  String username, String dateOfPost) throws Exception {
+        kortingsWord = replaceUnwantedCharacters(kortingsWord);
+        lastKortingPostTime = replaceUnwantedCharacters(lastKortingPostTime);
+        kortingPostFullText = replaceUnwantedCharacters(kortingPostFullText);
+        username = replaceUnwantedCharacters(username);
+        dateOfPost = replaceUnwantedCharacters(dateOfPost);
+
         try {
             initializeDbConnection();
 
@@ -228,14 +129,27 @@ public class Picuki {
     }
 
     private void updateKortingDbAllKortingTable(String username, String kortingsWord, String kortingPostFullText,
-                                                String dateOfPost) throws Exception {
+                                                String dateOfPost, String company, String discountWord) throws Exception {
+        username = replaceUnwantedCharacters(username);
+        kortingsWord = replaceUnwantedCharacters(kortingsWord);
+        kortingPostFullText = replaceUnwantedCharacters(kortingPostFullText);
+        dateOfPost = replaceUnwantedCharacters(dateOfPost);
+        company = replaceUnwantedCharacters(company);
+        discountWord = replaceUnwantedCharacters(discountWord);
+
         try {
             initializeDbConnection();
 
             Statement st = con.createStatement();
             st.executeUpdate("INSERT INTO all_korting (" +
-                    "username, kortingsword, kortingsword_post_fulltext, date_of_post) " +
-                    "VALUES ('" + username + "', '" + kortingsWord + "', '" + kortingPostFullText + "', '" + dateOfPost + "') " +
+                    "username, kortingsword, kortingsword_post_fulltext, date_of_post, company, kortingscode) " +
+                    "VALUES (" +
+                    "'" + username + "', '"
+                    + kortingsWord + "', '"
+                    + kortingPostFullText + "', '"
+                    + dateOfPost + "', '"
+                    + company + "', '"
+                    + discountWord + "') " +
                     "ON DUPLICATE KEY UPDATE username=username;");
             st.close();
 
@@ -251,7 +165,7 @@ public class Picuki {
         return document.html();
     }
 
-    public Set<String> identifyKortingWordsUsed(String fullHtml) throws Exception {
+    private Set<String> identifyKortingWordsUsed(String fullHtml) throws Exception {
         Set<String> kortingsWordsPresentOnPage = new HashSet<>();
 
         if(StringUtils.containsIgnoreCase(fullHtml, "korting")) {
@@ -297,7 +211,7 @@ public class Picuki {
         return kortingsWordsPresentOnPage;
     }
 
-    public Map<String, String> getKortingWordLastPostTimes(String bodyText, Set<String> kortingsWordsOnPage,
+    private Map<String, String> getKortingWordLastPostTimes(String bodyText, Set<String> kortingsWordsOnPage,
                                                             String timeHtmlIdentifier) {
         Map<String, String> kortingsWordWithpartAfterKortingWordSubstrings = new HashMap<>();
 
@@ -431,29 +345,6 @@ public class Picuki {
         return timeStringWithSubscript;
     }
 
-    private void nightlyRunOfFollowersTest() throws Exception {
-        List<String> users = new Aandacht().fillUserList(false);
-
-        for(String user : users) {
-            int followers;
-
-            try {
-                followers = getPicukiFollowers(user);
-            } catch (Exception e) {
-                followers = -1;
-            }
-
-            try {
-                updateUserAndFollowerAmountInDb(user, followers);
-            } catch (Exception e) {
-                System.out.println("Sicke sql exception yow");
-                e.printStackTrace();
-            }
-
-            TimeUnit.SECONDS.sleep(90);
-        }
-    }
-
     private int getPicukiFollowers(String username) throws Exception {
         int followers = -1;
 
@@ -488,7 +379,7 @@ public class Picuki {
 
         String fullKortingPostText = firstHalfOfKortingPostText + secondHalfOfKortingPostText;
 
-        fullKortingPostText = "storn " + fullKortingPostText;
+        fullKortingPostText = "stipo " + fullKortingPostText;
 
         return fullKortingPostText;
     }
@@ -524,20 +415,82 @@ public class Picuki {
         return dateFormat.format(dateOfPost);
     }
 
-    private String getCurrentDate() {
-        Date date = new Date();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return dateFormat.format(date);
+    private String cleanHtmlFromDiscountPosttext(String fullDiscountPosttext) {
+        String cleanedPostText = fullDiscountPosttext.replaceAll("<.*?>", "");
+        return cleanedPostText;
     }
 
-    private void updateUserAndFollowerAmountInDb(String username, int amountOfFollowers) throws Exception {
-        initializeDbConnection();
+    private String identifyCompaniesThatGiveDiscount(String fullDiscountPosttext) {
+        List<String> companies = new ArrayList<>();
 
-        Statement st = con.createStatement();
-        st.executeUpdate("UPDATE followers SET amount_of_followers = " + amountOfFollowers + " WHERE username = '" + username + "'");
-        st.close();
+        while(fullDiscountPosttext.contains("@") && fullDiscountPosttext.length() > fullDiscountPosttext.indexOf("@") + 1) {
+            fullDiscountPosttext = fullDiscountPosttext.substring(fullDiscountPosttext.indexOf("@") + 1, fullDiscountPosttext.length());
 
-        closeDbConnection();
+            String company;
+
+            if(fullDiscountPosttext.contains(" ")) {
+                company = fullDiscountPosttext.substring(0, fullDiscountPosttext.indexOf(" "));
+            } else {
+                company = fullDiscountPosttext;
+            }
+
+            if(company.endsWith(".") || company.endsWith(",") || company.endsWith("!") || company.endsWith("?")) {
+                company = company.substring(0, company.length() - 1);
+            }
+
+
+            companies.add(company);
+        }
+
+        String companiesDbString = "";
+
+        if(!companies.isEmpty()) {
+            if(companies.size() > 1) {
+                for(String company : companies) {
+                    companiesDbString = companiesDbString + ", " + company;
+                }
+            } else {
+                companiesDbString = companies.get(0);
+            }
+        }
+
+        if(companiesDbString.startsWith(", ")) {
+            companiesDbString = companiesDbString.replaceFirst(", ", "");
+        }
+
+        if(companiesDbString.equals("")) {
+            companiesDbString = "nothingFound";
+        }
+
+        return companiesDbString;
+    }
+
+    private String identifyDiscountCode(String fullDiscountPosttext) {
+        String code = "nothingFound";
+
+        if(fullDiscountPosttext.toLowerCase().contains("code")) {
+            code = fullDiscountPosttext.substring(fullDiscountPosttext.indexOf("code") + 4, fullDiscountPosttext.length());
+
+            if(code.startsWith(" ")) {
+                code = code.replaceFirst(" ", "");
+            }
+
+            if(code.contains(" ")) {
+                code = code.substring(0, code.indexOf(" "));
+            }
+        }
+
+        return code;
+    }
+
+    private String replaceUnwantedCharacters(String baseString) {
+        String replacedString = baseString;
+
+        replacedString = replacedString.replace("&amp;", "en");
+        replacedString = replacedString.replace("&", "en");
+        replacedString = replacedString.replace("'", "");
+
+        return replacedString;
     }
 
     private void initializeDbConnection() throws Exception {

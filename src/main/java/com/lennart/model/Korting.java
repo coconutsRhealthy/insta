@@ -317,6 +317,7 @@ public class Korting {
     public List<String> fillKortingUsers() {
         List<String> users = new ArrayList<>();
 
+        users.add("juliamekkes");
         users.add("lyannemeijer");
         users.add("glam_by_eefje");
         users.add("fennleonoor");
@@ -379,7 +380,6 @@ public class Korting {
         users.add("manontilstra");
         users.add("anoukhoogendijk");
         users.add("mrskeizer");
-        users.add("juliamekkes");
         users.add("kiya.vanrossum");
         users.add("shellysterk");
         users.add("onnedi");

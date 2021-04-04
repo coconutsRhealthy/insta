@@ -17,10 +17,9 @@ public class PostableCityIdentifier {
     //steden waar
         //duurste postcode prijs gelijk is aan duurste postcode prijs_m2
 
-    public static void main(String[] args) throws Exception {
-        new PostableCityIdentifier().analysePriceDiffMostExpensiveAndCheapPostcode("Amsterdam");
-
-    }
+//    public static void main(String[] args) throws Exception {
+//        new PostableCityIdentifier().analysePriceDiffMostExpensiveAndCheapPostcode("Amsterdam");
+//    }
 
     private List<String> identifyCitiesWithSameMostExpensivePostcodePricePriceM2() throws Exception {
         TheList theList = new TheList();
