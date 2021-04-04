@@ -1,6 +1,8 @@
 package com.lennart.model;
 
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Analysis {
@@ -8,8 +10,66 @@ public class Analysis {
     private Connection con;
 
 //    public static void main(String[] args) throws Exception {
-//        new Analysis().getBnList("absoluteFollowers", "2019-03-27", 1);
+//        new Analysis().analyseReplaceQuery();
 //    }
+
+
+
+    //adres
+    //postcode
+    //plaats
+    //oppervlakte
+    //kamers
+    //prijs
+    //makelaar
+
+
+
+
+    private void analyseReplaceQuery() throws Exception {
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+
+        st.executeUpdate("INSERT INTO efkes (" +
+                "kolom_1, " +
+                "kolom_2, " +
+                "kolom_3) " +
+                "VALUES ('" +
+                "beestje" + "', '" +
+                12 + "', '" +
+                getCurrentDate() + "'" +
+                ")");
+
+//        st.executeUpdate("REPLACE INTO efkes SET " +
+//                "kolom_1, " +
+//                "kolom_2, " +
+//                "kolom_3) " +
+//                "VALUES ('" +
+//                89 + "', '" +
+//                "paard" + "', '" +
+//                17.9 + "'" +
+//                ")");
+
+
+
+//        REPLACE INTO `transcripts`
+//        SET `ensembl_transcript_id` = 'ENSORGT00000000001',
+//        `transcript_chrom_start` = 12345,
+//        `transcript_chrom_end` = 12678;
+
+        st.close();
+
+        closeDbConnection();
+    }
+
+    private String getCurrentDate() {
+        java.util.Date date = new java.util.Date();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return dateFormat.format(date);
+    }
+
+
 
     private void printAllFollowerDataForUser(String username) throws Exception {
         initializeDbConnection();

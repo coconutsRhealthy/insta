@@ -5,10 +5,10 @@ package com.lennart.model.funda;
  */
 public class CityInfoRetriever extends PostCodeInfoRetriever {
 
-    public static void main(String[] args) throws Exception {
-        PostCode hmm = new CityInfoRetriever().getPostCodeData("Amsterdam");
-        System.out.println("wacht");
-    }
+//    public static void main(String[] args) throws Exception {
+//        PostCode hmm = new CityInfoRetriever().getPostCodeData("Amsterdam");
+//        System.out.println("wacht");
+//    }
 
     @Override
     String getQuery(String city) {

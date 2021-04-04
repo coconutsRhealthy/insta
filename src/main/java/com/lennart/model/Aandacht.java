@@ -1,10 +1,17 @@
 package com.lennart.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.URL;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -20,6 +27,25 @@ public class Aandacht {
 //        Aandacht aandacht = new Aandacht();
 //        aandacht.updateDb();
 //    }
+
+//    public static void main(String[] args) throws Exception {
+//        new Aandacht().testjeproxy();
+//    }
+
+    private void printDiscountAccounts() throws Exception {
+        //List<String> users = fillUserList(false);
+
+        List<String> users = Arrays.asList("boef");
+
+        int counter = 0;
+
+        for(String user : users) {
+            if(givesDiscount(user)) {
+                System.out.println(user);
+            }
+            System.out.println(counter++);
+        }
+    }
 
     private void updateDb() throws Exception {
         List<String> users = fillUserList(true);
@@ -46,51 +72,51 @@ public class Aandacht {
 
         Statement st = con.createStatement();
 
-        for (Map.Entry<String, Map<String, Double>> entry : allDataForAllUsers.entrySet()) {
-            Map<String, Double> dataForUser = entry.getValue();
-
-            String userName = entry.getKey();
-            double followers = dataForUser.get("followers");
-            double following = dataForUser.get("following");
-            double numberOfPosts = dataForUser.get("numberOfPosts");
-            double avNoOfLikesPerPost = dataForUser.get("avNoOfLikesPerPost");
-            double avNoOfCommentsPerPost = dataForUser.get("avNoOfCommentsPerPost");
-            double avNoOfPostsPerDay = dataForUser.get("avNoOfPostsPerDay");
-            double engagement = dataForUser.get("engagement");
-            double engagementLast24h = dataForUser.get("engagementLast24h");
-
-            try {
-                st.executeUpdate("INSERT INTO " + table + " (" +
-                        "entry, " +
-                        "date, " +
-                        "username, " +
-                        "followers, " +
-                        "following, " +
-                        "numberOfPosts, " +
-                        "avNoOfLikesPerPost, " +
-                        "avNoOfCommentsPerPost, " +
-                        "avNoOfPostsPerDay, " +
-                        "engagement, " +
-                        "engagementLast24h) " +
-                        "VALUES ('" +
-                        (getHighestIntEntry(table) + 1) + "', '" +
-                        date + "', '" +
-                        userName + "', '" +
-                        followers + "', '" +
-                        following + "', '" +
-                        numberOfPosts + "', '" +
-                        avNoOfLikesPerPost + "', '" +
-                        avNoOfCommentsPerPost + "', '" +
-                        avNoOfPostsPerDay + "', '" +
-                        engagement + "', '" +
-                        engagementLast24h + "'" +
-                        ")");
-            } catch (Exception e) {
-                System.out.println("error: " + userName);
-                System.out.println();
-                e.printStackTrace();
-            }
-        }
+//        for (Map.Entry<String, Map<String, Double>> entry : allDataForAllUsers.entrySet()) {
+//            Map<String, Double> dataForUser = entry.getValue();
+//
+//            String userName = entry.getKey();
+//            double followers = dataForUser.get("followers");
+//            double following = dataForUser.get("following");
+//            double numberOfPosts = dataForUser.get("numberOfPosts");
+//            double avNoOfLikesPerPost = dataForUser.get("avNoOfLikesPerPost");
+//            double avNoOfCommentsPerPost = dataForUser.get("avNoOfCommentsPerPost");
+//            double avNoOfPostsPerDay = dataForUser.get("avNoOfPostsPerDay");
+//            double engagement = dataForUser.get("engagement");
+//            double engagementLast24h = dataForUser.get("engagementLast24h");
+//
+//            try {
+//                st.executeUpdate("INSERT INTO " + table + " (" +
+//                        "entry, " +
+//                        "date, " +
+//                        "username, " +
+//                        "followers, " +
+//                        "following, " +
+//                        "numberOfPosts, " +
+//                        "avNoOfLikesPerPost, " +
+//                        "avNoOfCommentsPerPost, " +
+//                        "avNoOfPostsPerDay, " +
+//                        "engagement, " +
+//                        "engagementLast24h) " +
+//                        "VALUES ('" +
+//                        (getHighestIntEntry(table) + 1) + "', '" +
+//                        date + "', '" +
+//                        userName + "', '" +
+//                        followers + "', '" +
+//                        following + "', '" +
+//                        numberOfPosts + "', '" +
+//                        avNoOfLikesPerPost + "', '" +
+//                        avNoOfCommentsPerPost + "', '" +
+//                        avNoOfPostsPerDay + "', '" +
+//                        engagement + "', '" +
+//                        engagementLast24h + "'" +
+//                        ")");
+//            } catch (Exception e) {
+//                System.out.println("error: " + userName);
+//                System.out.println();
+//                e.printStackTrace();
+//            }
+//        }
 
         st.close();
 
@@ -126,10 +152,69 @@ public class Aandacht {
         return dataForUser;
     }
 
+    private void testjeproxy() throws Exception {
+        System.out.println("hallo");
+
+//        URL url = new URL("https://www.nu.nl");
+//        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("128.199.1.186", 3128)); // or whatever your proxy is
+//        HttpURLConnection uc = (HttpURLConnection)url.openConnection(proxy);
+//
+//        uc.connect();
+//
+//        String line = null;
+//        StringBuffer tmp = new StringBuffer();
+//        BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream()));
+//        while ((line = in.readLine()) != null) {
+//            tmp.append(line);
+//        }
+//
+//        Document doc = Jsoup.parse(String.valueOf(tmp));
+//
+//        System.out.println(doc.text());
+
+
+
+
+//        Document doc = Jsoup //
+//                .connect("https://www.dutchtoy.nl/") //
+//                .proxy("128.199.1.186", 3128) // sets a HTTP proxy
+//                .get();
+//
+//        System.out.println("wacht");
+
+    }
+
+    private boolean givesDiscount(String username) throws Exception {
+        boolean givesDiscount = false;
+
+        try {
+            Document document = Jsoup.connect("https://www.dutchtoy.nl/").proxy("127.0.0.1", 1080).get();
+
+            String bodyText = document.html();
+
+            if(StringUtils.containsIgnoreCase(bodyText, "korting")) {
+                givesDiscount = true;
+            } else if(StringUtils.containsIgnoreCase(bodyText, "discount")) {
+                givesDiscount = true;
+            } else if(StringUtils.containsIgnoreCase(bodyText, "% off")) {
+                givesDiscount = true;
+            } else if(StringUtils.containsIgnoreCase(bodyText, "%off")) {
+                givesDiscount = true;
+            } else if(StringUtils.containsIgnoreCase(bodyText, "my code")) {
+                givesDiscount = true;
+            }
+        } catch (Exception e) {
+            System.out.println("%% - Exception: " + username);
+        }
+
+        return givesDiscount;
+    }
+
     private String getRelevantScriptAsString(String username) throws Exception {
         String scriptToReturn = null;
 
         Document document = Jsoup.connect("https://www.instagram.com/" + username).get();
+
         Elements scripts = document.getElementsByTag("script");
 
         for(Element script : scripts) {
@@ -256,6 +341,31 @@ public class Aandacht {
         double engagementOfLast24h = engageCounter / numberOfFollowers;
 
         return engagementOfLast24h;
+    }
+
+//    public static void main(String[] args) throws Exception {
+//        new Aandacht().trueTestMethod();
+//    }
+
+    private void trueTestMethod() throws Exception {
+        List<String> users = fillUserList(false);
+
+        int counter = 0;
+
+        for(String user : users) {
+            counter++;
+
+            try {
+                String script = getRelevantScriptAsString(user);
+                double followers = getFollowers(script);
+                System.out.println("" + counter + " User: " + user + " --- Followers: " + followers);
+                TimeUnit.SECONDS.sleep(119);
+            } catch (Exception e) {
+                System.out.println("" + counter + " Exceptietje!");
+                e.printStackTrace();
+                TimeUnit.SECONDS.sleep(119);
+            }
+        }
     }
 
     public List<String> fillUserList(boolean includingInternational) {

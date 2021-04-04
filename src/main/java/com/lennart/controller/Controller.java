@@ -29,7 +29,7 @@ public class Controller extends SpringBootServletInitializer {
         return postCode;
     }
 
-    public static void main(String[] args) {
-        SpringApplication.run(Controller.class, args);
-    }
+//    public static void main(String[] args) {
+//        SpringApplication.run(Controller.class, args);
+//    }
 }
