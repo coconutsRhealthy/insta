@@ -12,9 +12,9 @@ public class TheList {
 
     private Connection con;
 
-    public static void main(String[] args) throws Exception {
-        new TheList().shortlistMethod();
-    }
+//    public static void main(String[] args) throws Exception {
+//        new TheList().shortlistMethod();
+//    }
 
     private void shortlistMethod() throws Exception {
         List<String> allCities = getAllAvailablePostCodeNumbersOrCities(true);
