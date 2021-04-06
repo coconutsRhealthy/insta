@@ -31,7 +31,8 @@ public class KortingIdentifierPersister {
     }
 
     private void continuousRunKorting(InstaAccounts instaAccounts) throws Exception {
-        List<String> users = instaAccounts.getAllInstaAccounts();
+        //List<String> users = instaAccounts.getAllInstaAccounts();
+        List<String> users = instaAccounts.getAllInstaAccountsNew();
 
         int counter = 0;
 
@@ -152,12 +153,12 @@ public class KortingIdentifierPersister {
         }
     }
 
-    private String getFullHtmlForUsername(String siteName, String username) throws Exception {
+    public String getFullHtmlForUsername(String siteName, String username) throws Exception {
         Document document = Jsoup.connect("https://www." + siteName + ".com/profile/" + username).get();
         return document.html();
     }
 
-    private Set<String> identifyKortingWordsUsed(String fullHtml) throws Exception {
+    public Set<String> identifyKortingWordsUsed(String fullHtml) throws Exception {
         Set<String> kortingsWordsPresentOnPage = new HashSet<>();
 
         if(StringUtils.containsIgnoreCase(fullHtml, "korting")) {
