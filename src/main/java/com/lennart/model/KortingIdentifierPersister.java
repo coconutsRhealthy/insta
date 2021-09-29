@@ -31,22 +31,19 @@ public class KortingIdentifierPersister {
     }
 
     private void continuousRunKorting(InstaAccounts instaAccounts) throws Exception {
-        //List<String> users = instaAccounts.getAllInstaAccounts();
-        List<String> users = instaAccounts.getAllInstaAccountsNew();
+        List<String> users = instaAccounts.getAllInstaAccounts();
 
-        int counter = 0;
-
-        for(String user : users) {
+        for(int i = 0; i < users.size(); i++) {
             try {
-                nightlyRunLogic(counter, user, "picuki", "<div class=\"time\">", "alt=", "\">");
+                nightlyRunLogic(i, users.get(i), "picuki", "<div class=\"time\">", "alt=", "\">");
             } catch (Exception z) {
                 System.out.println("picuki error!");
 
                 try {
-                    nightlyRunLogic(counter, user, "instajust", "<div class=\"article_time\">", "<span>", "</span>");
+                    nightlyRunLogic(i, users.get(i), "instajust", "<div class=\"article_time\">", "<span>", "</span>");
                 } catch (Exception y) {
                     System.out.println("ERROR complete!!!");
-                    updateKortingDb("error", "error", "stipo error", user, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(5000)));
+                    updateKortingDb("error", "error", "pitzo error", users.get(i), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(5000)));
                     z.printStackTrace();
                 }
             }
@@ -73,7 +70,7 @@ public class KortingIdentifierPersister {
 
         String kortingsWord = "none";
         String lastPostTimeToUse = "none";
-        String fullKortingsWordText = "stipo none";
+        String fullKortingsWordText = "pitzo none";
         String dateOfPost = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(5000));
         String company = "dunno";
         String kortingsCode = "dunno";
@@ -354,7 +351,7 @@ public class KortingIdentifierPersister {
 
         String fullKortingPostText = firstHalfOfKortingPostText + secondHalfOfKortingPostText;
 
-        fullKortingPostText = "stipo " + fullKortingPostText;
+        fullKortingPostText = "pitzo " + fullKortingPostText;
 
         return fullKortingPostText;
     }
