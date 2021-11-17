@@ -35,29 +35,34 @@ public class KortingIdentifierPersister {
 
         for(int i = 0; i < users.size(); i++) {
             try {
-                nightlyRunLogic(i, users.get(i), "picuki", "<div class=\"time\">", "alt=", "\">");
+                nightlyRunLogic(i, users.get(i), "<div class=\"time\">", "alt=", "\">");
             } catch (Exception z) {
-                System.out.println("picuki error!");
-
-                try {
-                    nightlyRunLogic(i, users.get(i), "instajust", "<div class=\"article_time\">", "<span>", "</span>");
-                } catch (Exception y) {
-                    System.out.println("ERROR complete!!!");
-                    updateKortingDb("error", "error", "pitzo error", users.get(i), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(5000)));
-                    z.printStackTrace();
-                }
+                System.out.println("gramho error!");
+                z.printStackTrace();
             }
 
             TimeUnit.SECONDS.sleep(90);
         }
     }
 
-    private void nightlyRunLogic(int counter, String user, String siteName, String timeHtmlIdentifier,
+    private void nightlyRunLogic(int counter, String user, String timeHtmlIdentifier,
                                  String startKortingPostHtmlIndicator, String endKortingPostHtmlIndicator) throws Exception {
         counter++;
         System.out.println("**** " + counter + ") USER: " + user + " ****");
 
-        String fullHtmlForUser = getFullHtmlForUsername(siteName, user);
+        String fullHtmlForUser = getFullHtmlForUsername(user);
+        String descriptionText = getDescriptionTextFromFullHtml(fullHtmlForUser);
+        String fullHtmlWithoutDescriptionText = fullHtmlForUser.replace(descriptionText, "");
+        identifyAndStoreKortingWord(user, fullHtmlWithoutDescriptionText, timeHtmlIdentifier, startKortingPostHtmlIndicator, endKortingPostHtmlIndicator);
+        Set<String> kortingWordsInDescriptionText = identifyKortingWordsUsed(descriptionText);
+
+        if(!kortingWordsInDescriptionText.isEmpty()) {
+            identifyAndStoreKortingWord(user, fullHtmlForUser, timeHtmlIdentifier, startKortingPostHtmlIndicator, endKortingPostHtmlIndicator);
+        }
+    }
+
+    private void identifyAndStoreKortingWord(String user, String fullHtmlForUser, String timeHtmlIdentifier, String startKortingPostHtmlIndicator,
+                                             String endKortingPostHtmlIndicator) throws Exception {
         Set<String> kortingWordsOnPage = identifyKortingWordsUsed(fullHtmlForUser);
 
         Map<String, String> lastPostTimesPerKortingsWord =
@@ -87,8 +92,10 @@ public class KortingIdentifierPersister {
             kortingsCode = identifyDiscountCode(fullKortingsWordText);
         }
 
-        updateKortingDb(kortingsWord, lastPostTimeToUse, fullKortingsWordText, user, dateOfPost);
-        updateKortingDbAllKortingTable(user, kortingsWord, fullKortingsWordText, dateOfPost, company, kortingsCode);
+        if(!kortingsWord.equals("none")) {
+            updateKortingDb(kortingsWord, lastPostTimeToUse, fullKortingsWordText, user, dateOfPost);
+            updateKortingDbAllKortingTable(user, kortingsWord, fullKortingsWordText, dateOfPost, company, kortingsCode);
+        }
     }
 
     private void updateKortingDb(String kortingsWord, String lastKortingPostTime, String kortingPostFullText,
@@ -150,8 +157,8 @@ public class KortingIdentifierPersister {
         }
     }
 
-    public String getFullHtmlForUsername(String siteName, String username) throws Exception {
-        Document document = Jsoup.connect("https://www." + siteName + ".com/profile/" + username).get();
+    public String getFullHtmlForUsername(String username) throws Exception {
+        Document document = Jsoup.connect("https://gramhir.com/profile/" + username + "/1").get();
         return document.html();
     }
 
@@ -354,6 +361,17 @@ public class KortingIdentifierPersister {
         fullKortingPostText = "pitzo " + fullKortingPostText;
 
         return fullKortingPostText;
+    }
+
+    private String getDescriptionTextFromFullHtml(String fullHtml) {
+        String descriptionText = "empty";
+
+        if(fullHtml.contains("<div class=\"profile-description\">")) {
+            String profileDescriptionPart = fullHtml.substring(fullHtml.indexOf("<div class=\"profile-description\">"), fullHtml.length() - 1);
+            descriptionText = profileDescriptionPart.substring(0, profileDescriptionPart.indexOf("</div>") + 6);
+        }
+
+        return descriptionText;
     }
 
     private String getDateFromTimeString(String timeString) {

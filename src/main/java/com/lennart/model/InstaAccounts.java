@@ -55,6 +55,7 @@ public class InstaAccounts {
         users.add("chloegardenier");
         users.add("clairecampman");
         users.add("clairepronk");
+        users.add("claudinebuisman");
         users.add("cocochloe__");
         users.add("cynthiavandoorn");
         users.add("daelostylo");
@@ -83,6 +84,7 @@ public class InstaAccounts {
         users.add("djessyx");
         users.add("djunabdatthijn");
         users.add("djwef");
+        users.add("_dominiquevanbeek");
         users.add("donnadaizy");
         users.add("eefje_d_m");
         users.add("effi.sxx");
@@ -146,6 +148,7 @@ public class InstaAccounts {
         users.add("juliacatharinax");
         users.add("juliamekkes");
         users.add("juliavanbergen");
+        users.add("juliavdnoord");
         users.add("juultjetieleman");
         users.add("k2im");
         users.add("kaesutherland");
@@ -305,6 +308,7 @@ public class InstaAccounts {
         users.add("sylviemeis");
         users.add("tassiejs");
         users.add("teskedeschepper");
+        users.add("tessveldkamp");
         users.add("thepastelsuitcase");
         users.add("tienvanwil");
         users.add("twinmom_chellebell");
@@ -330,6 +334,7 @@ public class InstaAccounts {
         users.add("xmylifeasayla");
         users.add("xnikkiverhoef");
         users.add("xpeterinabroers");
+        users.add("xsam_xm");
         users.add("yara.hendriks");
         users.add("yasminmerse");
         users.add("yolanthecabau");
