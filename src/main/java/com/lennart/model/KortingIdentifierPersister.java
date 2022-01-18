@@ -205,6 +205,14 @@ public class KortingIdentifierPersister {
             kortingsWordsPresentOnPage.add("met code");
         }
 
+        if(StringUtils.containsIgnoreCase(fullHtml, "use code")) {
+            kortingsWordsPresentOnPage.add("use code");
+        }
+
+        if(StringUtils.containsIgnoreCase(fullHtml, "gebruik code")) {
+            kortingsWordsPresentOnPage.add("gebruik code");
+        }
+
         return kortingsWordsPresentOnPage;
     }
 
