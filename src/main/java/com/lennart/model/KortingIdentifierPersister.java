@@ -37,7 +37,7 @@ public class KortingIdentifierPersister {
             try {
                 nightlyRunLogic(i, users.get(i), "<div class=\"time\">", "alt=", "\">");
             } catch (Exception z) {
-                System.out.println("gramho error!");
+                System.out.println("picuki error!");
                 z.printStackTrace();
             }
 
@@ -158,7 +158,7 @@ public class KortingIdentifierPersister {
     }
 
     public String getFullHtmlForUsername(String username) throws Exception {
-        Document document = Jsoup.connect("https://gramhir.com/profile/" + username + "/1").get();
+        Document document = SSLHelper.getConnection("https://www.picuki.com/profile/" + username).get();
         return document.html();
     }
 
