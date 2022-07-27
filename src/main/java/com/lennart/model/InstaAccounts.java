@@ -15,7 +15,6 @@ public class InstaAccounts {
         users.add("adalla.99");
         users.add("aichaverheye");
         users.add("amaka.hamelijnck");
-        users.add("amandasvalin");
         users.add("amberdhaan");
         users.add("amijeroos");
         users.add("angela_aydin_diyar");
@@ -24,9 +23,9 @@ public class InstaAccounts {
         users.add("annarikeroberte");
         users.add("annefloorx");
         users.add("annemiekhummelink");
-        users.add("anniieecoco");
         users.add("anoukhoogendijk");
         users.add("anoukmaasofficial");
+        users.add("anthonisevelien");
         users.add("antje.a");
         users.add("asmolenaarr");
         users.add("athomewithcharmaine");
@@ -65,7 +64,6 @@ public class InstaAccounts {
         users.add("clairecampman");
         users.add("clairepronk");
         users.add("claudinebuisman");
-        users.add("cocoanniie");
         users.add("cocochloe__");
         users.add("countlessshades");
         users.add("crdr.samira");
@@ -163,6 +161,7 @@ public class InstaAccounts {
         users.add("jriienn_x");
         users.add("juliacatharinax");
         users.add("juliamekkes");
+        users.add("julievandooren");
         users.add("juliavanbergen");
         users.add("juultjetieleman");
         users.add("k2im");
@@ -181,6 +180,7 @@ public class InstaAccounts {
         users.add("kimkotter");
         users.add("kimlianvdmeij");
         users.add("kimmkroes");
+        users.add("kind_of_b");
         users.add("kirstenhartmancom");
         users.add("kiya.vanrossum");
         users.add("kusbianca");
@@ -253,6 +253,7 @@ public class InstaAccounts {
         users.add("michellepantuss");
         users.add("michelleterlinden");
         users.add("milly.emm");
+        users.add("miraennen");
         users.add("mirasoeteman");
         users.add("mln_.x");
         users.add("moderosaofficial");
@@ -287,10 +288,8 @@ public class InstaAccounts {
         users.add("onnedi");
         users.add("patricia_paay");
         users.add("paulienmullaertx");
-        users.add("positivelifewithbo");
         users.add("queenofjetlags");
         users.add("rebeccavandenhoek");
-        users.add("remerubialess");
         users.add("reneenatassja");
         users.add("rentishehu");
         users.add("rianne.meijer");
@@ -305,7 +304,6 @@ public class InstaAccounts {
         users.add("rowenakonings_");
         users.add("roxeannehazes");
         users.add("roxysshizzle");
-        users.add("rudina_am_am");
         users.add("ruthgeerlinks");
         users.add("saarkoningsberger");
         users.add("sabrinaputrix");
@@ -333,6 +331,7 @@ public class InstaAccounts {
         users.add("stephsa");
         users.add("sterrekoning");
         users.add("stijn_fransen");
+        users.add("susangorz_");
         users.add("suuslothmann");
         users.add("sylvana");
         users.add("sylvana.elling");
