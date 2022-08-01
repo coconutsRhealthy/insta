@@ -19,7 +19,9 @@ import java.security.cert.CertificateException;
 public class SSLHelper {
 
     static public Connection getConnection(String url){
-        return Jsoup.connect(url).sslSocketFactory(SSLHelper.socketFactory());
+        return Jsoup.connect(url).sslSocketFactory(SSLHelper.socketFactory())
+                .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36")
+                .cookie("cf_clearance", "1D93wn7D9MNHkgjLk5trWGauUo_N44zFxj.FdYSYkY4-1659284567-0-150");
     }
 
     static private SSLSocketFactory socketFactory() {
