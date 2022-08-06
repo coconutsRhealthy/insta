@@ -93,7 +93,7 @@ public class KortingIdentifierPersister {
         }
 
         if(!kortingsWord.equals("none")) {
-            //updateKortingDb(kortingsWord, lastPostTimeToUse, fullKortingsWordText, user, dateOfPost);
+            updateKortingDb(kortingsWord, lastPostTimeToUse, fullKortingsWordText, user, dateOfPost);
             updateKortingDbAllKortingTable(user, kortingsWord, fullKortingsWordText, dateOfPost, company, kortingsCode);
         }
     }
@@ -138,8 +138,7 @@ public class KortingIdentifierPersister {
             initializeDbConnection();
 
             Statement st = con.createStatement();
-
-            String query = "INSERT INTO all_korting (" +
+            st.executeUpdate("INSERT INTO all_korting (" +
                     "username, kortingsword, kortingsword_post_fulltext, date_of_post, company, kortingscode) " +
                     "VALUES (" +
                     "'" + username + "', '"
@@ -148,13 +147,7 @@ public class KortingIdentifierPersister {
                     + dateOfPost + "', '"
                     + company + "', '"
                     + discountWord + "') " +
-                    "ON DUPLICATE KEY UPDATE username=username;";
-
-            String characterFilter = "[^\\p{L}\\p{M}\\p{N}\\p{P}\\p{Z}\\p{Cf}\\p{Cs}\\s]";
-            String queryNoEmojis = query.replaceAll(characterFilter,"");
-            queryNoEmojis = queryNoEmojis.replace("usernameusername", "username=username");
-
-            st.executeUpdate(queryNoEmojis);
+                    "ON DUPLICATE KEY UPDATE username=username;");
             st.close();
 
             closeDbConnection();
@@ -423,7 +416,7 @@ public class KortingIdentifierPersister {
 
     private void initializeDbConnection() throws Exception {
         Class.forName("com.mysql.jdbc.Driver").newInstance();
-        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/influencers?&serverTimezone=UTC", "root", "");
+        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/influencers", "root", "Vuurwerk00");
     }
 
     private void closeDbConnection() throws SQLException {
