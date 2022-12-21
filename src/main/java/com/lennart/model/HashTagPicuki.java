@@ -15,19 +15,20 @@ import java.util.stream.Collectors;
  */
 public class HashTagPicuki {
 
-//    nakdfashion
+//    nakdfashion / benakd / yesnakd / nakd
 //    idealofsweden
 //    desenio
 //    loavies
-//    hunkemoller
-//    sheingals
-//    veromoda
-//    icaniwill
-//    strongerlabel
+//    hunkemoller / hunkemöller
+//    sheingals / sheinforall / sheinstyle / sheincurve / shein / sheinpartner
+//    veromoda / veromodawomen
+//    lyko
+//    icaniwill / iciw
+//    strongerlabel / strongermoments
 //    gutsgusto
 //    chiquelle
 //    safirashine
-//    tessvfashion
+//    tessvfashion / tessvgirls / tessvthelabel
 //    myjewellery
 //    kidsbrandstore
 //    romwe_fun
@@ -35,15 +36,62 @@ public class HashTagPicuki {
 //    editedofficial
 //    bymusthaves
 //    airup
+//    bjornborg / björnborg
+
+    //bjornborg? https://dumpor.com/     //https://www.pixwox.com/
+    //myprotein
+    //americatoday
+    //wearglass / wearglas
+    //aboutyou
+
+    //rabattkoder.n - rabattkode.norge - rabattkodsidan
+
+
+
+
+//    zzz nakdfashion / benakd / yesnakd / nakd
+//    idealofsweden
+//    desenio
+//    loavies
+//    hunkemoller / hunkemöller
+//    zzz sheingals / sheinforall / sheinstyle / sheincurve / shein / sheinpartner
+//    veromoda / veromodawomen
+//    lyko
+//    zzz icaniwill / iciw
+//    zzz strongerlabel / strongermoments
+//    zzz gutsgusto
+//    zzz chiquelle
+//    zzz safirashine
+//    zzz tessvfashion / tessvgirls / tessvthelabel
+//    myjewellery
+//    zzz kidsbrandstore
+//    romwe_fun
+//    zzz famousstore
+//    editedofficial
+//    bymusthaves
+//    zzz airup
+//    zzz bjornborg / björnborg
+
+    //bjornborg? https://dumpor.com/     //https://www.pixwox.com/
+    //zzz myprotein
+    //americatoday
+    //wearglass / wearglas
+    //aboutyou
+
+    //rabattkoder.n - rabattkode.norge - rabattkodsidan
+
+
+
 
 
     public static void main(String[] args) throws Exception {
-        new HashTagPicuki().checkHashTagPage("safirashine");
+        new HashTagPicuki().checkHashTagPage("nakdfashion");
+        //new HashTagPicuki().printFullHtmlForPage("https://www.picuki.com/media/2934300772192345531");
     }
 
     private void checkHashTagPage(String hashTag) throws Exception {
-        String html = getFullHtmlForHashtag(hashTag);
-        //String html = getDummyInstaHtml();
+        //String html = getFullHtmlForHashtag(hashTag);
+        String html = getDummyInstaHtml();
         Set<String> kortingsWords = identifyKortingsWords(html);
         Map<String, String> kortingPostsWithIdentifier = getKortingPostsAndIdentifiers(kortingsWords, html);
         Map<String, String> times = getTimeStringPerPostIdentifier(kortingPostsWithIdentifier.keySet(), html);
@@ -134,24 +182,30 @@ public class HashTagPicuki {
     }
 
     private String getFullKortingPostText(String fullHtml, String kortingsWord) throws Exception {
-        kortingsWord = kortingsWord.toLowerCase();
-        fullHtml = fullHtml.toLowerCase();
+        try {
+            kortingsWord = kortingsWord.toLowerCase();
+            fullHtml = fullHtml.toLowerCase();
 
-        String partOfHtmlBeforeKortingsWord = fullHtml.substring(0, fullHtml.indexOf(kortingsWord));
-        String partOfHtmlAfterKortingsWord = fullHtml.substring(fullHtml.indexOf(kortingsWord), fullHtml.length());
+            String partOfHtmlBeforeKortingsWord = fullHtml.substring(0, fullHtml.indexOf(kortingsWord));
+            String partOfHtmlAfterKortingsWord = fullHtml.substring(fullHtml.indexOf(kortingsWord), fullHtml.length());
 
-        String startPostHtmlIndicator = "alt=";
-        String endPostHtmlIndicator = "\">";
+            String startPostHtmlIndicator = "alt=";
+            String endPostHtmlIndicator = "\">";
 
-        String firstHalfOfKortingPostText = partOfHtmlBeforeKortingsWord.substring
-                (partOfHtmlBeforeKortingsWord.lastIndexOf(startPostHtmlIndicator) - 65, partOfHtmlBeforeKortingsWord.length());
+            String firstHalfOfKortingPostText = partOfHtmlBeforeKortingsWord.substring
+                    (partOfHtmlBeforeKortingsWord.lastIndexOf(startPostHtmlIndicator) - 65, partOfHtmlBeforeKortingsWord.length());
 
-        String secondHalfOfKortingPostText = partOfHtmlAfterKortingsWord.substring
-                (0, partOfHtmlAfterKortingsWord.indexOf(endPostHtmlIndicator));
+            String secondHalfOfKortingPostText = partOfHtmlAfterKortingsWord.substring
+                    (0, partOfHtmlAfterKortingsWord.indexOf(endPostHtmlIndicator));
 
-        String fullKortingPostText = firstHalfOfKortingPostText + secondHalfOfKortingPostText;
+            String fullKortingPostText = firstHalfOfKortingPostText + secondHalfOfKortingPostText;
 
-        return fullKortingPostText;
+            return fullKortingPostText;
+        } catch (Exception e) {
+            System.out.println("Error in text!");
+            return "error";
+        }
+
     }
 
     private Set<String> identifyKortingsWords(String fullHtmlText) throws Exception {
@@ -246,7 +300,7 @@ public class HashTagPicuki {
     }
 
     private String getDummyInstaHtml() throws Exception {
-        File file = new File("/Users/LennartMac/Documents/Projects/insta/src/main/resources/static/picukidummyhashtag.txt");
+        File file = new File("/Users/LennartMac/Documents/Projects/insta/src/main/resources/static/picukidummyhashtag2.txt");
 
         String fileText = "";
         try (Reader fileReader = new FileReader(file)) {
