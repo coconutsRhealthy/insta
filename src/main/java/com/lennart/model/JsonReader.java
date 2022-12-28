@@ -6,6 +6,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.io.FileReader;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 /**
  * Created by LennartMac on 05/12/2022.
@@ -50,9 +53,9 @@ public class JsonReader {
 //  zzz myproteinnl
 //  zzz wearglas
 
-    public static void main(String[] args) throws Exception {
-        new JsonReader().printDiscountPostsForHashtag("wearglas");
-    }
+//    public static void main(String[] args) throws Exception {
+//        new JsonReader().printDiscountPostsForHashtag("wearglas");
+//    }
 
     private void printDiscountPostsForHashtag(String hashtagToUse) throws Exception {
         JSONParser jsonParser = new JSONParser();
@@ -100,6 +103,146 @@ public class JsonReader {
         }
     }
 
+
+    public static void main(String[] args) throws Exception {
+        new JsonReader().overallMethod();
+    }
+
+    private void overallMethod() throws Exception {
+        List<String> hashTagsForBand = Arrays.asList("wearglas");
+
+        JSONArray jsonArray = new JSONArray();
+
+        for(String hashtag : hashTagsForBand) {
+            jsonArray.addAll(getLatestPostsForHashtag(hashtag));
+        }
+
+        JSONArray sortedJsonArray = sort(jsonArray);
+
+        printData(sortedJsonArray);
+
+//        testPrintMethod(jsonArray);
+//        System.out.println();
+//        System.out.println();
+//        System.out.println();
+//        System.out.println();
+//        System.out.println();
+//        System.out.println();
+//        System.out.println("****************");
+//        System.out.println();
+//        System.out.println();
+//        System.out.println();
+//        System.out.println();
+//        System.out.println();
+//        System.out.println();
+//        testPrintMethod(sortedJsonArray);
+
+    }
+
+    private void testPrintMethod(JSONArray array) {
+        for(Object latestPostDataElement : array) {
+            JSONObject latestPost = (JSONObject) latestPostDataElement;
+            String date = (String) latestPost.get("timestamp");
+            System.out.println(date);
+        }
+    }
+
+    private JSONArray sort(JSONArray unsortedJsonArray) {
+        JSONArray sortedJsonArray = new JSONArray();
+
+        List<JSONObject> jsonValues = new ArrayList<>();
+
+        for (int i = 0; i < unsortedJsonArray.size(); i++) {
+            jsonValues.add((JSONObject) unsortedJsonArray.get(i));
+        }
+
+        Collections.sort(jsonValues, new Comparator<JSONObject>() {
+            //You can change "Name" with "ID" if you want to sort by ID
+            private static final String KEY_NAME = "Name";
+
+            @Override
+            public int compare(JSONObject a, JSONObject b) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z");
+
+                String date1 = (String) a.get("timestamp");
+                String date2 = (String) b.get("timestamp");
+
+                date1 = date1.replace("T", " ");
+                date2 = date2.replace("T", " ");
+
+                date1 = date1.replace(".000", " ");
+                date2 = date2.replace(".000", " ");
+
+                ZonedDateTime zonedDateTime1 = ZonedDateTime.parse(date1, formatter);
+                ZonedDateTime zonedDateTime2 = ZonedDateTime.parse(date2, formatter);
+                //ZonedDateTime eije = ZonedDateTime.parse("2022-12-20 09:12:23 Z", formatter);
+
+                if(zonedDateTime1.isBefore(zonedDateTime2)) {
+                    return 1;
+                } else if(zonedDateTime1.equals(zonedDateTime2)) {
+                    return 0;
+                } else {
+                    return -1;
+                }
+            }
+        });
+
+        for (int i = 0; i < unsortedJsonArray.size(); i++) {
+            sortedJsonArray.add(jsonValues.get(i));
+        }
+
+        return sortedJsonArray;
+    }
+
+
+    private JSONArray getLatestPostsForHashtag(String hashtagToUse) throws Exception {
+        JSONParser jsonParser = new JSONParser();
+
+        JSONArray apifyData = (JSONArray) jsonParser.parse(
+                new FileReader("/Users/LennartMac/Documents/Projects/insta/src/main/resources/static/26dec.json"));
+
+        for(Object apifyDataElement : apifyData) {
+            JSONObject hashtagJson = (JSONObject) apifyDataElement;
+
+            String hashtag = (String) hashtagJson.get("name");
+
+            if(hashtag.equals(hashtagToUse)) {
+                JSONArray latestPosts = (JSONArray) hashtagJson.get("latestPosts");
+                return latestPosts;
+            }
+        }
+
+        return null;
+    }
+
+    private void printData(JSONArray latestPostsForBrand) {
+        int counter = 0;
+
+        for(Object latestPostDataElement : latestPostsForBrand) {
+            JSONObject latestPost = (JSONObject) latestPostDataElement;
+
+            String caption = (String) latestPost.get("caption");
+
+            if(captionContainsDiscountWords(caption) && !captionDoesNotContain(caption)) {
+                counter++;
+                String timestamp = (String) latestPost.get("timestamp");
+                String url = (String) latestPost.get("url");
+
+                System.out.println("****************************************************************");
+                System.out.println(counter);
+                System.out.println(caption);
+                System.out.println();
+                System.out.println(url);
+                System.out.println("TIME: " + timestamp);
+                System.out.println("****************************************************************");
+                System.out.println("x");
+                System.out.println("x");
+                System.out.println("x");
+                System.out.println("x");
+            }
+        }
+    }
+
     private boolean captionContainsDiscountWords(String caption) {
         boolean containsDiscountWords =
                 StringUtils.containsIgnoreCase(caption, "korting") ||
@@ -122,6 +265,13 @@ public class JsonReader {
                 StringUtils.containsIgnoreCase(caption, "remise") ||
                 StringUtils.containsIgnoreCase(caption, "réduction") ||
                 StringUtils.containsIgnoreCase(caption, "reduction");
+        return containsDiscountWords;
+    }
+
+    private boolean captionDoesNotContain(String caption) {
+        boolean containsDiscountWords =
+                StringUtils.containsIgnoreCase(caption, "on idealofsweden.com") ||
+                StringUtils.containsIgnoreCase(caption, "Kortingscode ABOUTYOU -20");
         return containsDiscountWords;
     }
 }
