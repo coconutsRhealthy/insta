@@ -16,6 +16,7 @@ public class InstaAccountsAnalysis {
     public static void main(String[] args) throws Exception {
         InstaAccountsAnalysis instaAccountsAnalysis = new InstaAccountsAnalysis();
         instaAccountsAnalysis.getInterestingNewAccounts();
+        //dummy
     }
 
     private void getInterestingNewAccounts() throws Exception {
