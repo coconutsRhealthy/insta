@@ -16,6 +16,7 @@ import java.util.*;
 public class JsonReader {
 
 //  nakdfashion / benakd / nakd
+//  loavies / girlsgoneloavies / loaviesdiscount
 //  sheinpartner
 //  veromoda / veromodawomen
 //  lyko
@@ -23,7 +24,7 @@ public class JsonReader {
 //  strongerlabel / strongermoments
 //  gutsgusto
 //  chiquelle
-//  safirashine
+//  safira
 //  tessvfashion
 //  myjewellery
 //  kidsbrandstore
@@ -32,6 +33,17 @@ public class JsonReader {
 //  bjornborg
 //  myproteinnl
 //  wearglas
+    //desenio
+    //idealofsweden
+    //hunkemoller
+
+    //myburga / burga
+    //gymshark
+    //snuggs
+    //madlady
+    //ginatricot
+    //otrium / otriumcreators
+    //heyestrid
 
 
 
@@ -102,6 +114,37 @@ public class JsonReader {
             }
         }
     }
+
+
+//  nakdfashion / benakd / nakd
+//  loavies / girlsgoneloavies / loaviesdiscount
+//  sheinpartner
+//  veromoda / veromodawomen
+//  lyko
+//  icaniwill / iciw
+//  strongerlabel / strongermoments
+//  gutsgusto
+//  chiquelle
+//  safira
+//  tessvfashion
+//  myjewellery
+//  kidsbrandstore
+//  famousstore
+//  airup
+//  bjornborg
+//  myproteinnl
+//  wearglas
+    //desenio
+    //idealofsweden
+    //hunkemoller
+
+    //myburga / burga
+    //gymshark
+    //snuggs
+    //madlady
+    //ginatricot
+    //otrium / otriumcreators
+    //heyestrid
 
 
     public static void main(String[] args) throws Exception {
@@ -199,7 +242,7 @@ public class JsonReader {
         JSONParser jsonParser = new JSONParser();
 
         JSONArray apifyData = (JSONArray) jsonParser.parse(
-                new FileReader("/Users/LennartMac/Documents/Projects/insta/src/main/resources/static/26dec.json"));
+                new FileReader("/Users/LennartMac/Documents/Projects/insta/src/main/resources/static/apify/27apr.json"));
 
         for(Object apifyDataElement : apifyData) {
             JSONObject hashtagJson = (JSONObject) apifyDataElement;
