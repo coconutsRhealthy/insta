@@ -19,15 +19,12 @@ public class JsonReader {
 //  loavies / girlsgoneloavies / loaviesdiscount
 //  sheinpartner
 //  veromoda / veromodawomen
-//  lyko
 //  icaniwill / iciw
 //  strongerlabel / strongermoments
 //  gutsgusto
 //  chiquelle
-//  safira
 //  tessvfashion
 //  myjewellery
-//  kidsbrandstore
 //  famousstore
 //  airup
 //  bjornborg
@@ -44,6 +41,26 @@ public class JsonReader {
     //ginatricot
     //otrium / otriumcreators
     //heyestrid
+    //pinkgellac
+    //nanabeebi
+    //geurwolkje
+    //farfetch
+    //vitakruid
+    //body&fit
+    //kaptenandson
+    //stevemaddeneu
+    //emmasleep
+    //hellofresh
+    //zonnebrillencom
+    //voltairesneakers
+    //only.nederland
+    //edikted
+    //swybrand
+    //prozis
+    //sellpy
+    //esncom
+    //aybl
+
 
 
 
@@ -116,35 +133,51 @@ public class JsonReader {
     }
 
 
-//  nakdfashion / benakd / nakd
-//  loavies / girlsgoneloavies / loaviesdiscount
-//  sheinpartner
-//  veromoda / veromodawomen
-//  lyko
-//  icaniwill / iciw
-//  strongerlabel / strongermoments
-//  gutsgusto
-//  chiquelle
-//  safira
-//  tessvfashion
-//  myjewellery
-//  kidsbrandstore
-//  famousstore
-//  airup
-//  bjornborg
-//  myproteinnl
-//  wearglas
-    //desenio
-    //idealofsweden
-    //hunkemoller
+    //  zzz nakdfashion / benakd / nakd
+    //  zzz loavies / girlsgoneloavies / loaviesdiscount
+    //  zzz sheinpartner
+    //  zzz veromoda / veromodawomen
+    //  zzz icaniwill / iciw
+    //  zzz strongerlabel / strongermoments
+    //  zzz gutsgusto
+    //  zzz chiquelle
+    //  zzz tessvfashion
+    //  zzz myjewellery
+    //  zzz famousstore
+    //  zzz airup
+    //  zzz bjornborg
+    //  zzz myproteinnl
+    //  zzz wearglas
+        //desenio
+        //idealofsweden
+        //hunkemoller
 
-    //myburga / burga
-    //gymshark
-    //snuggs
-    //madlady
-    //ginatricot
-    //otrium / otriumcreators
-    //heyestrid
+        //zzz myburga / burga
+        //zzz gymshark
+        //zzz snuggs
+        //madlady
+        //zzz ginatricot
+        //zzz otrium / otriumcreators
+        //zzz heyestrid
+        //pinkgellac
+        //nanabeebi
+        //zzz geurwolkje
+        //zzz farfetch
+        //vitakruid
+        //zzz body&fit
+        //zzz kaptenandson
+        //zzz stevemaddeneu
+        //zzz emmasleep
+        //zzz hellofresh
+        //zzz zonnebrillencom
+        //zzz voltairesneakers
+        //zzz only.nederland
+        //edikted
+        //swybrand
+        //zzz prozis
+        //zzz sellpy
+        //zzz esncom
+        //zzz aybl
 
 
     public static void main(String[] args) throws Exception {
@@ -152,7 +185,7 @@ public class JsonReader {
     }
 
     private void overallMethod() throws Exception {
-        List<String> hashTagsForBand = Arrays.asList("wearglas");
+        List<String> hashTagsForBand = Arrays.asList("loavies");
 
         JSONArray jsonArray = new JSONArray();
 
@@ -242,7 +275,7 @@ public class JsonReader {
         JSONParser jsonParser = new JSONParser();
 
         JSONArray apifyData = (JSONArray) jsonParser.parse(
-                new FileReader("/Users/LennartMac/Documents/Projects/insta/src/main/resources/static/apify/27apr.json"));
+                new FileReader("/Users/LennartMac/Documents/Projects/insta/src/main/resources/static/apify/8dec.json"));
 
         for(Object apifyDataElement : apifyData) {
             JSONObject hashtagJson = (JSONObject) apifyDataElement;
