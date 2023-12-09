@@ -11,7 +11,7 @@ import java.util.*;
  */
 public class InstaAccountsAnalysis {
 
-    private static final String DATA_DIRECTIVE_FILE_PATH = "/Users/LennartMac/Documents/Projects/insta/src/main/resources/static/data_directive_may_dec_2022.txt";
+    private static final String DATA_DIRECTIVE_FILE_PATH = "/Users/LennartMac/Documents/Projects/insta/src/main/resources/static/data_directives/data_directive_jan_apr_2023.txt";
 
     public static void main(String[] args) throws Exception {
         InstaAccountsAnalysis instaAccountsAnalysis = new InstaAccountsAnalysis();
@@ -306,4 +306,51 @@ public class InstaAccountsAnalysis {
         }
         return result;
     }
+
+    private List<String> getUsernamesThatSharedCodesOfLoaviesAndNakd() throws Exception {
+        List<String> loaviesDiscountGivers = new ArrayList<>();
+        List<String> nakdDiscountGivers = new ArrayList<>();
+
+
+        File file = new File(DATA_DIRECTIVE_FILE_PATH);
+        List<String> lines = readTheFile(file);
+
+        for(String line : lines) {
+            String companyInLine = getCompanyFromLine(line);
+
+            if(companyInLine.equals("loavies")) {
+                loaviesDiscountGivers.add(getUsernameFromLine(line));
+            }
+
+            if(companyInLine.equals("nakdfashion")) {
+                nakdDiscountGivers.add(getUsernameFromLine(line));
+            }
+        }
+
+        Set<String> bothLoaviesAndNakdGiversSet = new HashSet<>();
+        bothLoaviesAndNakdGiversSet.addAll(loaviesDiscountGivers);
+        bothLoaviesAndNakdGiversSet.retainAll(nakdDiscountGivers);
+        List<String> bothLoaviesAndNakdGivers = new ArrayList<>();
+        bothLoaviesAndNakdGivers.addAll(bothLoaviesAndNakdGiversSet);
+
+        //for(int i = 0; i < bothLoaviesAndNakdGivers.size(); i++) {
+        //    System.out.println("" + i + ") " + bothLoaviesAndNakdGivers.get(i));
+        //}
+
+        return bothLoaviesAndNakdGivers;
+    }
+
+    private void printCompaniesThatUserGivesCodesFor(String user) throws Exception {
+        List<String> companies = getBrandsThatNewUserOffersDiscountFor(user);
+        Set<String> asSet = new HashSet<>();
+        asSet.addAll(companies);
+
+        System.out.println("user: " + user);
+        for(String company : asSet) {
+            System.out.println(company);
+        }
+        System.out.println();
+    }
+
+
 }
