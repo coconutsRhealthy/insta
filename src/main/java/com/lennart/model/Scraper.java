@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 public class Scraper {
 
     public static void main(String[] args) throws Exception {
-        new Scraper().scrape();                        
+        new Scraper().scrape();
     }
 
     private List<String> getUsernamesToUse() {
@@ -36,6 +36,12 @@ public class Scraper {
 
             TimeUnit.MILLISECONDS.sleep(500);
 
+            //click initial url bar
+            click(1047, 96);
+            TimeUnit.MILLISECONDS.sleep(300);
+            pressBackspace();
+            TimeUnit.MILLISECONDS.sleep(300);
+
             //click url bar
             rightClick(1047, 96);
 
@@ -53,19 +59,19 @@ public class Scraper {
             TimeUnit.MILLISECONDS.sleep(7000);
 
             //right click
-            rightClick(1043, 264);
+            rightClick(1043, 309);
             TimeUnit.MILLISECONDS.sleep(150);
 
             //click save page as
             TimeUnit.MILLISECONDS.sleep(500);
-            click(1151 ,352);
+            click(1151 ,397);
 
             ///
             click(842, 269);
             TimeUnit.MILLISECONDS.sleep(500);
 
             pressBackSpace();
-            TimeUnit.MILLISECONDS.sleep(60);
+            TimeUnit.MILLISECONDS.sleep(90);
 
             enterText("" + username);
             TimeUnit.MILLISECONDS.sleep(60);
@@ -108,6 +114,16 @@ public class Scraper {
             Robot bot = new Robot();
             bot.keyPress(KeyEvent.VK_ENTER);
             bot.keyRelease(KeyEvent.VK_ENTER);
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void pressBackspace() {
+        try {
+            Robot bot = new Robot();
+            bot.keyPress(KeyEvent.VK_BACK_SPACE);
+            bot.keyRelease(KeyEvent.VK_BACK_SPACE);
         } catch (AWTException e) {
             e.printStackTrace();
         }
