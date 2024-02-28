@@ -11,15 +11,25 @@ import java.util.*;
  */
 public class InstaAccountsAnalysis {
 
-    private static final String DATA_DIRECTIVE_FILE_PATH = "/Users/LennartMac/Documents/Projects/insta/src/main/resources/static/data_directives/data_directive_jan_apr_2023.txt";
+    private static final String DATA_DIRECTIVE_FILE_PATH = "/Users/LennartMac/Documents/Projects/insta/src/main/resources/static/data_directives/data_directive_may_jan_2024.txt";
 
     public static void main(String[] args) throws Exception {
         InstaAccountsAnalysis instaAccountsAnalysis = new InstaAccountsAnalysis();
-        instaAccountsAnalysis.getInterestingNewAccounts();
-        //dummy
+        //instaAccountsAnalysis.getInterestingNewAccounts();
+
+        List<String> nonDiscountGivers = instaAccountsAnalysis.getDataDirectiveNonDiscountGivers();
+
+        //for(int i = 0; i < nonDiscountGivers.size(); i++) {
+        //    System.out.println("" + i + " " + nonDiscountGivers.get(i));
+        //}
+
+        Map<String, List<String>> interestingNewAccs = instaAccountsAnalysis.getInterestingNewAccounts();
+
+        interestingNewAccs.keySet().forEach(newUserName -> System.out.println(newUserName));
+
     }
 
-    private void getInterestingNewAccounts() throws Exception {
+    private Map<String, List<String>> getInterestingNewAccounts() throws Exception {
         Map<String, List<String>> brandsPerNewUser = getBrandsPerNewUser();
         Map<String, Double> interestingAccsSum = getInterestingSum(brandsPerNewUser);
         Map<String, Double> interestingAccsUnique = getInterestingUnique(brandsPerNewUser);
@@ -28,7 +38,7 @@ public class InstaAccountsAnalysis {
         interestingAccs.addAll(interestingAccsSum.keySet());
         interestingAccs.addAll(interestingAccsUnique.keySet());
 
-        Map<String, List<String>> interestingNewAccs = retainOnlyMapKeysIncludedInSet(brandsPerNewUser, interestingAccs);
+        return retainOnlyMapKeysIncludedInSet(brandsPerNewUser, interestingAccs);
     }
 
     private Map<String, List<String>> retainOnlyMapKeysIncludedInSet(Map<String, List<String>> map, Set<String> set) {
@@ -51,17 +61,17 @@ public class InstaAccountsAnalysis {
         for(Map.Entry<String, List<String>> entry : brandsPerNewUser.entrySet()) {
             List<String> brands = entry.getValue();
 
-            if(brands.size() >= 2 || brands.contains("myjewellery")) {
+            if(brands.size() >= 2) {
                 double score = 0;
 
                 for(String brand : brands) {
-                    if(brand.equals("nakdfashion") || brand.equals("loavies") || brand.equals("chiquelle")
-                            || brand.equals("gutsgusto") || brand.equals("myjewellery") || brands.contains("veromoda")) {
+                    if(brand.equals("nakdfashion") || brand.equals("loavies") || brand.equals("snuggs") || brand.equals("onceuponapp")
+                            || brand.equals("gutsgusto") || brand.equals("albelli_nl") || brands.contains("veromoda") || brands.contains("burga")) {
                         score++;
                     }
                 }
 
-                if(score >= 2 || brands.contains("myjewellery")) {
+                if(score >= 2) {
                     interestingUsersWithScore.put(entry.getKey(), score);
                 }
             }
@@ -77,7 +87,7 @@ public class InstaAccountsAnalysis {
         for(Map.Entry<String, List<String>> entry : brandsPerNewUser.entrySet()) {
             List<String> brands = entry.getValue();
 
-            if(brands.size() >= 2 || brands.contains("myjewellery")) {
+            if(brands.size() >= 2) {
                 double score = 0;
 
                 if(brands.contains("nakdfashion")) {
@@ -92,19 +102,23 @@ public class InstaAccountsAnalysis {
                     score++;
                 }
 
-                if(brands.contains("myjewellery")) {
-                    score++;
-                }
-
-                if(brands.contains("chiquelle")) {
-                    score++;
-                }
-
                 if(brands.contains("veromoda")) {
                     score++;
                 }
 
-                if(score >= 2 || brands.contains("myjewellery")) {
+                if(brands.contains("snuggs")) {
+                    score++;
+                }
+
+                if(brands.contains("albelli_nl")) {
+                    score++;
+                }
+
+                if(brands.contains("onceuponapp")) {
+                    score++;
+                }
+
+                if(score >= 2) {
                     interestingUsersWithScore.put(entry.getKey(), score);
                 }
             }

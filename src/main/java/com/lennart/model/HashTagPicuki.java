@@ -37,7 +37,7 @@ public class HashTagPicuki {
 //    airup
 
 
-            //rabattkoder.n - rabattkode.norge - rabattkodsidan - gratispandan - rabattkoderinorge.no - rabatt.inspo - rabatt_sverige - homeofdiscounts - billigare_sverige - influencerdiscountcodes - @d.iscount - @bestekortingscodes
+            //rabattkoder.n - rabattkode.norge - rabattkodsidan - gratispandan - rabattkoderinorge.no - rabatt.inspo - rabattkonsulten - billigare_sverige - influencerdiscountcodes - korting.code - @d.iscount - @bestekortingscodes
 
 
     public static void main(String[] args) throws Exception {

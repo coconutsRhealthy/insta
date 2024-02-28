@@ -29,7 +29,7 @@ public class JsonReader {
 //  airup
 //  bjornborg
 //  myproteinnl
-//  wearglas
+//  glas.eyewear
     //desenio
     //idealofsweden
     //hunkemoller
@@ -42,7 +42,7 @@ public class JsonReader {
     //otrium / otriumcreators
     //heyestrid
     //pinkgellac
-    //nanabeebi
+    //mimmti.official
     //geurwolkje
     //farfetch
     //vitakruid
@@ -60,6 +60,9 @@ public class JsonReader {
     //sellpy
     //esncom
     //aybl
+    //albelli_nl
+    //lyko_nl
+    //maniacnails.official
 
 
 
@@ -329,6 +332,7 @@ public class JsonReader {
                 StringUtils.containsIgnoreCase(caption, "mijn code") ||
                 StringUtils.containsIgnoreCase(caption, "de code") ||
                 StringUtils.containsIgnoreCase(caption, "code:") ||
+                StringUtils.containsIgnoreCase(caption, "code") ||
                 StringUtils.containsIgnoreCase(caption, "with code") ||
                 StringUtils.containsIgnoreCase(caption, "met code") ||
                 StringUtils.containsIgnoreCase(caption, "use code") ||
