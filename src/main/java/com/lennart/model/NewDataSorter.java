@@ -4,10 +4,11 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class NewDataSorter {
     public static void main(String[] args) {
-        new NewDataSorter().companySorting();
+        new NewDataSorter().testMethode();
     }
 
     private void companySorting() {
@@ -17,8 +18,6 @@ public class NewDataSorter {
 
         newBatch.add("zz");
         newBatch.add("zz");
-
-        newBatch = shuffleAndRemoveDuplicates(newBatch);
 
         sortNewBatch(newBatch, existingBatches);
 
@@ -60,7 +59,9 @@ public class NewDataSorter {
         // Sort the new batch based on average positions
         Collections.sort(newBatch, Comparator.comparingDouble(word -> averagePositions.getOrDefault(word, Double.MAX_VALUE)));
 
-        System.out.println("wacht");
+        newBatch.forEach(company -> System.out.println(company));
+
+        //System.out.println("wacht");
     }
 
     private void sampleBatchFileMethod() {
@@ -135,18 +136,136 @@ public class NewDataSorter {
         return batches;
     }
 
-    private List<String> shuffleAndRemoveDuplicates(List<String> inputList) {
-        // Shuffle the ArrayList
-        Collections.shuffle(inputList);
+    //"/Users/lennartmac/Documents/Projects/diski/src/app/data/data.directive.ts";
 
-        // Remove duplicates
-        ArrayList<String> uniqueList = new ArrayList<>();
-        for (String element : inputList) {
-            if (!uniqueList.contains(element)) {
-                uniqueList.add(element);
+    private List<String> readNewDataFromDataDirective() {
+        String filePath = "/Users/lennartmac/Documents/Projects/diski/src/app/data/data.directive.ts";
+        List<String> newData = new ArrayList<>();
+
+        try {
+            FileReader fileReader = new FileReader(filePath);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String line;
+            boolean inArray = false;
+
+            while ((line = bufferedReader.readLine()) != null) {
+                if (line.contains("static dataArray")) {
+                    inArray = true;
+                    continue;
+                }
+
+                if (inArray && !line.trim().isEmpty()) {
+                    newData.add(line.trim());
+                }
+
+                if (inArray && (line.trim().isEmpty() || line.contains("];"))) {
+                    break;
+                }
             }
+
+            bufferedReader.close();
+            return newData;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        return uniqueList;
+        return null;
+    }
+
+    private void testMethode() {
+        List<List<String>> dataDirective = readDataFromDataDirective("/Users/lennartmac/Documents/Projects/diski/src/app/data/data.directive.ts");
+        List<List<String>> archiveDataDirective = readDataFromDataDirective("/Users/lennartmac/Documents/Projects/diski/src/app/data/archivedata.directive.ts");
+        List<List<String>> archive = readDataFromArchive("/Users/lennartmac/Documents/Projects/diski/src/app/data/archive2.txt");
+
+        List<List<String>> dataDirectiveCompaniesOnly = retainOnlyCompanyInDataLines(dataDirective);
+        List<List<String>> archiveDataDirectiveCompaniesOnly = retainOnlyCompanyInDataLines(archiveDataDirective);
+        List<List<String>> archiveCompaniesOnly = retainOnlyCompanyInDataLines(archive);
+
+        List<String> newData = dataDirectiveCompaniesOnly.get(0);
+        List<List<String>> trainingData = new ArrayList<>();
+
+        trainingData.addAll(dataDirectiveCompaniesOnly.subList(1, dataDirectiveCompaniesOnly.size()));
+        trainingData.addAll(archiveDataDirectiveCompaniesOnly);
+        trainingData.addAll(archiveCompaniesOnly.subList(0, Math.min(120, archiveCompaniesOnly.size())));
+
+        trainingData = trainingData.stream()
+                .filter(list -> list.size() >= 20)
+                .collect(Collectors.toList());
+
+        sortNewBatch(newData, trainingData);
+    }
+
+    private List<List<String>> readDataFromDataDirective(String filePath) {
+        List<List<String>> dataBatches = new ArrayList<>();
+
+        try {
+            FileReader fileReader = new FileReader(filePath);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String line;
+            boolean inArray = false;
+            List<String> tempArrayList = new ArrayList<>();
+
+            while ((line = bufferedReader.readLine()) != null) {
+                if (line.contains("static dataArray")) {
+                    inArray = true;
+                    continue;
+                }
+
+                if (inArray && !line.trim().isEmpty() && !line.contains("];")) {
+                    tempArrayList.add(line.trim());
+                }
+
+                if (inArray && (line.trim().isEmpty() || line.contains("];"))) {
+                    dataBatches.add(new ArrayList<>(tempArrayList));
+                    tempArrayList.clear();
+                }
+            }
+
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return dataBatches;
+    }
+
+    private List<List<String>> readDataFromArchive(String filePath) {
+        List<List<String>> dataBatches = new ArrayList<>();
+
+        try {
+            FileReader fileReader = new FileReader(filePath);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String line;
+            List<String> tempArrayList = new ArrayList<>();
+
+            while ((line = bufferedReader.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    tempArrayList.add(line.trim());
+                } else {
+                    dataBatches.add(new ArrayList<>(tempArrayList));
+                    tempArrayList.clear();
+                }
+            }
+
+            bufferedReader.close();
+
+            if (!tempArrayList.isEmpty()) {
+                dataBatches.add(new ArrayList<>(tempArrayList));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return dataBatches;
+    }
+
+    public static List<List<String>> retainOnlyCompanyInDataLines(List<List<String>> inputList) {
+        return inputList.stream()
+                .map(innerList -> innerList.stream()
+                        .map(str -> str.split(",")[0].trim()) // Split by comma and take the first part
+                        .map(str -> str.replaceAll("\"", ""))
+                        .map(str -> str.contains("(") ? str.substring(0, str.indexOf('(')) : str)
+                        .collect(Collectors.toCollection(ArrayList::new)))
+                .collect(Collectors.toList());
     }
 }
