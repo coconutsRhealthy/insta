@@ -11,36 +11,13 @@ public class NewDataSorter {
         new NewDataSorter().testMethode();
     }
 
-    private void companySorting() {
-        List<List<String>> existingBatches = populateBatches();
-
-        List<String> newBatch = new ArrayList<>();
-
-        newBatch.add("zz");
-        newBatch.add("zz");
-
-        sortNewBatch(newBatch, existingBatches);
-
-        //sortNewBatchBasedOnLevenshtein(existingBatches, newBatch);
-
-        // The sorted order is now in the newBatch list
-        //for (String word : newBatch) {
-        //    System.out.println(word);
-        //}
-    }
-
-    //other approach of relative position of all batches
-
-
-    private void sortNewBatch(List<String> newBatch, List<List<String>> existingBatches) {
+    private Map<String, String> sortNewBatch(Map<String, String> mapToSort, List<List<String>> existingBatches) {
         Map<String, Double> averagePositions = new HashMap<>();
 
-        // Calculate average positions of words across all batches
-        for (String word : newBatch) {
+        for (String word : mapToSort.values()) {
             double totalPosition = 0.0;
             int wordCount = 0;
 
-            // Iterate through all batches to find the position of the word
             for (List<String> batch : existingBatches) {
                 int position = batch.indexOf(word);
                 if (position != -1) {
@@ -49,127 +26,23 @@ public class NewDataSorter {
                 }
             }
 
-            // Calculate average position of the word
             if (wordCount > 0) {
                 double averagePosition = totalPosition / wordCount;
                 averagePositions.put(word, averagePosition);
             }
         }
 
-        // Sort the new batch based on average positions
-        Collections.sort(newBatch, Comparator.comparingDouble(word -> averagePositions.getOrDefault(word, Double.MAX_VALUE)));
+        List<Map.Entry<String, String>> mapAsList = new ArrayList<>(mapToSort.entrySet());
 
-        newBatch.forEach(company -> System.out.println(company));
+        Collections.sort(mapAsList, Comparator.comparingDouble(entry ->
+                averagePositions.getOrDefault(entry.getValue(), Double.MAX_VALUE)));
 
-        //System.out.println("wacht");
-    }
-
-    private void sampleBatchFileMethod() {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader("/Users/lennartmac/Desktop/sample_batches2.txt"));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                line = line.trim();
-
-                if (line.startsWith("\"")) {
-                    line = line.substring(1);
-                }
-
-                int index = line.indexOf(" (");
-                if (index != -1) {
-                    line = line.substring(0, index);
-                }
-
-                int commaIndex = line.indexOf(',');
-
-                if (commaIndex != -1) {
-                    line = line.substring(0, commaIndex);
-                }
-
-                System.out.println(line);
-            }
-
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private List<List<String>> populateBatches() {
-        String filename = "/Users/lennartmac/Desktop/sample_batches2.txt"; // Change this to your file path
-
-        List<List<String>> batches = new ArrayList<>();
-
-        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-            String line;
-            List<String> currentBatch = new ArrayList<>();
-            Set<String> wordSet = new HashSet<>(); // To keep track of words within each batch
-
-            while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty()) {
-                    // Empty line detected, add the current batch to the batches list
-                    if(currentBatch.size() >= 20) {
-                        batches.add(currentBatch);
-                    }
-
-                    currentBatch = new ArrayList<>(); // Reset currentBatch for the next batch
-                    wordSet.clear(); // Clear the word set for the next batch
-                } else {
-                    String word = line.trim();
-                    if (!wordSet.contains(word)) {
-                        currentBatch.add(word); // Add word to the current batch if it's not already present
-                        wordSet.add(word); // Add word to the word set
-                    }
-                }
-            }
-
-            // Add the last batch if it's not empty
-            if (!currentBatch.isEmpty() && currentBatch.size() >= 20) {
-                batches.add(currentBatch);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        Map<String, String> sortedMap = new LinkedHashMap<>();
+        for (Map.Entry<String, String> entry : mapAsList) {
+            sortedMap.put(entry.getKey(), entry.getValue());
         }
 
-        return batches;
-    }
-
-    //"/Users/lennartmac/Documents/Projects/diski/src/app/data/data.directive.ts";
-
-    private List<String> readNewDataFromDataDirective() {
-        String filePath = "/Users/lennartmac/Documents/Projects/diski/src/app/data/data.directive.ts";
-        List<String> newData = new ArrayList<>();
-
-        try {
-            FileReader fileReader = new FileReader(filePath);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String line;
-            boolean inArray = false;
-
-            while ((line = bufferedReader.readLine()) != null) {
-                if (line.contains("static dataArray")) {
-                    inArray = true;
-                    continue;
-                }
-
-                if (inArray && !line.trim().isEmpty()) {
-                    newData.add(line.trim());
-                }
-
-                if (inArray && (line.trim().isEmpty() || line.contains("];"))) {
-                    break;
-                }
-            }
-
-            bufferedReader.close();
-            return newData;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+        return sortedMap;
     }
 
     private void testMethode() {
@@ -181,7 +54,15 @@ public class NewDataSorter {
         List<List<String>> archiveDataDirectiveCompaniesOnly = retainOnlyCompanyInDataLines(archiveDataDirective);
         List<List<String>> archiveCompaniesOnly = retainOnlyCompanyInDataLines(archive);
 
-        List<String> newData = dataDirectiveCompaniesOnly.get(0);
+        Map<String, String> newDataFullLineAndCompanies = new LinkedHashMap<>();
+
+        List<String> newDataCompaniesOnly = dataDirectiveCompaniesOnly.get(0);
+        List<String> newDataFull = dataDirective.get(0);
+
+        for(int i = 0; i < newDataFull.size(); i++) {
+            newDataFullLineAndCompanies.put(newDataFull.get(i), newDataCompaniesOnly.get(i));
+        }
+
         List<List<String>> trainingData = new ArrayList<>();
 
         trainingData.addAll(dataDirectiveCompaniesOnly.subList(1, dataDirectiveCompaniesOnly.size()));
@@ -192,7 +73,8 @@ public class NewDataSorter {
                 .filter(list -> list.size() >= 20)
                 .collect(Collectors.toList());
 
-        sortNewBatch(newData, trainingData);
+        Map<String, String> sortedNewData = sortNewBatch(newDataFullLineAndCompanies, trainingData);
+        sortedNewData.keySet().forEach(System.out::println);
     }
 
     private List<List<String>> readDataFromDataDirective(String filePath) {
