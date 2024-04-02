@@ -1,7 +1,8 @@
 package com.lennart.model;
 
 import java.sql.*;
-import java.time.Year;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,20 +12,40 @@ public class DataDirectivePersister {
     private Connection con;
 
     public static void main(String[] args) throws Exception {
-        new DataDirectivePersister().enterSomeData();
+        new DataDirectivePersister().fillEmptyDb();
     }
 
-    private void enterSomeData() throws Exception {
+    private void addNewDataDirectiveLinesToDb(String dateBoundry) throws Exception {
+        //dateBoundry example: "03-29-2024";
+        List<String> dataDirective = getDataDirectiveLines("/Users/lennartmac/Documents/Projects/diski/src/app/data/data.directive.ts");
+        dataDirective = addYearToDate(dataDirective, 2024);
+        dataDirective = removeDataBeforeDate(dataDirective, dateBoundry);
+        addDataToDb(dataDirective);
+    }
+
+    private void fillEmptyDb() throws Exception {
+        List<String> dataDirective = getDataDirectiveLines("/Users/lennartmac/Documents/Projects/diski/src/app/data/data.directive.ts");
+        List<String> archiveDataDirective = getDataDirectiveLines("/Users/lennartmac/Documents/Projects/diski/src/app/data/archivedata.directive.ts");
+        List<String> archive2 = getArchiveLines("/Users/lennartmac/Documents/Projects/diski/src/app/data/archive2.txt");
+        List<String> archive = getArchiveLines("/Users/lennartmac/Documents/Projects/diski/src/app/data/archive.txt");
+
+        dataDirective = addYearToDate(dataDirective, 2024);
+        archiveDataDirective = addYearToDate(archiveDataDirective, 2024);
+        archive2 = addYearToDate(archive2, 2024);
+        archive = addYearToDate(archive, 2022);
+
+        addDataToDb(dataDirective);
+        addDataToDb(archiveDataDirective);
+        addDataToDb(archive2);
+        addDataToDb(archive);
+    }
+
+    private void addDataToDb(List<String> dataLines) throws Exception {
         initializeDbConnection();
 
-        List<String> dataLines = getDataDirectiveLines("/Users/lennartmac/Documents/Projects/diski/src/app/data/data.directive.ts");
-        //List<String> dataLines = getArchiveLines("/Users/lennartmac/Documents/Projects/diski/src/app/data/archive2.txt");
-
-        //addYearToDate(dataLines);
-
         for(String line : dataLines) {
-            line = line.replaceAll("\"", "");
-            line = line.substring(0, line.length() - 1);
+            line = removeQuotesAndLastCommaFromLine(line);
+            line = addEmptyDiscountCodeToLineIfNeeded(line);
 
             if(line.length() > 5) {
                 Statement st = con.createStatement();
@@ -45,7 +66,6 @@ public class DataDirectivePersister {
 
                 st.close();
             }
-
         }
 
         closeDbConnection();
@@ -80,7 +100,17 @@ public class DataDirectivePersister {
     private Date getDateFromLine(String line) {
         String[] parts = line.split(",");
         String dateString = parts[4].trim();
-        return Date.valueOf("2024-" + dateString);
+        String[] dateParts = dateString.split("-");
+
+        String dateStringToUse;
+
+        if(dateParts[0].length() == 2) {
+            dateStringToUse = dateParts[2] + "-" + dateParts[0] + "-" + dateParts[1];
+        } else {
+            dateStringToUse = dateString;
+        }
+
+        return Date.valueOf(dateStringToUse);
     }
 
     private List<String> getDataDirectiveLines(String path) {
@@ -93,8 +123,7 @@ public class DataDirectivePersister {
                 stream().flatMap(List::stream).collect(Collectors.toList());
     }
 
-    private List<String> addYearToDate(List<String> dataDirectives) {
-        int currentYear = Year.now().getValue();
+    private List<String> addYearToDate(List<String> dataDirectives, int yearToStartWith) {
         List<String> dataDirectivesIncludingYear = new ArrayList<>();
         String lastMonth = null;
         for (int i = 0; i < dataDirectives.size(); i++) {
@@ -102,24 +131,68 @@ public class DataDirectivePersister {
 
             if(parts.length >= 4) {
                 int partsIndexToUse = (parts.length > 4) ? 4 : 3;
-
                 String date = parts[partsIndexToUse];
-
                 String[] dateParts = date.split("-");
-                String month = dateParts[0];
 
-                if (lastMonth != null && lastMonth.equals("01") && month.equals("12")) {
-                    currentYear--;
+                if(dateParts.length == 2) {
+                    String month = dateParts[0];
+
+                    if (lastMonth != null && lastMonth.equals("01") && month.equals("12")) {
+                        yearToStartWith--;
+                    }
+
+                    lastMonth = month;
+
+                    String dateToUse = date.substring(0, date.length() - 2);
+                    dateToUse = dateToUse + "-" + yearToStartWith + "\",";
+
+                    parts[partsIndexToUse] = dateToUse;
                 }
 
-                lastMonth = month;
-
-                parts[partsIndexToUse] = parts[partsIndexToUse] + "-" + currentYear;
                 dataDirectivesIncludingYear.add(String.join(", ", parts));
             }
         }
 
         return dataDirectivesIncludingYear;
+    }
+
+    private String addEmptyDiscountCodeToLineIfNeeded(String line) {
+        String lineToReturn = line;
+        String[] parts = line.split(",");
+
+        if (parts.length == 4) {
+            lineToReturn = parts[0] + "," + parts[1] + ",  , " + parts[2] + "," + parts[3];
+        }
+
+        return lineToReturn;
+    }
+
+    private List<String> removeDataBeforeDate(List<String> dataDirective, String dateBoundryString) {
+        List<String> dataDirectiveAfterDateBoundry = new ArrayList<>();
+
+        for(String line : dataDirective) {
+            if(line.length() > 5) {
+                String lineToAnalyseDate = removeQuotesAndLastCommaFromLine(line);
+                String[] parts = lineToAnalyseDate.split(",");
+                String dateString = parts[4].trim();
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+                LocalDate dateInDataDirective = LocalDate.parse(dateString, formatter);
+                LocalDate dateBoundry = LocalDate.parse(dateBoundryString, formatter);
+
+                if(!dateInDataDirective.isBefore(dateBoundry)) {
+                    dataDirectiveAfterDateBoundry.add(line);
+                }
+            }
+        }
+
+        return dataDirectiveAfterDateBoundry;
+    }
+
+    private String removeQuotesAndLastCommaFromLine(String line) {
+        line = line.replaceAll("\"", "");
+        line = line.substring(0, line.length() - 1);
+        return line;
     }
 
     private void initializeDbConnection() throws Exception {
