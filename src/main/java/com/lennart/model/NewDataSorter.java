@@ -11,10 +11,11 @@ public class NewDataSorter {
         new NewDataSorter().testMethode();
     }
 
-    private Map<String, String> sortNewBatch(Map<String, String> mapToSort, List<List<String>> existingBatches) {
+    private Map<String, String> sortNewBatch(Map<String, String> newBatchToSort, List<List<String>> existingBatches) {
+        newBatchToSort.put("**new copmanies**", "**new companies**");
         Map<String, Double> averagePositions = new HashMap<>();
 
-        for (String word : mapToSort.values()) {
+        for (String word : newBatchToSort.values()) {
             double totalPosition = 0.0;
             int wordCount = 0;
 
@@ -30,9 +31,20 @@ public class NewDataSorter {
                 double averagePosition = totalPosition / wordCount;
                 averagePositions.put(word, averagePosition);
             }
+
+            if (word.equals("temu") || word.equals("bylashbabe") || word.equals("idealofsweden") || word.equals("vitakruid") ||
+                word.equals("desenio") || word.equals("pinkgellac")) {
+                double randomHighAveragePosition = 4.0 + (new Random().nextDouble());
+                averagePositions.put(word, randomHighAveragePosition);
+            }
+
+            if (word.equals("**new companies**")) {
+                double artificialHighNumberForSorting = 5000.0;
+                averagePositions.put(word, artificialHighNumberForSorting);
+            }
         }
 
-        List<Map.Entry<String, String>> mapAsList = new ArrayList<>(mapToSort.entrySet());
+        List<Map.Entry<String, String>> mapAsList = new ArrayList<>(newBatchToSort.entrySet());
 
         Collections.sort(mapAsList, Comparator.comparingDouble(entry ->
                 averagePositions.getOrDefault(entry.getValue(), Double.MAX_VALUE)));
@@ -73,11 +85,17 @@ public class NewDataSorter {
                 .filter(list -> list.size() >= 20)
                 .collect(Collectors.toList());
 
+        Map<String, String> duplicates = getDuplicateCompanies(newDataFullLineAndCompanies);
+        newDataFullLineAndCompanies.keySet().removeAll(duplicates.keySet());
+
         Map<String, String> sortedNewData = sortNewBatch(newDataFullLineAndCompanies, trainingData);
-        sortedNewData.keySet().forEach(System.out::println);
+
+        Map<String, String> sortedNewDataDuplicatesAddedBack = addDuplicatesBackToMap(sortedNewData, duplicates);
+
+        sortedNewDataDuplicatesAddedBack.keySet().forEach(System.out::println);
     }
 
-    private List<List<String>> readDataFromDataDirective(String filePath) {
+    public List<List<String>> readDataFromDataDirective(String filePath) {
         List<List<String>> dataBatches = new ArrayList<>();
 
         try {
@@ -111,7 +129,7 @@ public class NewDataSorter {
         return dataBatches;
     }
 
-    private List<List<String>> readDataFromArchive(String filePath) {
+    public List<List<String>> readDataFromArchive(String filePath) {
         List<List<String>> dataBatches = new ArrayList<>();
 
         try {
@@ -149,5 +167,94 @@ public class NewDataSorter {
                         .map(str -> str.contains("(") ? str.substring(0, str.indexOf('(')) : str)
                         .collect(Collectors.toCollection(ArrayList::new)))
                 .collect(Collectors.toList());
+    }
+
+    private Map<String, String> getDuplicateCompanies(Map<String, String> inputMap) {
+        Map<String, String> result = new LinkedHashMap<>();
+        Map<String, Integer> valueCounts = new LinkedHashMap<>();
+
+        for (Map.Entry<String, String> entry : inputMap.entrySet()) {
+            String value = entry.getValue();
+
+            valueCounts.put(value, valueCounts.getOrDefault(value, 0) + 1);
+
+            if (valueCounts.get(value) > 1) {
+                result.put(entry.getKey(), value);
+            }
+        }
+
+        return result;
+    }
+
+    private Map<String, String> addDuplicatesBackToMap(Map<String, String> sortedNewBatch, Map<String, String> duplicates) {
+        //1 make a map newCompanies
+        //2 make a map firstHalfSortedNewBatchExcludingNewCompanies
+        //3 make a map secondHalfSortedNewBatchExcludingNewCompanies
+        //4 make a new (empty) map secondHalfSortedPlusDuplicates
+        //5 randomly put entries from secondHalfSortedNewBatchExcludingNewCompanies and duplicates into the new empty
+        //secondHalfSortedPlusDuplicates map until both secondHalfSortedNewBatchExcludingNewCompanies and duplicates are empty
+        //6 make a new empty map named toReturn
+        //7 putall elements of firstHalfSortedNewBatchExcludingNewCompanies into this
+        //putall elements of secondHalfSortedPlusDuplicates into this
+        //putall elements of newCompanies into this
+        //8 return toReturn;
+
+        //1
+        Map<String, String> newCompanies = new LinkedHashMap<>();
+        boolean newCompaniesStarted = false;
+
+        for(Map.Entry<String, String> entry : sortedNewBatch.entrySet()) {
+            if(entry.getKey().equals("**new copmanies**")) {
+                newCompaniesStarted = true;
+            }
+
+            if(newCompaniesStarted) {
+                newCompanies.put(entry.getKey(), entry.getValue());
+            }
+        }
+
+        //2
+        Map<String, String> sortedNewBatchCopy = new LinkedHashMap<>(sortedNewBatch);
+        sortedNewBatchCopy.keySet().removeAll(newCompanies.keySet());
+
+        int size = sortedNewBatchCopy.size();
+        int halfSize = size / 2;
+
+        Map<String, String> firstHalfSortedNewBatchExcludingNewCompanies = sortedNewBatchCopy.entrySet().stream()
+                .limit(halfSize)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
+        //3
+        Map<String, String> secondHalfSortedNewBatchExcludingNewCompanies = new LinkedHashMap<>(sortedNewBatchCopy);
+        secondHalfSortedNewBatchExcludingNewCompanies.keySet().removeAll(firstHalfSortedNewBatchExcludingNewCompanies.keySet());
+
+        //4
+        Map<String, String> secondHalfSortedPlusDuplicates = new LinkedHashMap<>();
+
+        //5
+        List<Map.Entry<String, String>> list1 = new ArrayList<>(secondHalfSortedNewBatchExcludingNewCompanies.entrySet());
+        List<Map.Entry<String, String>> list2 = new ArrayList<>(duplicates.entrySet());
+
+        Random random = new Random();
+        while (!list1.isEmpty() || !list2.isEmpty()) {
+            if (!list1.isEmpty() && (list2.isEmpty() || random.nextBoolean())) {
+                Map.Entry<String, String> entry1 = list1.remove(0);
+                secondHalfSortedPlusDuplicates.put(entry1.getKey(), entry1.getValue());
+            } else {
+                Map.Entry<String, String> entry2 = list2.remove(0);
+                secondHalfSortedPlusDuplicates.put(entry2.getKey(), entry2.getValue());
+            }
+        }
+
+        //6
+        Map<String, String> toReturn = new LinkedHashMap<>();
+
+        //7
+        toReturn.putAll(firstHalfSortedNewBatchExcludingNewCompanies);
+        toReturn.putAll(secondHalfSortedPlusDuplicates);
+        toReturn.putAll(newCompanies);
+
+        //8
+        return toReturn;
     }
 }

@@ -1,5 +1,10 @@
 package com.lennart.model;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import java.io.FileReader;
 import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -15,24 +20,33 @@ public class InstaAccountFinder {
         //    System.out.println("\"https://www.instagram.com/" + influencer + "\",");
         //}
 
-        new InstaAccountFinder().fillInfluListTest();
+        //for(int i = 0; i < 10; i++) {
+            InstaAccountFinder instaAccountFinder = new InstaAccountFinder();
+
+            List<String> list1 = instaAccountFinder.fillInfluListTest();
+//            List<String> list2 = instaAccountFinder.fillInfluListTest();
+//
+//            list1.retainAll(list2);
+//            System.out.println(list1.size());
+        //}
+
+        //new InstaAccountFinder().fillInfluListTest();
+
+        //new InstaAccountFinder().initializeInfluencerDb();
     }
 
-    private void fillInfluListTest() throws Exception {
-        List<String> influencers2024 = getInfluencers("2024-01-01", "2024-12-31");
-        List<String> influencersLast3Days = getInfluencers("2024-04-06", "2024-12-31");
+    private List<String> fillInfluListTest() throws Exception {
+        List<String> influencersLast3Days = getInfluencers("2024-04-10", "2024-12-31");
 
-        List<String> eligibleInfluencers = influencers2024.stream()
-                .filter(i -> !influencersLast3Days.contains(i))
-                .collect(Collectors.toList());
-
-        eligibleInfluencers = removeNotToBeUsedInfluencers(eligibleInfluencers);
-
-        List<String> sectors = Arrays.asList("accessoires", "cosmetics", "erotics", "fashion", "food", "homedecoration",
+        List<String> sectors = Arrays.asList("accessoires", "cosmetics", "fashion", "food", "homedecoration",
                 "jewellery", "lingerie", "other", "sport");
 
         Map<String, List<String>> influencersPerSector = sectors.stream()
                 .collect(Collectors.toMap(sector -> sector, sector -> getInfluencersForSector(sector, "2024-01-01")));
+
+        for (List<String> influencerList : influencersPerSector.values()) {
+            influencerList.removeAll(influencersLast3Days);
+        }
 
         Collections.shuffle(sectors);
 
@@ -48,12 +62,21 @@ public class InstaAccountFinder {
             influencersToUse.addAll(selectedInfluencersForSector);
         }
 
+        List<String> influencers2024 = getInfluencers("2024-01-01", "2024-12-31");
+
+        List<String> eligibleInfluencers = influencers2024.stream()
+                .filter(i -> !influencersLast3Days.contains(i))
+                .collect(Collectors.toList());
+
+        eligibleInfluencers = removeNotToBeUsedInfluencers(eligibleInfluencers);
+
         List<String> influencersWithUnknownBranch = eligibleInfluencers.stream()
                 .filter(influencer -> influencersPerSector.values().stream()
                         .flatMap(List::stream)
                         .noneMatch(influencer::equals))
                 .collect(Collectors.toList());
 
+        influencersWithUnknownBranch = removeNotToBeUsedInfluencers(influencersWithUnknownBranch);
         Collections.shuffle(influencersWithUnknownBranch);
 
         int targetSize = 369;
@@ -73,6 +96,8 @@ public class InstaAccountFinder {
         influencersToUse.stream()
                 .map(account -> "\"https://www.instagram.com/" + account + "\",\n")
                 .forEach(System.out::print);
+
+        return influencersToUse;
     }
 
     private long getMaxNumberOfInfluencersForSector(String sector) {
@@ -80,34 +105,31 @@ public class InstaAccountFinder {
 
         switch (sector) {
             case "accessoires":
-                maxNumber = 30L;
+                maxNumber = 60L;
                 break;
             case "cosmetics":
-                maxNumber = 19L;
-                break;
-            case "erotics":
-                maxNumber = 1L;
+                maxNumber = 40L;
                 break;
             case "fashion":
-                maxNumber = 125L;
+                maxNumber = 100L;
                 break;
             case "food":
-                maxNumber = 12L;
+                maxNumber = 30L;
                 break;
             case "homedecoration":
-                maxNumber = 27L;
+                maxNumber = 40L;
                 break;
             case "jewellery":
-                maxNumber = 5L;
+                maxNumber = 15L;
                 break;
             case "lingerie":
-                maxNumber = 6L;
+                maxNumber = 15L;
                 break;
             case "other":
-                maxNumber = 23L;
+                maxNumber = 30L;
                 break;
             case "sport":
-                maxNumber = 86L;
+                maxNumber = 10L;
                 break;
         }
 
@@ -263,7 +285,12 @@ public class InstaAccountFinder {
                 "rabattkodsidan",
                 "d.iscount",
                 "zonnebrillen.com",
-                "eije"
+                "eije",
+                "aimnsportswear",
+                "azukanl",
+                "easytoys",
+                "herrvonsmit",
+                "korting.code"
         );
 
         cleanedInfluList.removeAll(usernamesToBeRemoved);
@@ -280,6 +307,54 @@ public class InstaAccountFinder {
                 .map(Map.Entry::getKey)
                 .sorted()
                 .collect(Collectors.toList());
+    }
+
+    private void initializeInfluencerDb() throws Exception {
+        List<String> influencers = getInfluencers("2019-01-01", "2025-12-31");
+
+        initializeDbConnection();
+
+        int counter = 0;
+
+        for(String influencer : influencers) {
+            int followers = getFollowersForUsernameFromJson(influencer);
+
+            if(followers != -1) {
+                Statement st = con.createStatement();
+
+                st.executeUpdate("INSERT INTO influencers (" +
+                        "name, " +
+                        "followers) " +
+                        "VALUES ('" +
+                        influencer + "', '" +
+                        followers + "'" +
+                        ")");
+                st.close();
+            }
+
+            System.out.println(counter++);
+        }
+
+        closeDbConnection();
+    }
+
+    private int getFollowersForUsernameFromJson(String username) throws Exception {
+        JSONParser jsonParser = new JSONParser();
+
+        JSONArray apifyData = (JSONArray) jsonParser.parse(
+                new FileReader("/Users/lennartmac/Downloads/follower_count.json"));
+
+        for(Object apifyDataElement : apifyData) {
+            JSONObject followersJson = (JSONObject) apifyDataElement;
+            String jsonUsername = (String) followersJson.get("userName");
+
+            if(jsonUsername != null && jsonUsername.equals(username)) {
+                Long followersCountLong = (Long) followersJson.get("followersCount");
+                return Math.toIntExact(followersCountLong);
+            }
+        }
+
+        return -1;
     }
 
     private void initializeDbConnection() throws Exception {

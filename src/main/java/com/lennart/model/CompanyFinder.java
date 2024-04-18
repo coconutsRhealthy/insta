@@ -19,7 +19,7 @@ public class CompanyFinder {
         //List<String> companiesForDate = new CompanyFinder().getCompaniesForDate("2024-04-05");
         //companyFinder.printBranchDistribution(companiesForDate);
 
-        new CompanyFinder().testMethod();
+        new CompanyFinder().getCodesForCompany("aybl", "2019-01-01");
     }
 
     private void testMethod() throws Exception {
@@ -173,7 +173,7 @@ public class CompanyFinder {
     private static Map<String, String> initializeCompanyToBranchMap() {
         Map<String, String> companyToBranchMap = new HashMap<>();
 
-        companyToBranchMap.put("shein", "fashion");
+        companyToBranchMap.put("shein", "sheinfashion");
         companyToBranchMap.put("ginatricot", "fashion");
         companyToBranchMap.put("gutsgusto", "fashion");
         companyToBranchMap.put("burga", "accessoires");
