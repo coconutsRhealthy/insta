@@ -1,10 +1,5 @@
 package com.lennart.model;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
-import java.io.FileReader;
 import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -23,7 +18,7 @@ public class InstaAccountFinder {
         //for(int i = 0; i < 10; i++) {
             InstaAccountFinder instaAccountFinder = new InstaAccountFinder();
 
-            List<String> list1 = instaAccountFinder.fillInfluListTest();
+            //List<String> list1 = instaAccountFinder.fillInfluListTest();
 //            List<String> list2 = instaAccountFinder.fillInfluListTest();
 //
 //            list1.retainAll(list2);
@@ -33,6 +28,8 @@ public class InstaAccountFinder {
         //new InstaAccountFinder().fillInfluListTest();
 
         //new InstaAccountFinder().initializeInfluencerDb();
+
+        instaAccountFinder.getDutchInfluencers();
     }
 
     private List<String> fillInfluListTest() throws Exception {
@@ -171,7 +168,7 @@ public class InstaAccountFinder {
         return influencersToUse;
     }
 
-    private List<String> getInfluencers(String startDate, String endDate) throws Exception {
+    public List<String> getInfluencers(String startDate, String endDate) throws Exception {
         initializeDbConnection();
 
         Statement st = con.createStatement();
@@ -182,6 +179,11 @@ public class InstaAccountFinder {
         while(rs.next()) {
             influencersSet.add(rs.getString("influencer"));
         }
+
+        rs.close();
+        st.close();
+
+        closeDbConnection();
 
         List<String> influencers = influencersSet.stream().sorted().collect(Collectors.toList());
         return influencers;
@@ -309,52 +311,55 @@ public class InstaAccountFinder {
                 .collect(Collectors.toList());
     }
 
-    private void initializeInfluencerDb() throws Exception {
-        List<String> influencers = getInfluencers("2019-01-01", "2025-12-31");
+    private Map<String, Integer> getAllInfluencersFromCountry(String country) throws Exception {
+        Map<String, Integer> influencersFromCountry = new HashMap<>();
 
         initializeDbConnection();
 
-        int counter = 0;
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM influencers WHERE country LIKE '%" + country + "%';");
 
-        for(String influencer : influencers) {
-            int followers = getFollowersForUsernameFromJson(influencer);
-
-            if(followers != -1) {
-                Statement st = con.createStatement();
-
-                st.executeUpdate("INSERT INTO influencers (" +
-                        "name, " +
-                        "followers) " +
-                        "VALUES ('" +
-                        influencer + "', '" +
-                        followers + "'" +
-                        ")");
-                st.close();
-            }
-
-            System.out.println(counter++);
+        while(rs.next()) {
+            influencersFromCountry.put(rs.getString("name"), rs.getInt("followers"));
         }
+
+        rs.close();
+        st.close();
 
         closeDbConnection();
+
+        influencersFromCountry = influencersFromCountry.entrySet()
+                .stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new));
+
+        return influencersFromCountry;
     }
 
-    private int getFollowersForUsernameFromJson(String username) throws Exception {
-        JSONParser jsonParser = new JSONParser();
+    private void getDutchInfluencers() throws Exception {
+        Map<String, Integer> allDutchInfluencers = getAllInfluencersFromCountry("Netherlands");
+        List<String> allInfluencers2024 = getInfluencers("2024-01-01", "2024-12-31");
 
-        JSONArray apifyData = (JSONArray) jsonParser.parse(
-                new FileReader("/Users/lennartmac/Downloads/follower_count.json"));
+        Map<String, Integer> recentDutchInfluencers = allDutchInfluencers.entrySet().stream()
+                .filter(entry -> allInfluencers2024.contains(entry.getKey()))
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue, // in case of duplicate keys, keep the old key
+                        LinkedHashMap::new));
 
-        for(Object apifyDataElement : apifyData) {
-            JSONObject followersJson = (JSONObject) apifyDataElement;
-            String jsonUsername = (String) followersJson.get("userName");
+        List<String> dutchInfluencers = new ArrayList<>(recentDutchInfluencers.keySet());
 
-            if(jsonUsername != null && jsonUsername.equals(username)) {
-                Long followersCountLong = (Long) followersJson.get("followersCount");
-                return Math.toIntExact(followersCountLong);
-            }
+        List<String> cleanedList = removeNotToBeUsedInfluencers(dutchInfluencers);
+
+        for(int i = 1; i < 370; i++) {
+            System.out.println("\"https://www.instagram.com/" + cleanedList.get(i) + "\",");
         }
-
-        return -1;
     }
 
     private void initializeDbConnection() throws Exception {
