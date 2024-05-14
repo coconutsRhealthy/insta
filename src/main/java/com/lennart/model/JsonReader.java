@@ -136,8 +136,8 @@ public class JsonReader {
     }
 
 
-    //  zzz nakdfashion / benakd / nakd
-    //  zzz loavies / girlsgoneloavies / loaviesdiscount
+    //  nakdfashion / benakd / nakd
+    //  loavies / girlsgoneloavies / loaviesdiscount
     //  zzz sheinpartner
     //  zzz veromoda / veromodawomen
     //  zzz icaniwill / iciw
@@ -150,41 +150,45 @@ public class JsonReader {
     //  zzz airup
     //  zzz bjornborg
     //  zzz myproteinnl
-    //  zzz wearglas
+    //  zzz glas.eyewear
         //desenio
         //idealofsweden
-        //hunkemoller
+        //zzz hunkemoller
 
         //zzz myburga / burga
         //zzz gymshark
         //zzz snuggs
-        //madlady
+        //zzz madlady
         //zzz ginatricot
         //zzz otrium / otriumcreators
         //zzz heyestrid
-        //pinkgellac
-        //nanabeebi
+        //zzz pinkgellac
+        //zzz mimmti.official
         //zzz geurwolkje
         //zzz farfetch
         //vitakruid
         //zzz body&fit
         //zzz kaptenandson
         //zzz stevemaddeneu
-        //zzz emmasleep
+        //emmasleep
         //zzz hellofresh
         //zzz zonnebrillencom
         //zzz voltairesneakers
         //zzz only.nederland
         //edikted
         //swybrand
-        //zzz prozis
+        //prozis
         //zzz sellpy
         //zzz esncom
         //zzz aybl
+        //zzz albelli_nl
+        //zzz lyko_nl
+        //zzz maniacnails.official
 
 
     public static void main(String[] args) throws Exception {
         new JsonReader().overallMethod();
+        //new JsonReader().openaiShizzle();
     }
 
     private void overallMethod() throws Exception {
@@ -194,6 +198,7 @@ public class JsonReader {
 
         for(String hashtag : hashTagsForBand) {
             jsonArray.addAll(getLatestPostsForHashtag(hashtag));
+            jsonArray.addAll(getCompanyTaggedPostsForHashtag(hashtag));
         }
 
         JSONArray sortedJsonArray = sort(jsonArray);
@@ -246,22 +251,26 @@ public class JsonReader {
                 String date1 = (String) a.get("timestamp");
                 String date2 = (String) b.get("timestamp");
 
-                date1 = date1.replace("T", " ");
-                date2 = date2.replace("T", " ");
+                if(date1 != null && date2 != null) {
+                    date1 = date1.replace("T", " ");
+                    date2 = date2.replace("T", " ");
 
-                date1 = date1.replace(".000", " ");
-                date2 = date2.replace(".000", " ");
+                    date1 = date1.replace(".000", " ");
+                    date2 = date2.replace(".000", " ");
 
-                ZonedDateTime zonedDateTime1 = ZonedDateTime.parse(date1, formatter);
-                ZonedDateTime zonedDateTime2 = ZonedDateTime.parse(date2, formatter);
-                //ZonedDateTime eije = ZonedDateTime.parse("2022-12-20 09:12:23 Z", formatter);
+                    ZonedDateTime zonedDateTime1 = ZonedDateTime.parse(date1, formatter);
+                    ZonedDateTime zonedDateTime2 = ZonedDateTime.parse(date2, formatter);
 
-                if(zonedDateTime1.isBefore(zonedDateTime2)) {
-                    return 1;
-                } else if(zonedDateTime1.equals(zonedDateTime2)) {
-                    return 0;
+                    if(zonedDateTime1.isBefore(zonedDateTime2)) {
+                        return 1;
+                    } else if(zonedDateTime1.equals(zonedDateTime2)) {
+                        return 0;
+                    } else {
+                        return -1;
+                    }
                 } else {
-                    return -1;
+                    System.out.println("No timestamp for post available!");
+                    return 0;
                 }
             }
         });
@@ -278,7 +287,7 @@ public class JsonReader {
         JSONParser jsonParser = new JSONParser();
 
         JSONArray apifyData = (JSONArray) jsonParser.parse(
-                new FileReader("/Users/LennartMac/Documents/Projects/insta/src/main/resources/static/apify/8dec.json"));
+                new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/13mei.json"));
 
         for(Object apifyDataElement : apifyData) {
             JSONObject hashtagJson = (JSONObject) apifyDataElement;
@@ -291,7 +300,11 @@ public class JsonReader {
             }
         }
 
-        return null;
+        return new JSONArray();
+    }
+
+    private JSONArray getCompanyTaggedPostsForHashtag(String hashtag) throws Exception {
+        return JsonReaderTagged.getTaggedPostsForCompany(hashtag, "/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/13mei_tagged.json");
     }
 
     private void printData(JSONArray latestPostsForBrand) {
@@ -328,6 +341,8 @@ public class JsonReader {
                 StringUtils.containsIgnoreCase(caption, "discount") ||
                 StringUtils.containsIgnoreCase(caption, "% off") ||
                 StringUtils.containsIgnoreCase(caption, "%off") ||
+                StringUtils.containsIgnoreCase(caption, "% of") ||
+                StringUtils.containsIgnoreCase(caption, "%of") ||
                 StringUtils.containsIgnoreCase(caption, "my code") ||
                 StringUtils.containsIgnoreCase(caption, "mijn code") ||
                 StringUtils.containsIgnoreCase(caption, "de code") ||

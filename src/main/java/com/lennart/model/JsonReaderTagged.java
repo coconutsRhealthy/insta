@@ -13,14 +13,14 @@ import java.io.FileReader;
 public class JsonReaderTagged {
 
     public static void main(String[] args) throws Exception {
-        new JsonReaderTagged().checkUserTaggedPostsForDiscountCodes("ginatricot");
+        new JsonReaderTagged().checkUserTaggedPostsForDiscountCodes("fashiontiger");
     }
 
     private void checkUserTaggedPostsForDiscountCodes(String company) throws Exception {
         JSONParser jsonParser = new JSONParser();
 
         JSONArray apifyData = (JSONArray) jsonParser.parse(
-                new FileReader("/Users/LennartMac/Documents/Projects/insta/src/main/resources/static/apify/ginatricot_6mrt.json"));
+                new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/fashiontiger_13mei.json"));
 
         int counter = 1;
 
@@ -60,6 +60,8 @@ public class JsonReaderTagged {
                 StringUtils.containsIgnoreCase(caption, "discount") ||
                 StringUtils.containsIgnoreCase(caption, "% off") ||
                 StringUtils.containsIgnoreCase(caption, "%off") ||
+                StringUtils.containsIgnoreCase(caption, "% of") ||
+                StringUtils.containsIgnoreCase(caption, "%of") ||
                 StringUtils.containsIgnoreCase(caption, "my code") ||
                 StringUtils.containsIgnoreCase(caption, "mijn code") ||
                 StringUtils.containsIgnoreCase(caption, "de code") ||
@@ -96,5 +98,29 @@ public class JsonReaderTagged {
             default:
                 return false;
         }
+    }
+
+    public static JSONArray getTaggedPostsForCompany(String company, String jsonPath) throws Exception {
+        JSONParser jsonParser = new JSONParser();
+        JSONArray apifyData = (JSONArray) jsonParser.parse(new FileReader(jsonPath));
+        JSONArray taggedPostsForCompany = new JSONArray();
+
+        for(Object apifyDataElement : apifyData) {
+            JSONObject taggedUserJson = (JSONObject) apifyDataElement;
+            String inputUrl = (String) taggedUserJson.get("inputUrl");
+
+            if(inputUrl != null) {
+                String taggedCompany = inputUrl.substring(inputUrl.lastIndexOf('/') + 1);
+
+                if(taggedCompany.contains(company) || company.contains(taggedCompany)) {
+                    String originalCaption = (String) taggedUserJson.get("caption");
+                    String alteredCaption = "** TAGGED USER JSON **\n" + originalCaption;
+                    taggedUserJson.put("caption", alteredCaption);
+                    taggedPostsForCompany.add(taggedUserJson);
+                }
+            }
+        }
+
+        return taggedPostsForCompany;
     }
 }
