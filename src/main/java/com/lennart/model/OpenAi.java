@@ -5,14 +5,9 @@ import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsgSystem;
 import io.github.sashirestela.openai.domain.chat.message.ChatMsgUser;
 
-import java.io.IOException;
 import java.util.List;
 
 public class OpenAi {
-
-    public static void main(String[] args) throws IOException {
-        new OpenAi().testmethode();
-    }
 
     public String identifyInstaProfileCountry(String chatmessage) {
         var openai = SimpleOpenAI.builder()
@@ -61,7 +56,7 @@ public class OpenAi {
         return chatResponse.firstContent();
     }
 
-    private void testmethode() {
+    public String isTiktokProfileDutch(String chatmessage) {
         var openai = SimpleOpenAI.builder()
                 .apiKey("secret")
                 .build();
@@ -69,23 +64,17 @@ public class OpenAi {
         var chatRequest = ChatRequest.builder()
                 .model("gpt-3.5-turbo-1106")
                 .messages(List.of(
-                        new ChatMsgSystem("You should identify from which country an instagram account most likely is, " +
-                         "given its recent captions, its recenty used hashtags, its recent location tags and its bio"),
-                        new ChatMsgUser(
-                                "Recent captions: " +
-                                "1) Het is hier prachtig! 2) Wat een leuk feestje 3) Omg I love it here" +
-                                "Recent  hashtags: " +
-                                "1) almere 2) shoptillyoudrop 3) gottalovefridays" +
-                                "Recent locations: " +
-                                "1) Almere, The Netherlands 2) London, United Kingdom 3) Gent, Belgium" +
-                                "Bio: " +
-                                "Gen Z dutchie loving life and shopping!"
-                        )))
+                        new ChatMsgSystem("You will receive information of a Tiktok account, namely the username, bio " +
+                                "and one or a few captions. Based on this you should try to establish where the Tiktok " +
+                                "account is from. Please answer just with the name of the most likely country, with " +
+                                "the abbreviation of the country behind it (so Netherlands should be 'Netherlands, NL', " +
+                                "Mexico 'Mexico, MX' etc). Nothing more."),
+                        new ChatMsgUser(chatmessage)))
                 .temperature(0.0)
                 .maxTokens(300)
                 .build();
         var futureChat = openai.chatCompletions().create(chatRequest);
         var chatResponse = futureChat.join();
-        System.out.println(chatResponse.firstContent());
+        return chatResponse.firstContent();
     }
 }
