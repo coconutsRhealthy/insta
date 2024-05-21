@@ -13,7 +13,38 @@ public class InfluencerPersister {
     private Connection con;
 
     public static void main(String[] args) throws Exception {
-        new InfluencerPersister().getAndPrintAllInfluencersFromDb();
+        new InfluencerPersister().addNewInfluencersToDb("2024-04-20");
+    }
+
+    private void addNewInfluencersToDb(String fromDate) throws Exception {
+        List<String> influencers = new InstaAccountFinder().getInfluencers(fromDate, "2025-12-31");
+
+        initializeDbConnection();
+
+        for(String newInfluencer : influencers) {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM influencers where name = '" + newInfluencer + "';");
+            int initialFollowers = -1;
+            String emptyCountryString = "";
+
+            if(!rs.next()) {
+                st.executeUpdate("INSERT INTO influencers (" +
+                        "name, " +
+                        "followers, " +
+                        "country) " +
+                        "VALUES ('" +
+                        newInfluencer + "', '" +
+                        initialFollowers + "', '" +
+                        emptyCountryString + "'" +
+                        ")");
+                st.close();
+            }
+
+            rs.close();
+            st.close();
+        }
+
+        closeDbConnection();
     }
 
     private void initializeInfluencerDb() throws Exception {
@@ -115,6 +146,28 @@ public class InfluencerPersister {
 
         st.close();
 
+        closeDbConnection();
+    }
+
+    public void addTiktokUserToDb(String username, int followers, String country) throws Exception {
+        initializeDbConnection();
+        Statement st = con.createStatement();
+
+        ResultSet rs = st.executeQuery("SELECT * FROM tiktok_influencers where name = '" + username + "';");
+
+        if(!rs.next()) {
+            st.executeUpdate("INSERT INTO tiktok_influencers (" +
+                    "name, " +
+                    "followers, " +
+                    "country) " +
+                    "VALUES ('" +
+                    username + "', '" +
+                    followers + "', '" +
+                    country + "'" +
+                    ")");
+        }
+
+        st.close();
         closeDbConnection();
     }
 

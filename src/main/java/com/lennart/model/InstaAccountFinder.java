@@ -9,162 +9,57 @@ public class InstaAccountFinder {
     private Connection con;
 
     public static void main(String[] args) throws Exception {
-        //List<String> influencersForApify = new InstaAccountFinder().getInfluencersForApify();
-
-        //for(String influencer : influencersForApify) {
-        //    System.out.println("\"https://www.instagram.com/" + influencer + "\",");
-        //}
-
-        //for(int i = 0; i < 10; i++) {
-            InstaAccountFinder instaAccountFinder = new InstaAccountFinder();
-
-            //List<String> list1 = instaAccountFinder.fillInfluListTest();
-//            List<String> list2 = instaAccountFinder.fillInfluListTest();
-//
-//            list1.retainAll(list2);
-//            System.out.println(list1.size());
-        //}
-
-        //new InstaAccountFinder().fillInfluListTest();
-
-        //new InstaAccountFinder().initializeInfluencerDb();
-
-        instaAccountFinder.getDutchInfluencers();
+        InstaAccountFinder instaAccountFinder = new InstaAccountFinder();
+        instaAccountFinder.printInfluList();
     }
 
-    private List<String> fillInfluListTest() throws Exception {
-        List<String> influencersLast3Days = getInfluencers("2024-04-10", "2024-12-31");
+    private void printInfluList() throws Exception {
+        Map<String, Integer> influList = fillInfluList();
 
-        List<String> sectors = Arrays.asList("accessoires", "cosmetics", "fashion", "food", "homedecoration",
-                "jewellery", "lingerie", "other", "sport");
+        influList.keySet().stream()
+            .map(account -> "\"https://www.instagram.com/" + account + "\",\n")
+            .forEach(System.out::print);
+    }
 
-        Map<String, List<String>> influencersPerSector = sectors.stream()
-                .collect(Collectors.toMap(sector -> sector, sector -> getInfluencersForSector(sector, "2024-01-01")));
+    private Map<String, Integer> fillInfluList() throws Exception {
+        Map<String, Integer> influencersToUse = new LinkedHashMap<>();
+        Map<String, Integer> recentDutchInfluencers = getRecentInfluencersFromCountry("Netherlands");
+        List<String> influencersToBeRemoved = getInfluencersToBeRemoved();
+        influencersToBeRemoved.forEach(recentDutchInfluencers.keySet()::remove);
 
-        for (List<String> influencerList : influencersPerSector.values()) {
-            influencerList.removeAll(influencersLast3Days);
+        int counter = 0;
+
+        for(Map.Entry<String, Integer> entry : recentDutchInfluencers.entrySet()) {
+            counter++;
+
+            if(counter <= 295) {
+                influencersToUse.put(entry.getKey(), entry.getValue());
+            } else {
+                break;
+            }
         }
 
-        Collections.shuffle(sectors);
-
-        List<String> influencersToUse = new ArrayList<>();
-
-        for(String sector : sectors) {
-            List<String> influencersForSector = influencersPerSector.get(sector);
-            Collections.shuffle(influencersForSector);
-            List<String> selectedInfluencersForSector = influencersForSector.stream()
-                    .filter(influencer -> !influencersToUse.contains(influencer))
-                    .limit(getMaxNumberOfInfluencersForSector(sector))
-                    .collect(Collectors.toList());
-            influencersToUse.addAll(selectedInfluencersForSector);
-        }
-
-        List<String> influencers2024 = getInfluencers("2024-01-01", "2024-12-31");
-
-        List<String> eligibleInfluencers = influencers2024.stream()
-                .filter(i -> !influencersLast3Days.contains(i))
+        recentDutchInfluencers.keySet().removeAll(influencersToUse.keySet());
+        Random random = new Random();
+        List<String> stillEligibleKeys = recentDutchInfluencers.entrySet().stream()
+                .filter(entry -> entry.getValue() >= 1000)
+                .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
-        eligibleInfluencers = removeNotToBeUsedInfluencers(eligibleInfluencers);
-
-        List<String> influencersWithUnknownBranch = eligibleInfluencers.stream()
-                .filter(influencer -> influencersPerSector.values().stream()
-                        .flatMap(List::stream)
-                        .noneMatch(influencer::equals))
-                .collect(Collectors.toList());
-
-        influencersWithUnknownBranch = removeNotToBeUsedInfluencers(influencersWithUnknownBranch);
-        Collections.shuffle(influencersWithUnknownBranch);
-
-        int targetSize = 369;
-
-        for (String influencer : influencersWithUnknownBranch) {
-            if (influencersToUse.size() >= targetSize) {
+        while(influencersToUse.size() < 369) {
+            if(stillEligibleKeys.isEmpty()) {
+                System.out.println("Not enough eligible entries in stillEligibleKeys");
                 break;
             }
-
-            if (!influencersToUse.contains(influencer)) {
-                influencersToUse.add(influencer);
-            }
+            String randomKey = stillEligibleKeys.remove(random.nextInt(stillEligibleKeys.size()));
+            influencersToUse.put(randomKey, recentDutchInfluencers.get(randomKey));
         }
 
-        Collections.sort(influencersToUse);
+        influencersToUse = influencersToUse.entrySet().stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
 
-        influencersToUse.stream()
-                .map(account -> "\"https://www.instagram.com/" + account + "\",\n")
-                .forEach(System.out::print);
-
-        return influencersToUse;
-    }
-
-    private long getMaxNumberOfInfluencersForSector(String sector) {
-        long maxNumber = 0L;
-
-        switch (sector) {
-            case "accessoires":
-                maxNumber = 60L;
-                break;
-            case "cosmetics":
-                maxNumber = 40L;
-                break;
-            case "fashion":
-                maxNumber = 100L;
-                break;
-            case "food":
-                maxNumber = 30L;
-                break;
-            case "homedecoration":
-                maxNumber = 40L;
-                break;
-            case "jewellery":
-                maxNumber = 15L;
-                break;
-            case "lingerie":
-                maxNumber = 15L;
-                break;
-            case "other":
-                maxNumber = 30L;
-                break;
-            case "sport":
-                maxNumber = 10L;
-                break;
-        }
-
-        return maxNumber;
-    }
-
-    private List<String> getInfluencersForApify() throws Exception {
-        List<String> premiumInfluencers = getInfluencers(
-                Arrays.asList("nakdfashion", "gutsgusto", "burga", "sellpy", "bjornborg", "stronger",
-                        "geurwolkje", "leolive", "hellofresh.nl", "emmasleepnl", "ginatricot", "loavies", "esuals.nl",
-                        "maniacnails", "begoldennl", "zonnebrillen.com", "bodyandfit.com", "gymshark", "aybl", "snuggs",
-                        "myproteinnl", "shein", "albelli", "terstal", "photowall_sweden", "loungeunderwear", "stevemaddeneu"),
-                "2023-04-01",
-                2
-        );
-
-        List<String> recentInfluencers = getInfluencers(
-                Arrays.asList("nakdfashion", "gutsgusto", "burga", "sellpy", "bjornborg", "stronger",
-                        "geurwolkje", "leolive", "hellofresh.nl", "emmasleepnl", "ginatricot", "loavies", "snuggs"),
-                "2024-02-01",
-                1
-        );
-
-        Collections.shuffle(recentInfluencers);
-
-        List<String> influencersToUse = new ArrayList<>(premiumInfluencers);
-
-        for(String recentInfluencer : recentInfluencers) {
-            if(influencersToUse.size() == 369) {
-                break;
-            }
-
-            if(!influencersToUse.contains(recentInfluencer)) {
-                influencersToUse.add(recentInfluencer);
-            }
-        }
-
-        Collections.sort(influencersToUse);
         return influencersToUse;
     }
 
@@ -189,27 +84,16 @@ public class InstaAccountFinder {
         return influencers;
     }
 
-    private List<String> getInfluencers(List<String> brands, String dateLimit, int minimumPresenceInLists) throws Exception {
-        List<List<String>> companyInfluencersLists = new ArrayList<>();
-
-        for(String company : brands) {
-            companyInfluencersLists.add(getInfluencersForBrand(company, dateLimit));
-        }
-
-        List<String> selectedInfluencers = getInfluencersPresentInMultipleLists(companyInfluencersLists, minimumPresenceInLists);
-        return selectedInfluencers;
-    }
-
-    private List<String> getInfluencersForBrand(String brand, String dateLimit) throws Exception {
-        Set<String> influencersSet = new HashSet<>();
+    private Map<String, Integer> getAllInfluencersFromCountry(String country) throws Exception {
+        Map<String, Integer> influencersFromCountry = new HashMap<>();
 
         initializeDbConnection();
 
         Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM discounts WHERE company = '" + brand + "' AND date >= '" + dateLimit + "';");
+        ResultSet rs = st.executeQuery("SELECT * FROM influencers WHERE country LIKE '%" + country + "%';");
 
         while(rs.next()) {
-            influencersSet.add(rs.getString("influencer"));
+            influencersFromCountry.put(rs.getString("name"), rs.getInt("followers"));
         }
 
         rs.close();
@@ -217,51 +101,36 @@ public class InstaAccountFinder {
 
         closeDbConnection();
 
-        List<String> influencers = new ArrayList<>(influencersSet);
-        Collections.sort(influencers);
-        return influencers;
+        influencersFromCountry = influencersFromCountry.entrySet()
+                .stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new));
+
+        return influencersFromCountry;
     }
 
-    private List<String> getInfluencersForSector(String sector, String dateLimit) {
-        try {
-            List<String> companiesWithinSector = CompanyFinder.getCompaniesForBranch(sector);
+    private Map<String, Integer> getRecentInfluencersFromCountry(String country) throws Exception {
+        Map<String, Integer> allInfluencersFromCountry = getAllInfluencersFromCountry(country);
+        List<String> allInfluencers2024 = getInfluencers("2024-01-01", "2024-12-31");
 
-            initializeDbConnection();
+        Map<String, Integer> recentDutchInfluencers = allInfluencersFromCountry.entrySet().stream()
+                .filter(entry -> allInfluencers2024.contains(entry.getKey()))
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue,
+                        LinkedHashMap::new));
 
-            Statement st = con.createStatement();
-
-            String companiesCondition = companiesWithinSector.stream()
-                    .map(company -> "company = '" + company + "'")
-                    .collect(Collectors.joining(" OR ", "(", ")"));
-
-            String query = "SELECT * FROM discounts WHERE " + companiesCondition + " AND date >= '" + dateLimit + "';";
-
-            ResultSet rs = st.executeQuery(query);
-
-            Set<String> influencersForSectorAsSet = new HashSet<>();
-
-            while(rs.next()) {
-                influencersForSectorAsSet.add(rs.getString("influencer"));
-            }
-
-            rs.close();
-            st.close();
-
-            closeDbConnection();
-
-            List<String> influencersForSector = influencersForSectorAsSet.stream().sorted().collect(Collectors.toList());
-            influencersForSector = removeNotToBeUsedInfluencers(influencersForSector);
-            return influencersForSector;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+        return recentDutchInfluencers;
     }
 
-    private List<String> removeNotToBeUsedInfluencers(List<String> currentInfluList) {
-        List<String> cleanedInfluList = new ArrayList<>(currentInfluList);
-
-        List<String> usernamesToBeRemoved = Arrays.asList(
+    private List<String> getInfluencersToBeRemoved() {
+        return Arrays.asList(
                 "janedoe",
                 "wgk",
                 "kleinpepertje",
@@ -294,72 +163,6 @@ public class InstaAccountFinder {
                 "herrvonsmit",
                 "korting.code"
         );
-
-        cleanedInfluList.removeAll(usernamesToBeRemoved);
-
-        return cleanedInfluList;
-    }
-
-    public List<String> getInfluencersPresentInMultipleLists(List<List<String>> companyInfluencersLists, int minimumPresenceInLists) {
-        return companyInfluencersLists.stream()
-                .flatMap(List::stream)
-                .collect(Collectors.groupingBy(e -> e, Collectors.counting()))
-                .entrySet().stream()
-                .filter(entry -> entry.getValue() >= minimumPresenceInLists)
-                .map(Map.Entry::getKey)
-                .sorted()
-                .collect(Collectors.toList());
-    }
-
-    private Map<String, Integer> getAllInfluencersFromCountry(String country) throws Exception {
-        Map<String, Integer> influencersFromCountry = new HashMap<>();
-
-        initializeDbConnection();
-
-        Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM influencers WHERE country LIKE '%" + country + "%';");
-
-        while(rs.next()) {
-            influencersFromCountry.put(rs.getString("name"), rs.getInt("followers"));
-        }
-
-        rs.close();
-        st.close();
-
-        closeDbConnection();
-
-        influencersFromCountry = influencersFromCountry.entrySet()
-                .stream()
-                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (e1, e2) -> e1,
-                        LinkedHashMap::new));
-
-        return influencersFromCountry;
-    }
-
-    private void getDutchInfluencers() throws Exception {
-        Map<String, Integer> allDutchInfluencers = getAllInfluencersFromCountry("Netherlands");
-        List<String> allInfluencers2024 = getInfluencers("2024-01-01", "2024-12-31");
-
-        Map<String, Integer> recentDutchInfluencers = allDutchInfluencers.entrySet().stream()
-                .filter(entry -> allInfluencers2024.contains(entry.getKey()))
-                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (oldValue, newValue) -> oldValue, // in case of duplicate keys, keep the old key
-                        LinkedHashMap::new));
-
-        List<String> dutchInfluencers = new ArrayList<>(recentDutchInfluencers.keySet());
-
-        List<String> cleanedList = removeNotToBeUsedInfluencers(dutchInfluencers);
-
-        for(int i = 1; i < 370; i++) {
-            System.out.println("\"https://www.instagram.com/" + cleanedList.get(i) + "\",");
-        }
     }
 
     private void initializeDbConnection() throws Exception {
