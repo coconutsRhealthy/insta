@@ -13,17 +13,17 @@ public class InfluencerPersister {
     private Connection con;
 
     public static void main(String[] args) throws Exception {
-        new InfluencerPersister().addNewInfluencersToDb("2024-04-20");
+        new InfluencerPersister().addNewInfluencersToDb("2024-06-09");
     }
 
     private void addNewInfluencersToDb(String fromDate) throws Exception {
-        List<String> influencers = new InstaAccountFinder().getInfluencers(fromDate, "2025-12-31");
+        List<String> instaInfluencers = new InstaAccountFinder().getInfluencers(fromDate, "2025-12-31");
 
         initializeDbConnection();
 
-        for(String newInfluencer : influencers) {
+        for(String newInstaInfluencer : instaInfluencers) {
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM influencers where name = '" + newInfluencer + "';");
+            ResultSet rs = st.executeQuery("SELECT * FROM influencers where name = '" + newInstaInfluencer + "';");
             int initialFollowers = -1;
             String emptyCountryString = "";
 
@@ -33,7 +33,7 @@ public class InfluencerPersister {
                         "followers, " +
                         "country) " +
                         "VALUES ('" +
-                        newInfluencer + "', '" +
+                        newInstaInfluencer + "', '" +
                         initialFollowers + "', '" +
                         emptyCountryString + "'" +
                         ")");

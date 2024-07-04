@@ -13,14 +13,14 @@ import java.io.FileReader;
 public class JsonReaderTagged {
 
     public static void main(String[] args) throws Exception {
-        new JsonReaderTagged().checkUserTaggedPostsForDiscountCodes("fashiontiger");
+        new JsonReaderTagged().checkUserTaggedPostsForDiscountCodes("loavies");
     }
 
     private void checkUserTaggedPostsForDiscountCodes(String company) throws Exception {
         JSONParser jsonParser = new JSONParser();
 
         JSONArray apifyData = (JSONArray) jsonParser.parse(
-                new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/fashiontiger_13mei.json"));
+                new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/specific_tagged/loavies_1jul.json"));
 
         int counter = 1;
 
@@ -107,17 +107,22 @@ public class JsonReaderTagged {
 
         for(Object apifyDataElement : apifyData) {
             JSONObject taggedUserJson = (JSONObject) apifyDataElement;
-            String inputUrl = (String) taggedUserJson.get("inputUrl");
 
-            if(inputUrl != null) {
-                String taggedCompany = inputUrl.substring(inputUrl.lastIndexOf('/') + 1);
+            if(taggedUserJson.get("error") == null) {
+                String inputUrl = (String) taggedUserJson.get("inputUrl");
 
-                if(taggedCompany.contains(company) || company.contains(taggedCompany)) {
-                    String originalCaption = (String) taggedUserJson.get("caption");
-                    String alteredCaption = "** TAGGED USER JSON **\n" + originalCaption;
-                    taggedUserJson.put("caption", alteredCaption);
-                    taggedPostsForCompany.add(taggedUserJson);
+                if(inputUrl != null) {
+                    String taggedCompany = inputUrl.substring(inputUrl.lastIndexOf('/') + 1);
+
+                    if(taggedCompany.contains(company) || company.contains(taggedCompany)) {
+                        String originalCaption = (String) taggedUserJson.get("caption");
+                        String alteredCaption = "** TAGGED USER JSON **\n" + originalCaption;
+                        taggedUserJson.put("caption", alteredCaption);
+                        taggedPostsForCompany.add(taggedUserJson);
+                    }
                 }
+            } else {
+                System.out.println("Error in tagged Json! Json object ignored");
             }
         }
 

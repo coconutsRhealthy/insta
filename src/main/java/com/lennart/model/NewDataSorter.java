@@ -60,7 +60,7 @@ public class NewDataSorter {
     private void testMethode() {
         List<List<String>> dataDirective = readDataFromDataDirective("/Users/lennartmac/Documents/Projects/diski/src/app/data/data.directive.ts");
         List<List<String>> archiveDataDirective = readDataFromDataDirective("/Users/lennartmac/Documents/Projects/diski/src/app/data/archivedata.directive.ts");
-        List<List<String>> archive = readDataFromArchive("/Users/lennartmac/Documents/Projects/diski/src/app/data/archive2.txt");
+        List<List<String>> archive = readDataFromArchive("/Users/lennartmac/Documents/Projects/diski/src/app/data/archive3.txt");
 
         List<List<String>> dataDirectiveCompaniesOnly = retainOnlyCompanyInDataLines(dataDirective);
         List<List<String>> archiveDataDirectiveCompaniesOnly = retainOnlyCompanyInDataLines(archiveDataDirective);

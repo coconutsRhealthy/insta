@@ -19,7 +19,9 @@ public class CompanyFinder {
         //List<String> companiesForDate = new CompanyFinder().getCompaniesForDate("2024-04-05");
         //companyFinder.printBranchDistribution(companiesForDate);
 
-        new CompanyFinder().getCodesForCompany("aybl", "2019-01-01");
+        //new CompanyFinder().getCodesForCompany("aybl", "2023-06-01");
+        //new CompanyFinder().getCompanyFrequencyMap("2023-06-01");
+        new CompanyFinder().getCompanyFrequencyMap("2024-01-01");
     }
 
     private void testMethod() throws Exception {

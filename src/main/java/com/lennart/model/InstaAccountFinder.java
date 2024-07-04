@@ -72,7 +72,11 @@ public class InstaAccountFinder {
         Set<String> influencersSet = new HashSet<>();
 
         while(rs.next()) {
-            influencersSet.add(rs.getString("influencer"));
+            String influencer = rs.getString("influencer");
+
+            if(!influencer.contains("_tiktok")) {
+                influencersSet.add(rs.getString("influencer"));
+            }
         }
 
         rs.close();

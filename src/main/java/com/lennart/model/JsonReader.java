@@ -136,8 +136,8 @@ public class JsonReader {
     }
 
 
-    //  nakdfashion / benakd / nakd
-    //  loavies / girlsgoneloavies / loaviesdiscount
+    //  zzz nakdfashion / benakd / nakd
+    //  zzz loavies / girlsgoneloavies / loaviesdiscount
     //  zzz sheinpartner
     //  zzz veromoda / veromodawomen
     //  zzz icaniwill / iciw
@@ -166,11 +166,11 @@ public class JsonReader {
         //zzz mimmti.official
         //zzz geurwolkje
         //zzz farfetch
-        //vitakruid
+        //zzz vitakruid
         //zzz body&fit
         //zzz kaptenandson
         //zzz stevemaddeneu
-        //emmasleep
+        //zzz emmasleep
         //zzz hellofresh
         //zzz zonnebrillencom
         //zzz voltairesneakers
@@ -287,7 +287,7 @@ public class JsonReader {
         JSONParser jsonParser = new JSONParser();
 
         JSONArray apifyData = (JSONArray) jsonParser.parse(
-                new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/13mei.json"));
+                new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/companies/3jul.json"));
 
         for(Object apifyDataElement : apifyData) {
             JSONObject hashtagJson = (JSONObject) apifyDataElement;
@@ -304,7 +304,7 @@ public class JsonReader {
     }
 
     private JSONArray getCompanyTaggedPostsForHashtag(String hashtag) throws Exception {
-        return JsonReaderTagged.getTaggedPostsForCompany(hashtag, "/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/13mei_tagged.json");
+        return JsonReaderTagged.getTaggedPostsForCompany(hashtag, "/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/companies/3jul_tagged.json");
     }
 
     private void printData(JSONArray latestPostsForBrand) {

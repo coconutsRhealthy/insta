@@ -10,33 +10,39 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class TikTokProfileFinder {
 
+    private Connection con;
+
     public static void main(String[] args) throws Exception {
-        new TikTokProfileFinder().askOpenAiWhichCountry();
+        new TikTokProfileFinder().testGetRecentDiscountPostsTiktok();
     }
 
     private void testGetRecentDiscountPostsTiktok() throws Exception {
-        Map<String, Integer> tiktokUsers = new HashMap<>();
-
         JSONParser jsonParser = new JSONParser();
-        JSONArray apifyData = (JSONArray) jsonParser.parse(new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/tiktok_test/users_test/tiktok_users_20mei.json"));
+        JSONArray apifyData = (JSONArray) jsonParser.parse(new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/tiktok_test/users_test/tiktok_users_3jul.json"));
+        int counter = 1;
 
         for(Object apifyDataElement : apifyData) {
             JSONObject recentTiktokPostJson = (JSONObject) apifyDataElement;
             String caption = (String) recentTiktokPostJson.get("text");
 
             if(captionContainsDiscountWords(caption)) {
+                System.out.println("****************************************************************");
+                System.out.println(counter++);
+                System.out.println((String) ((JSONObject) recentTiktokPostJson.get("authorMeta")).get("name"));
                 System.out.println((String) recentTiktokPostJson.get("webVideoUrl"));
                 System.out.println(caption);
-                System.out.println();
-                System.out.println();
-                System.out.println("*************");
-                System.out.println();
-                System.out.println();
+                System.out.println("TIME: " + recentTiktokPostJson.get("createTimeISO"));
+                System.out.println("****************************************************************");
+                System.out.println("x");
+                System.out.println("x");
+                System.out.println("x");
+                System.out.println("x");
             }
         }
     }
@@ -65,6 +71,37 @@ public class TikTokProfileFinder {
         allTiktokUsers.keySet().forEach(key -> System.out.println("\"" + key + "\","));
 
         return allTiktokUsers;
+    }
+
+    private Map<String, Integer> getDutchTiktokUsers() throws Exception {
+        Map<String, Integer> dutchTiktokUsers = new HashMap<>();
+
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM tiktok_influencers WHERE country LIKE '%Netherlands%';");
+
+        while(rs.next()) {
+            dutchTiktokUsers.put(rs.getString("name"), rs.getInt("followers"));
+        }
+
+        rs.close();
+        st.close();
+
+        closeDbConnection();
+
+        dutchTiktokUsers = dutchTiktokUsers.entrySet()
+                .stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new));
+
+        dutchTiktokUsers.keySet().forEach(key -> System.out.println("\"" + key + "\","));
+
+        return dutchTiktokUsers;
     }
 
     private Map<String, JSONArray> getAllPostsForAllTiktokUsers() throws Exception {
@@ -246,5 +283,14 @@ public class TikTokProfileFinder {
                         StringUtils.containsIgnoreCase(caption, "réduction") ||
                         StringUtils.containsIgnoreCase(caption, "reduction");
         return containsDiscountWords;
+    }
+
+    private void initializeDbConnection() throws Exception {
+        Class.forName("com.mysql.jdbc.Driver");
+        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diski?&serverTimezone=UTC", "root", "");
+    }
+
+    private void closeDbConnection() throws SQLException {
+        con.close();
     }
 }

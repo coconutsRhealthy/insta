@@ -26,16 +26,19 @@ public class DataDirectivePersister {
     private void fillEmptyDb() throws Exception {
         List<String> dataDirective = getDataDirectiveLines("/Users/lennartmac/Documents/Projects/diski/src/app/data/data.directive.ts");
         List<String> archiveDataDirective = getDataDirectiveLines("/Users/lennartmac/Documents/Projects/diski/src/app/data/archivedata.directive.ts");
+        List<String> archive3 = getArchiveLines("/Users/lennartmac/Documents/Projects/diski/src/app/data/archive3.txt");
         List<String> archive2 = getArchiveLines("/Users/lennartmac/Documents/Projects/diski/src/app/data/archive2.txt");
         List<String> archive = getArchiveLines("/Users/lennartmac/Documents/Projects/diski/src/app/data/archive.txt");
 
         dataDirective = addYearToDate(dataDirective, 2024);
         archiveDataDirective = addYearToDate(archiveDataDirective, 2024);
-        archive2 = addYearToDate(archive2, 2024);
+        archive3 = addYearToDate(archive3, 2024);
+        archive2 = addYearToDate(archive2, 2023);
         archive = addYearToDate(archive, 2022);
 
         addDataToDb(dataDirective);
         addDataToDb(archiveDataDirective);
+        addDataToDb(archive3);
         addDataToDb(archive2);
         addDataToDb(archive);
     }
