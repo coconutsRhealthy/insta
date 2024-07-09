@@ -1,6 +1,7 @@
-package com.lennart.model;
+package com.lennart.model.tiktok;
 
-import org.apache.commons.lang3.StringUtils;
+import com.lennart.model.InfluencerPersister;
+import com.lennart.model.OpenAi;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -10,42 +11,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class TikTokProfileFinder {
+import static com.lennart.model.tiktok.JsonReaderTikTok.captionContainsDiscountWords;
 
-    private Connection con;
-
-    public static void main(String[] args) throws Exception {
-        new TikTokProfileFinder().testGetRecentDiscountPostsTiktok();
-    }
-
-    private void testGetRecentDiscountPostsTiktok() throws Exception {
-        JSONParser jsonParser = new JSONParser();
-        JSONArray apifyData = (JSONArray) jsonParser.parse(new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/tiktok_test/users_test/tiktok_users_3jul.json"));
-        int counter = 1;
-
-        for(Object apifyDataElement : apifyData) {
-            JSONObject recentTiktokPostJson = (JSONObject) apifyDataElement;
-            String caption = (String) recentTiktokPostJson.get("text");
-
-            if(captionContainsDiscountWords(caption)) {
-                System.out.println("****************************************************************");
-                System.out.println(counter++);
-                System.out.println((String) ((JSONObject) recentTiktokPostJson.get("authorMeta")).get("name"));
-                System.out.println((String) recentTiktokPostJson.get("webVideoUrl"));
-                System.out.println(caption);
-                System.out.println("TIME: " + recentTiktokPostJson.get("createTimeISO"));
-                System.out.println("****************************************************************");
-                System.out.println("x");
-                System.out.println("x");
-                System.out.println("x");
-                System.out.println("x");
-            }
-        }
-    }
+public class TikTokNewProfilesFinder {
 
     private Map<String, Integer> getAllTiktokUsers() throws Exception {
         Map<String, Integer> allTiktokUsers = new HashMap<>();
@@ -71,37 +42,6 @@ public class TikTokProfileFinder {
         allTiktokUsers.keySet().forEach(key -> System.out.println("\"" + key + "\","));
 
         return allTiktokUsers;
-    }
-
-    private Map<String, Integer> getDutchTiktokUsers() throws Exception {
-        Map<String, Integer> dutchTiktokUsers = new HashMap<>();
-
-        initializeDbConnection();
-
-        Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM tiktok_influencers WHERE country LIKE '%Netherlands%';");
-
-        while(rs.next()) {
-            dutchTiktokUsers.put(rs.getString("name"), rs.getInt("followers"));
-        }
-
-        rs.close();
-        st.close();
-
-        closeDbConnection();
-
-        dutchTiktokUsers = dutchTiktokUsers.entrySet()
-                .stream()
-                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (e1, e2) -> e1,
-                        LinkedHashMap::new));
-
-        dutchTiktokUsers.keySet().forEach(key -> System.out.println("\"" + key + "\","));
-
-        return dutchTiktokUsers;
     }
 
     private Map<String, JSONArray> getAllPostsForAllTiktokUsers() throws Exception {
@@ -255,42 +195,5 @@ public class TikTokProfileFinder {
 
         String openAiQuestionString = result.toString();
         return openAiQuestionString;
-    }
-
-    private boolean captionContainsDiscountWords(String caption) {
-        boolean containsDiscountWords =
-                StringUtils.containsIgnoreCase(caption, "korting") ||
-                        StringUtils.containsIgnoreCase(caption, "discount") ||
-                        StringUtils.containsIgnoreCase(caption, "% off") ||
-                        StringUtils.containsIgnoreCase(caption, "%off") ||
-                        StringUtils.containsIgnoreCase(caption, "% of") ||
-                        StringUtils.containsIgnoreCase(caption, "%of") ||
-                        StringUtils.containsIgnoreCase(caption, "my code") ||
-                        StringUtils.containsIgnoreCase(caption, "mijn code") ||
-                        StringUtils.containsIgnoreCase(caption, "de code") ||
-                        StringUtils.containsIgnoreCase(caption, "code:") ||
-                        StringUtils.containsIgnoreCase(caption, "code") ||
-                        StringUtils.containsIgnoreCase(caption, "with code") ||
-                        StringUtils.containsIgnoreCase(caption, "met code") ||
-                        StringUtils.containsIgnoreCase(caption, "use code") ||
-                        StringUtils.containsIgnoreCase(caption, "gebruik code") ||
-                        StringUtils.containsIgnoreCase(caption, "werbung") ||
-                        StringUtils.containsIgnoreCase(caption, "anzeige") ||
-                        StringUtils.containsIgnoreCase(caption, "rabatt") ||
-                        StringUtils.containsIgnoreCase(caption, "dem code") ||
-                        StringUtils.containsIgnoreCase(caption, "le code") ||
-                        StringUtils.containsIgnoreCase(caption, "remise") ||
-                        StringUtils.containsIgnoreCase(caption, "réduction") ||
-                        StringUtils.containsIgnoreCase(caption, "reduction");
-        return containsDiscountWords;
-    }
-
-    private void initializeDbConnection() throws Exception {
-        Class.forName("com.mysql.jdbc.Driver");
-        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diski?&serverTimezone=UTC", "root", "");
-    }
-
-    private void closeDbConnection() throws SQLException {
-        con.close();
     }
 }
