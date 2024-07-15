@@ -27,6 +27,9 @@ public class InstaAccountFinder {
         List<String> influencersToBeRemoved = getInfluencersToBeRemoved();
         influencersToBeRemoved.forEach(recentDutchInfluencers.keySet()::remove);
 
+        List<String> sportInfluencers = getSportInfluencers(recentDutchInfluencers);
+        sportInfluencers.forEach(recentDutchInfluencers.keySet()::remove);
+
         int counter = 0;
 
         for(Map.Entry<String, Integer> entry : recentDutchInfluencers.entrySet()) {
@@ -167,6 +170,94 @@ public class InstaAccountFinder {
                 "herrvonsmit",
                 "korting.code"
         );
+    }
+
+    private List<String> getSportInfluencers(Map<String, Integer> allInfluencers) throws Exception {
+        List<String> dutchInfluList = new ArrayList<>(allInfluencers.keySet());
+        Map<String, List<String>> allCompaniesForInfluencers = getAllCompaniesForInfluencers(dutchInfluList, "2024-01-01");
+
+        List<String> sportInfluencers = new ArrayList<>();
+        List<String> sportCompanies = Arrays.asList("esn", "myproteinnl", "gymshark", "aybl", "bodyandfit.com");
+
+        for(String influencer : dutchInfluList) {
+            List<String> companies = allCompaniesForInfluencers.get(influencer);
+
+            if(!Collections.disjoint(companies, sportCompanies)) {
+                sportInfluencers.add(influencer);
+            }
+        }
+
+        return sportInfluencers;
+    }
+
+    private Map<String, List<String>> getAllCompaniesForInfluencers(List<String> influencers, String fromDate) throws Exception {
+        Map<String, List<String>> companiesForInfluencers = new TreeMap<>();
+
+        initializeDbConnection();
+
+        for(String influencer : influencers) {
+            companiesForInfluencers.put(influencer, new ArrayList<>());
+
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM discounts WHERE influencer = '" + influencer + "' AND date >= '" + fromDate + "';");
+
+            while(rs.next()) {
+                companiesForInfluencers.get(influencer).add(rs.getString("company"));
+            }
+
+            rs.close();
+            st.close();
+        }
+
+        closeDbConnection();
+
+
+        return companiesForInfluencers;
+    }
+
+    private void findInfluencersForBrand(String company, String fromdate) throws Exception {
+        Set<String> influencersForCompanySet = new HashSet<>();
+
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM discounts WHERE company = '" + company + "' AND date >= '" + fromdate + "';");
+
+        while(rs.next()) {
+            influencersForCompanySet.add(rs.getString("influencer"));
+        }
+
+        rs.close();
+        st.close();
+
+        Map<String, Integer> influencersForCompany = new HashMap<>();
+
+        for(String influencer : influencersForCompanySet) {
+            Statement st2 = con.createStatement();
+            ResultSet rs2 = st2.executeQuery("SELECT * FROM influencers WHERE name = '" + influencer + "';");
+
+            while(rs2.next()) {
+                influencersForCompany.put(influencer, rs2.getInt("followers"));
+            }
+
+            st2.close();
+            rs2.close();
+        }
+
+        closeDbConnection();
+
+        influencersForCompany = influencersForCompany.entrySet()
+                .stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
+
+        //influencersForCompany.keySet().forEach(System.out::println);
+        influencersForCompany.values().forEach(System.out::println);
     }
 
     private void initializeDbConnection() throws Exception {

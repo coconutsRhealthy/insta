@@ -6,6 +6,7 @@ import org.json.simple.parser.JSONParser;
 
 import java.io.FileReader;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class InfluencerPersister {
@@ -55,7 +56,7 @@ public class InfluencerPersister {
         int counter = 0;
 
         for(String influencer : influencers) {
-            int followers = getFollowersForUsernameFromJson(influencer);
+            int followers = getFollowersFromFollowerJson(influencer);
 
             if(followers != -1) {
                 Statement st = con.createStatement();
@@ -76,11 +77,41 @@ public class InfluencerPersister {
         closeDbConnection();
     }
 
-    private int getFollowersForUsernameFromJson(String username) throws Exception {
+    private void addFollowersToNewEntries() throws Exception {
+        initializeDbConnection();
+
+        List<String> influencersToUpdate = new ArrayList<>();
+
+        Statement st1 = con.createStatement();
+        ResultSet rs = st1.executeQuery("SELECT * FROM influencers WHERE followers = '-1';");
+
+        while(rs.next()) {
+            influencersToUpdate.add(rs.getString("name"));
+        }
+
+        rs.close();
+        st1.close();
+
+        int counter = 0;
+
+        for(String influencer : influencersToUpdate) {
+            System.out.println(counter++);
+
+            Statement st2 = con.createStatement();
+            st2.executeUpdate("UPDATE influencers SET " +
+                    "followers = '" + getFollowersFromUsersJson(influencer) + "' " +
+                    "WHERE name = '" + influencer + "'");
+            st2.close();
+        }
+
+        closeDbConnection();
+    }
+
+    private int getFollowersFromFollowerJson(String username) throws Exception {
         JSONParser jsonParser = new JSONParser();
 
         JSONArray apifyData = (JSONArray) jsonParser.parse(
-                new FileReader("/Users/lennartmac/Downloads/follower_count.json"));
+                new FileReader("/Users/lennartmac/Downloads/ai_data/follower_count.json"));
 
         for(Object apifyDataElement : apifyData) {
             JSONObject followersJson = (JSONObject) apifyDataElement;
@@ -93,6 +124,30 @@ public class InfluencerPersister {
         }
 
         return -1;
+    }
+
+    private int getFollowersFromUsersJson(String username) throws Exception {
+        JSONParser jsonParser = new JSONParser();
+
+        JSONArray apifyData = (JSONArray) jsonParser.parse(
+                new FileReader("/Users/lennartmac/Downloads/ai_data/new_insta_influencers_country_analysis_july24.json"));
+
+        for(Object apifyDataElement : apifyData) {
+            JSONObject influencerJson = (JSONObject) apifyDataElement;
+
+
+            String usernameInJson = influencerJson.get("username").toString();
+
+            if(usernameInJson.equals(username)) {
+                if(influencerJson.get("followersCount") != null) {
+                    return ((Long) influencerJson.get("followersCount")).intValue();
+                } else {
+                    System.out.println("Followers unknown for: " + username);
+                }
+            }
+        }
+
+        return -2;
     }
 
     private void getAndPrintAllInfluencersFromDb() throws Exception {

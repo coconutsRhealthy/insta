@@ -22,7 +22,7 @@ public class CountryIdentifier {
     }
 
     private String createGptQuestionString() throws Exception {
-        Map<String, Map<String, List<String>>> allData = getDataForAllUsers("/Users/lennartmac/Downloads/ai_data/all_influencers_including_data_basejson.json");
+        Map<String, Map<String, List<String>>> allData = getDataForAllUsers("/Users/lennartmac/Downloads/ai_data/new_insta_influencers_country_analysis_july24.json");
 
         int counter = 0;
         OpenAi openAi = new OpenAi();
@@ -54,7 +54,7 @@ public class CountryIdentifier {
 
                 influencerPersister.setCountry(username, country);
                 String lineToAdd = username + " - " + country + System.lineSeparator();
-                Files.write(Paths.get("/Users/lennartmac/Desktop/influencer_countries.txt"), lineToAdd.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+                Files.write(Paths.get("/Users/lennartmac/Desktop/influencer_persister_stuff/influencer_countries.txt"), lineToAdd.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
                 System.out.println("******* " + counter++ + " *******");
             } else {
                 System.out.println("country already set for user: " + username);
