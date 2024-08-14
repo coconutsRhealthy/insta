@@ -1,6 +1,7 @@
 package com.lennart.model.tiktok;
 
 import java.sql.*;
+import java.sql.Date;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -9,7 +10,38 @@ public class TikTokAnalysis {
     private Connection con;
 
     public static void main(String[] args) throws Exception {
-        new TikTokAnalysis().getCompaniesThatGaveDiscount();
+        TikTokAnalysis tikTokAnalysis = new TikTokAnalysis();
+        tikTokAnalysis.getTiktokkersForNewApifyList();
+    }
+
+    private void getTiktokkersForNewApifyList() throws Exception {
+        Map<String, Integer> tikTokkersFromDb1 = getTikTokkersFromDb("Netherlands", "true", "2024-05-19");
+        Map<String, Integer> tikTokkersFromDb2 = getTikTokkersFromDb("Netherlands", "", "2024-07-17");
+        Map<String, Integer> tikTokkersFromDb3 = getTikTokkersFromDb("Netherlands", "", "2024-07-18");
+
+        Map<String, Integer> combined = new HashMap<>();
+        combined.putAll(tikTokkersFromDb1);
+        combined.putAll(tikTokkersFromDb2);
+        combined.putAll(tikTokkersFromDb3);
+
+        combined = sortByValueHighToLow(combined);
+        combined.keySet().forEach(key -> System.out.println("\"" + key + "\","));
+    }
+
+    private void updateDbForUsersWhoGaveDiscount() throws Exception {
+        List<String> usersThatGaveDiscount = new ArrayList<>(getTiktokUsersThatGaveDiscount().keySet());
+
+        TikTokInfluencerPersister tikTokInfluencerPersister = new TikTokInfluencerPersister();
+
+        usersThatGaveDiscount.forEach(user -> {
+            user = user.replace("_tiktok", "");
+
+            try {
+                tikTokInfluencerPersister.setGaveDiscount(user, "true");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private Map<String, List<String>> getTiktokUsersThatGaveDiscount() throws Exception {
@@ -60,6 +92,8 @@ public class TikTokAnalysis {
 
         closeDbConnection();
 
+        companiesThatGaveDiscount.keySet().forEach(System.out::println);
+
         return companiesThatGaveDiscount;
     }
 
@@ -80,7 +114,37 @@ public class TikTokAnalysis {
 
         closeDbConnection();
 
-        dutchTiktokUsers = dutchTiktokUsers.entrySet()
+        dutchTiktokUsers = sortByValueHighToLow(dutchTiktokUsers);
+
+        dutchTiktokUsers.keySet().forEach(key -> System.out.println("\"" + key + "\","));
+
+        return dutchTiktokUsers;
+    }
+
+    private Map<String, Integer> getTikTokkersFromDb(String country, String gaveDiscount, String dateAdded) throws Exception {
+        Map<String, Integer> tikTokkers = new HashMap<>();
+
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM tiktok_influencers WHERE country LIKE '%" + country +
+                "%' AND gave_discount = '" + gaveDiscount + "' AND date_added = '" + Date.valueOf(dateAdded) + "';");
+
+        while(rs.next()) {
+            tikTokkers.put(rs.getString("name"), rs.getInt("followers"));
+        }
+
+        rs.close();
+        st.close();
+
+        closeDbConnection();
+
+        tikTokkers = sortByValueHighToLow(tikTokkers);
+        return tikTokkers;
+    }
+
+    private Map<String, Integer> sortByValueHighToLow(Map<String, Integer> mapToSort) {
+        return mapToSort.entrySet()
                 .stream()
                 .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
                 .collect(Collectors.toMap(
@@ -88,10 +152,6 @@ public class TikTokAnalysis {
                         Map.Entry::getValue,
                         (e1, e2) -> e1,
                         LinkedHashMap::new));
-
-        dutchTiktokUsers.keySet().forEach(key -> System.out.println("\"" + key + "\","));
-
-        return dutchTiktokUsers;
     }
 
     private void initializeDbConnection() throws Exception {

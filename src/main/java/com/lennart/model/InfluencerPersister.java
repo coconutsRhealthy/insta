@@ -204,28 +204,6 @@ public class InfluencerPersister {
         closeDbConnection();
     }
 
-    public void addTiktokUserToDb(String username, int followers, String country) throws Exception {
-        initializeDbConnection();
-        Statement st = con.createStatement();
-
-        ResultSet rs = st.executeQuery("SELECT * FROM tiktok_influencers where name = '" + username + "';");
-
-        if(!rs.next()) {
-            st.executeUpdate("INSERT INTO tiktok_influencers (" +
-                    "name, " +
-                    "followers, " +
-                    "country) " +
-                    "VALUES ('" +
-                    username + "', '" +
-                    followers + "', '" +
-                    country + "'" +
-                    ")");
-        }
-
-        st.close();
-        closeDbConnection();
-    }
-
     private void initializeDbConnection() throws Exception {
         Class.forName("com.mysql.jdbc.Driver");
         con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diski?&serverTimezone=UTC", "root", "");

@@ -28,7 +28,12 @@ public class InstaAccountFinder {
         influencersToBeRemoved.forEach(recentDutchInfluencers.keySet()::remove);
 
         List<String> sportInfluencers = getSportInfluencers(recentDutchInfluencers);
-        sportInfluencers.forEach(recentDutchInfluencers.keySet()::remove);
+        //sportInfluencers.forEach(recentDutchInfluencers.keySet()::remove);
+        sportInfluencers.forEach(influencer -> {
+            if(Math.random() < 0.9) {
+                recentDutchInfluencers.keySet().remove(influencer);
+            }
+        });
 
         int counter = 0;
 
