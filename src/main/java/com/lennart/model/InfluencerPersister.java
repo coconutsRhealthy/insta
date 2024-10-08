@@ -14,7 +14,8 @@ public class InfluencerPersister {
     private Connection con;
 
     public static void main(String[] args) throws Exception {
-        new InfluencerPersister().addNewInfluencersToDb("2024-06-09");
+        //new InfluencerPersister().addNewInfluencersToDb("2024-08-01");
+        new InfluencerPersister().addFollowersToNewEntries();
     }
 
     private void addNewInfluencersToDb(String fromDate) throws Exception {
@@ -130,7 +131,7 @@ public class InfluencerPersister {
         JSONParser jsonParser = new JSONParser();
 
         JSONArray apifyData = (JSONArray) jsonParser.parse(
-                new FileReader("/Users/lennartmac/Downloads/ai_data/new_insta_influencers_country_analysis_july24.json"));
+                new FileReader("/Users/lennartmac/Downloads/ai_data/new_insta_influencers_country_analysis_okt24.json"));
 
         for(Object apifyDataElement : apifyData) {
             JSONObject influencerJson = (JSONObject) apifyDataElement;
@@ -201,6 +202,20 @@ public class InfluencerPersister {
 
         st.close();
 
+        closeDbConnection();
+    }
+
+    private void printNewlyAddedInfluencers() throws Exception {
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM influencers where followers = '-1' AND country = '';");
+
+        while(rs.next()) {
+            System.out.println("\"https://www.instagram.com/" + rs.getString("name") + "\",");
+        }
+
+        st.close();
         closeDbConnection();
     }
 

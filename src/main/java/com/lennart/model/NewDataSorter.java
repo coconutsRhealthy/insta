@@ -33,7 +33,7 @@ public class NewDataSorter {
             }
 
             if (word.equals("temu") || word.equals("bylashbabe") || word.equals("idealofsweden") || word.equals("vitakruid") ||
-                word.equals("desenio") || word.equals("pinkgellac")) {
+                word.equals("desenio") || word.equals("leolive") || word.equals("hellofresh.nl") || word.equals("rosental-organics.nl")) {
                 double randomHighAveragePosition = 4.0 + (new Random().nextDouble());
                 averagePositions.put(word, randomHighAveragePosition);
             }
