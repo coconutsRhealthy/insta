@@ -28,8 +28,8 @@ public class TikTokNewProfilesFinder {
 
         tiktokUsers.forEach((key, value) -> {
             try {
-                tikTokInfluencerPersister.addOrUpdateTiktokUser
-                        (key, value, "-", "", "2024-07-18");
+                tikTokInfluencerPersister.addTiktokUserToDb
+                        (key, value, "-", "", "2024-10-15");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -39,7 +39,7 @@ public class TikTokNewProfilesFinder {
     private Map<String, Integer> getAllTiktokUsers() throws Exception {
         Map<String, Integer> allTiktokUsers = new HashMap<>();
 
-        List<String> filePaths = Files.list(Paths.get("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/tiktok_test/new_july"))
+        List<String> filePaths = Files.list(Paths.get("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/tiktok_test/new_october"))
                 .filter(Files::isRegularFile)
                 .map(Path::toString)
                 .collect(Collectors.toList());
@@ -65,7 +65,7 @@ public class TikTokNewProfilesFinder {
     private Map<String, JSONArray> getAllPostsForAllTiktokUsers() throws Exception {
         Map<String, JSONArray> allPostsForAllTiktokUsers = new HashMap<>();
 
-        List<String> filePaths = Files.list(Paths.get("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/tiktok_test/new_july/18jul"))
+        List<String> filePaths = Files.list(Paths.get("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/tiktok_test/new_october"))
                 .filter(Files::isRegularFile)
                 .map(Path::toString)
                 .collect(Collectors.toList());
@@ -145,11 +145,17 @@ public class TikTokNewProfilesFinder {
         System.out.println("openAiData: " + openAiData.size());
 
         for(Map.Entry<String, String> entry : openAiData.entrySet()) {
-            String country = openAi.isTiktokProfileDutch(entry.getValue());
-            String lineToAdd = entry.getKey() + " - " + country + System.lineSeparator();
-            tikTokInfluencerPersister.addOrUpdateTiktokUser(entry.getKey(), -3, country, "", "2024-07-18");
-            Files.write(Paths.get("/Users/lennartmac/Desktop/influencer_persister_stuff/tiktok_users.txt"), lineToAdd.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
-            System.out.println("******* " + counter++ + " *******");
+            String countryInDb = tikTokInfluencerPersister.getCountry(entry.getKey());
+
+            if(countryInDb != null && countryInDb.equals("-")) {
+                String country = openAi.isTiktokProfileDutch(entry.getValue());
+                String lineToAdd = entry.getKey() + " - " + country + System.lineSeparator();
+                tikTokInfluencerPersister.executeUpdateCountryQuery(entry.getKey(), country);
+                Files.write(Paths.get("/Users/lennartmac/Desktop/influencer_persister_stuff/oct/tiktok_users.txt"), lineToAdd.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+                System.out.println("******* " + counter++ + " *******");
+            } else {
+                System.out.println("Country already set for: " + entry.getKey());
+            }
         }
     }
 

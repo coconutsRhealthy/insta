@@ -10,7 +10,7 @@ public class TikTokInfluencerPersister {
         new TikTokInfluencerPersister().setDefaultDateAddedInDb();
     }
 
-    public void addOrUpdateTiktokUser(String username, int followers, String country,
+    public void addTiktokUserToDb(String username, int followers, String country,
                                   String gaveDiscount, String addedToDbDate) throws Exception {
         initializeDbConnection();
         Statement st = con.createStatement();
@@ -18,10 +18,9 @@ public class TikTokInfluencerPersister {
         ResultSet rs = st.executeQuery("SELECT * FROM tiktok_influencers where name = '" + username + "';");
 
         if(!rs.next()) {
-            addTiktokUserToDb(username, followers, country, gaveDiscount, addedToDbDate);
+            executeAddQuery(username, followers, country, gaveDiscount, addedToDbDate);
             System.out.println("Added: " + username);
         } else {
-            updateTiktokUserInDb(username, country);
             System.out.println("Already in db: " + username);
         }
 
@@ -29,7 +28,25 @@ public class TikTokInfluencerPersister {
         closeDbConnection();
     }
 
-    private void addTiktokUserToDb(String username, int followers, String country,
+    public String getCountry(String username) throws Exception {
+        String country = null;
+
+        initializeDbConnection();
+        Statement st = con.createStatement();
+
+        ResultSet rs = st.executeQuery("SELECT * FROM tiktok_influencers where name = '" + username + "';");
+
+        if(rs.next()) {
+            country = rs.getString("country");
+        }
+
+        st.close();
+        closeDbConnection();
+
+        return country;
+    }
+
+    private void executeAddQuery(String username, int followers, String country,
                                     String gaveDiscount, String addedToDbDate) throws Exception {
         initializeDbConnection();
         Statement st = con.createStatement();
@@ -52,16 +69,21 @@ public class TikTokInfluencerPersister {
         closeDbConnection();
     }
 
-    private void updateTiktokUserInDb(String username, String country) throws Exception {
-        initializeDbConnection();
+    public void executeUpdateCountryQuery(String username, String country) throws Exception {
+        String query = "UPDATE tiktok_influencers SET country = '" + country + "' WHERE name = '" + username + "'";
 
-        Statement st = con.createStatement();
-        st.executeUpdate("UPDATE tiktok_influencers SET " +
-                "country = '" + country + "' " +
-                "WHERE name = '" + username + "'");
-        st.close();
+        try {
+            initializeDbConnection();
 
-        closeDbConnection();
+            Statement st = con.createStatement();
+            st.executeUpdate(query);
+            st.close();
+
+            closeDbConnection();
+        } catch (Exception e) {
+            System.out.println("Couldn't set country, error with query: " + query);
+            e.printStackTrace();
+        }
     }
 
     private void setDefaultDateAddedInDb() throws Exception {

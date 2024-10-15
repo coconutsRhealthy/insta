@@ -16,13 +16,18 @@ public class TikTokAnalysis {
 
     private void getTiktokkersForNewApifyList() throws Exception {
         Map<String, Integer> tikTokkersFromDb1 = getTikTokkersFromDb("Netherlands", "true", "2024-05-19");
-        Map<String, Integer> tikTokkersFromDb2 = getTikTokkersFromDb("Netherlands", "", "2024-07-17");
-        Map<String, Integer> tikTokkersFromDb3 = getTikTokkersFromDb("Netherlands", "", "2024-07-18");
+        Map<String, Integer> tikTokkersFromDb2 = getTikTokkersFromDb("Netherlands", "true", "2024-07-17");
+        Map<String, Integer> tikTokkersFromDb3 = getTikTokkersFromDb("Netherlands", "true", "2024-07-18");
+        Map<String, Integer> tikTokkersFromDb4 = getTikTokkersFromDb("Netherlands", "", "2024-10-15");
+
+        int minimumFollowersForNewUsers = 1000;
+        tikTokkersFromDb4.entrySet().removeIf(entry -> entry.getValue() < minimumFollowersForNewUsers);
 
         Map<String, Integer> combined = new HashMap<>();
         combined.putAll(tikTokkersFromDb1);
         combined.putAll(tikTokkersFromDb2);
         combined.putAll(tikTokkersFromDb3);
+        combined.putAll(tikTokkersFromDb4);
 
         combined = sortByValueHighToLow(combined);
         combined.keySet().forEach(key -> System.out.println("\"" + key + "\","));
@@ -141,6 +146,15 @@ public class TikTokAnalysis {
 
         tikTokkers = sortByValueHighToLow(tikTokkers);
         return tikTokkers;
+    }
+
+    private List<String> getNewTiktokkersThatGaveDiscount() throws Exception {
+        List<String> newTiktokkers = new ArrayList<>(getTikTokkersFromDb("Netherlands", "", "2024-07-17").keySet());
+        newTiktokkers.addAll(new ArrayList<>(getTikTokkersFromDb("Netherlands", "", "2024-07-18").keySet()));
+        List<String> usersThatGaveDiscount = new ArrayList<>(getTiktokUsersThatGaveDiscount().keySet());
+        usersThatGaveDiscount = usersThatGaveDiscount.stream().map(user -> user.replaceAll("_tiktok", "")).collect(Collectors.toList());
+        newTiktokkers.retainAll(usersThatGaveDiscount);
+        return newTiktokkers;
     }
 
     private Map<String, Integer> sortByValueHighToLow(Map<String, Integer> mapToSort) {
