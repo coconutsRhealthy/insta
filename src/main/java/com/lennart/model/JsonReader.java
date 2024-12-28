@@ -18,72 +18,45 @@ public class JsonReader {
 //  nakdfashion / benakd / nakd
 //  loavies / girlsgoneloavies / loaviesdiscount
 //  sheinpartner
-//  veromoda / veromodawomen
-//  icaniwill / iciw
 //  strongerlabel / strongermoments
 //  gutsgusto
-//  chiquelle
-//  tessvfashion
+//  getdrezzed
+//  begoldennl
+//  mimamsterdam
+//  paulie__pocket, pauliepocket
 //  myjewellery
 //  famousstore
 //  airup
 //  bjornborg
 //  myproteinnl
-//  glas.eyewear
-    //desenio
-    //idealofsweden
+//  esuals
+    //terstal / mijnterstallook
+    //loopearplugs
     //hunkemoller
 
     //myburga / burga
     //gymshark
     //snuggs
-    //madlady
+    //goboony
     //ginatricot
     //otrium / otriumcreators
-    //heyestrid
     //pinkgellac
-    //mimmti.official
     //geurwolkje
-    //farfetch
-    //vitakruid
     //body&fit
     //kaptenandson
     //stevemaddeneu
     //emmasleep
     //hellofresh
-    //zonnebrillencom
-    //voltairesneakers
+    //lookfantastic
+    //leolive
     //only.nederland
-    //edikted
-    //swybrand
-    //prozis
     //sellpy
     //esncom
     //aybl
-    //albelli_nl
     //lyko_nl
     //maniacnails.official
 
 
-
-
-    //  zzz nakdfashion / benakd / nakd
-//  zzz sheinpartner
-//  zzz veromoda / veromodawomen
-//  zzz lyko
-//  zzz icaniwill / iciw
-//  zzz strongerlabel / strongermoments
-//  zzz gutsgusto
-//  zzz chiquelle
-//  zzz safirashine
-//  zzz tessvfashion
-//  zzz myjewellery
-//  zzz kidsbrandstore
-//  zzz famousstore
-//  zzz airup
-//  zzz bjornborg
-//  zzz myproteinnl
-//  zzz wearglas
 
 //    public static void main(String[] args) throws Exception {
 //        new JsonReader().printDiscountPostsForHashtag("wearglas");
@@ -139,52 +112,43 @@ public class JsonReader {
     //  zzz nakdfashion / benakd / nakd
     //  zzz loavies / girlsgoneloavies / loaviesdiscount
     //  zzz sheinpartner
-    //  zzz veromoda / veromodawomen
-    //  zzz icaniwill / iciw
     //  zzz strongerlabel / strongermoments
     //  zzz gutsgusto
-    //  zzz chiquelle
-    //  zzz tessvfashion
+    //  zzz getdrezzed
+    //  zzz begoldennl
+    //  zzz mimamsterdam
+    //  zzz paulie__pocket, pauliepocket
     //  zzz myjewellery
     //  zzz famousstore
     //  zzz airup
     //  zzz bjornborg
     //  zzz myproteinnl
-    //  zzz glas.eyewear
-        //desenio
-        //idealofsweden
+    //  zzz esuals
+        //zzz terstal / mijnterstallook
+        //zzz loopearplugs
         //zzz hunkemoller
 
         //zzz myburga / burga
         //zzz gymshark
         //zzz snuggs
-        //zzz madlady
+        //zzz goboony
         //zzz ginatricot
         //zzz otrium / otriumcreators
-        //zzz heyestrid
         //zzz pinkgellac
-        //zzz mimmti.official
         //zzz geurwolkje
-        //zzz farfetch
-        //zzz vitakruid
         //zzz body&fit
         //zzz kaptenandson
         //zzz stevemaddeneu
         //zzz emmasleep
         //zzz hellofresh
-        //zzz zonnebrillencom
-        //zzz voltairesneakers
+        //zzz lookfantastic
+        //zzz leolive
         //zzz only.nederland
-        //edikted
-        //swybrand
-        //prozis
         //zzz sellpy
         //zzz esncom
         //zzz aybl
-        //zzz albelli_nl
         //zzz lyko_nl
         //zzz maniacnails.official
-
 
     public static void main(String[] args) throws Exception {
         new JsonReader().overallMethod();
@@ -192,13 +156,13 @@ public class JsonReader {
     }
 
     private void overallMethod() throws Exception {
-        List<String> hashTagsForBand = Arrays.asList("loavies");
+        List<String> hashTagsForBand = Arrays.asList("nakdfashion");
 
         JSONArray jsonArray = new JSONArray();
 
         for(String hashtag : hashTagsForBand) {
             jsonArray.addAll(getLatestPostsForHashtag(hashtag));
-            jsonArray.addAll(getCompanyTaggedPostsForHashtag(hashtag));
+            //jsonArray.addAll(getCompanyTaggedPostsForHashtag(hashtag));
         }
 
         JSONArray sortedJsonArray = sort(jsonArray);
@@ -282,29 +246,34 @@ public class JsonReader {
         return sortedJsonArray;
     }
 
-
+    @SuppressWarnings("unchecked")
     private JSONArray getLatestPostsForHashtag(String hashtagToUse) throws Exception {
         JSONParser jsonParser = new JSONParser();
 
         JSONArray apifyData = (JSONArray) jsonParser.parse(
-                new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/companies/3jul.json"));
+                new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/companies/27dec_nakdfashion.json"));
+
+        JSONArray postDataForHashtag = new JSONArray();
 
         for(Object apifyDataElement : apifyData) {
             JSONObject hashtagJson = (JSONObject) apifyDataElement;
 
-            String hashtag = (String) hashtagJson.get("name");
+            JSONArray hashtags = (JSONArray) hashtagJson.get("hashtags");
 
-            if(hashtag.equals(hashtagToUse)) {
-                JSONArray latestPosts = (JSONArray) hashtagJson.get("latestPosts");
-                return latestPosts;
+            if(hashtags != null && hashtags.contains(hashtagToUse)) {
+                JSONObject postDetails = new JSONObject();
+                postDetails.put("caption", hashtagJson.get("caption"));
+                postDetails.put("timestamp", hashtagJson.get("timestamp"));
+                postDetails.put("url", hashtagJson.get("url"));
+                postDataForHashtag.add(postDetails);
             }
         }
 
-        return new JSONArray();
+        return postDataForHashtag;
     }
 
     private JSONArray getCompanyTaggedPostsForHashtag(String hashtag) throws Exception {
-        return JsonReaderTagged.getTaggedPostsForCompany(hashtag, "/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/companies/3jul_tagged.json");
+        return JsonReaderTagged.getTaggedPostsForCompany(hashtag, "/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/companies/17nov_tagged_stronger.json");
     }
 
     private void printData(JSONArray latestPostsForBrand) {

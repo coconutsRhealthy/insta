@@ -36,11 +36,12 @@ public class InstaAccountFinder {
         });
 
         int counter = 0;
+        int sizeLimit = 1000;
 
         for(Map.Entry<String, Integer> entry : recentDutchInfluencers.entrySet()) {
             counter++;
 
-            if(counter <= 295) {
+            if(counter <= sizeLimit * 0.8) {
                 influencersToUse.put(entry.getKey(), entry.getValue());
             } else {
                 break;
@@ -54,9 +55,10 @@ public class InstaAccountFinder {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
-        while(influencersToUse.size() < 369) {
+        while(influencersToUse.size() < sizeLimit) {
             if(stillEligibleKeys.isEmpty()) {
-                System.out.println("Not enough eligible entries in stillEligibleKeys");
+                System.out.println("Not enough eligible entries, will add sportInfluencers");
+                //addRandomSportInfluencer(influencersToUse, sportInfluencers, sizeLimit);
                 break;
             }
             String randomKey = stillEligibleKeys.remove(random.nextInt(stillEligibleKeys.size()));
@@ -67,6 +69,27 @@ public class InstaAccountFinder {
                 .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
                         (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+
+        return influencersToUse;
+    }
+
+    private Map<String, Integer> addRandomSportInfluencer(Map<String, Integer> influencersToUse, List<String> sportInfluencers,
+                                                          int sizeLimit) {
+        Random random = new Random();
+
+        while (influencersToUse.size() < sizeLimit && !sportInfluencers.isEmpty()) {
+            // Pick a random index and corresponding influencer
+            int randomIndex = random.nextInt(sportInfluencers.size());
+            String randomInfluencer = sportInfluencers.get(randomIndex);
+
+            // Add it to the map with the value -1 if it's not already in the map
+            if (!influencersToUse.containsKey(randomInfluencer)) {
+                influencersToUse.put(randomInfluencer, -1);
+            }
+
+            // Remove the influencer from the sportInfluencers list
+            sportInfluencers.remove(randomIndex);
+        }
 
         return influencersToUse;
     }
@@ -127,7 +150,7 @@ public class InstaAccountFinder {
 
     private Map<String, Integer> getRecentInfluencersFromCountry(String country) throws Exception {
         Map<String, Integer> allInfluencersFromCountry = getAllInfluencersFromCountry(country);
-        List<String> allInfluencers2024 = getInfluencers("2024-01-01", "2024-12-31");
+        List<String> allInfluencers2024 = getInfluencers("2023-12-01", "2024-12-31");
 
         Map<String, Integer> recentDutchInfluencers = allInfluencersFromCountry.entrySet().stream()
                 .filter(entry -> allInfluencers2024.contains(entry.getKey()))

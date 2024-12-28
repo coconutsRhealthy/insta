@@ -21,7 +21,10 @@ public class CompanyFinder {
 
         //new CompanyFinder().getCodesForCompany("aybl", "2023-06-01");
         //new CompanyFinder().getCompanyFrequencyMap("2023-06-01");
-        new CompanyFinder().getCompanyFrequencyMap("2024-01-01");
+        //new CompanyFinder().getCompanyFrequencyMap("2024-01-01");
+        //new CompanyFinder().getAllCompanies();
+
+        new CompanyFinder().getCompanyFrequencyMap("2024-06-30");
     }
 
     private void testMethod() throws Exception {
@@ -285,6 +288,30 @@ public class CompanyFinder {
                 .map(Map.Entry::getKey)
                 .sorted()
                 .collect(Collectors.toList());
+    }
+
+    private List<String> getAllCompanies() throws Exception {
+        Set<String> companies = new HashSet<>();
+
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM discounts;");
+
+        while(rs.next()) {
+            companies.add(rs.getString("company"));
+        }
+
+        rs.close();
+        st.close();
+
+        closeDbConnection();
+
+        List<String> sortedCompanies = companies.stream()
+                .sorted()
+                .collect(Collectors.toList());
+
+        return sortedCompanies;
     }
 
     private void initializeDbConnection() throws Exception {

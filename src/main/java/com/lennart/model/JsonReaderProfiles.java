@@ -28,7 +28,7 @@ public class JsonReaderProfiles {
         JSONParser jsonParser = new JSONParser();
 
         JSONArray apifyData = (JSONArray) jsonParser.parse(
-                new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/users/users_3jul.json"));
+                new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/users/users_27dec.json"));
 
         int counter = 1;
 
