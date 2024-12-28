@@ -17,27 +17,24 @@ public class DataDirectivePersister {
 
     private void addNewDataDirectiveLinesToDb(String dateBoundry) throws Exception {
         //dateBoundry example: "03-29-2024";
-        List<String> dataDirective = getDataDirectiveLines("/Users/lennartmac/Documents/Projects/diski/src/app/data/data.directive.ts");
-        dataDirective = addYearToDate(dataDirective, 2024);
-        dataDirective = removeDataBeforeDate(dataDirective, dateBoundry);
-        addDataToDb(dataDirective);
+        List<String> discountsJsonLines = getDiscountsJsonLines("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/discounts.json");
+        discountsJsonLines = addYearToDate(discountsJsonLines, 2024);
+        discountsJsonLines = removeDataBeforeDate(discountsJsonLines, dateBoundry);
+        addDataToDb(discountsJsonLines);
     }
 
     private void fillEmptyDb() throws Exception {
-        List<String> dataDirective = getDataDirectiveLines("/Users/lennartmac/Documents/Projects/diski/src/app/data/data.directive.ts");
-        List<String> archiveDataDirective = getDataDirectiveLines("/Users/lennartmac/Documents/Projects/diski/src/app/data/archivedata.directive.ts");
-        List<String> archive3 = getArchiveLines("/Users/lennartmac/Documents/Projects/diski/src/app/data/archive3.txt");
-        List<String> archive2 = getArchiveLines("/Users/lennartmac/Documents/Projects/diski/src/app/data/archive2.txt");
-        List<String> archive = getArchiveLines("/Users/lennartmac/Documents/Projects/diski/src/app/data/archive.txt");
+        List<String> discountsJsonLines = getDiscountsJsonLines("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/discounts.json");
+        List<String> archive3 = getArchiveLines("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/archive3.txt");
+        List<String> archive2 = getArchiveLines("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/archive2.txt");
+        List<String> archive = getArchiveLines("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/archive.txt");
 
-        dataDirective = addYearToDate(dataDirective, 2024);
-        archiveDataDirective = addYearToDate(archiveDataDirective, 2024);
+        discountsJsonLines = addYearToDate(discountsJsonLines, 2024);
         archive3 = addYearToDate(archive3, 2024);
         archive2 = addYearToDate(archive2, 2023);
         archive = addYearToDate(archive, 2022);
 
-        addDataToDb(dataDirective);
-        addDataToDb(archiveDataDirective);
+        addDataToDb(discountsJsonLines);
         addDataToDb(archive3);
         addDataToDb(archive2);
         addDataToDb(archive);
@@ -116,8 +113,8 @@ public class DataDirectivePersister {
         return Date.valueOf(dateStringToUse);
     }
 
-    private List<String> getDataDirectiveLines(String path) {
-        return new NewDataSorter().readDataFromDataDirective(path).
+    private List<String> getDiscountsJsonLines(String path) {
+        return new NewDataSorter().readDataFromDiscountsJson(path).
                 stream().flatMap(List::stream).collect(Collectors.toList());
     }
 

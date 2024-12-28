@@ -59,18 +59,16 @@ public class NewDataSorter {
     }
 
     private void testMethode() {
-        List<List<String>> dataDirective = readDataFromDataDirective("/Users/lennartmac/Documents/Projects/diski/src/app/data/data.directive.ts");
-        List<List<String>> archiveDataDirective = readDataFromDataDirective("/Users/lennartmac/Documents/Projects/diski/src/app/data/archivedata.directive.ts");
-        List<List<String>> archive = readDataFromArchive("/Users/lennartmac/Documents/Projects/diski/src/app/data/archive3.txt");
+        List<List<String>> discountsJson = readDataFromDiscountsJson("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/discounts.json");
+        List<List<String>> archive = readDataFromArchive("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/archive3.txt");
 
-        List<List<String>> dataDirectiveCompaniesOnly = retainOnlyCompanyInDataLines(dataDirective);
-        List<List<String>> archiveDataDirectiveCompaniesOnly = retainOnlyCompanyInDataLines(archiveDataDirective);
+        List<List<String>> discountsJsonCompaniesOnly = retainOnlyCompanyInDataLines(discountsJson);
         List<List<String>> archiveCompaniesOnly = retainOnlyCompanyInDataLines(archive);
 
         Map<String, String> newDataFullLineAndCompanies = new LinkedHashMap<>();
 
-        List<String> newDataCompaniesOnly = dataDirectiveCompaniesOnly.get(0);
-        List<String> newDataFull = dataDirective.get(0);
+        List<String> newDataCompaniesOnly = discountsJsonCompaniesOnly.get(0);
+        List<String> newDataFull = discountsJson.get(0);
 
         for(int i = 0; i < newDataFull.size(); i++) {
             newDataFullLineAndCompanies.put(newDataFull.get(i), newDataCompaniesOnly.get(i));
@@ -78,8 +76,7 @@ public class NewDataSorter {
 
         List<List<String>> trainingData = new ArrayList<>();
 
-        trainingData.addAll(dataDirectiveCompaniesOnly.subList(1, dataDirectiveCompaniesOnly.size()));
-        trainingData.addAll(archiveDataDirectiveCompaniesOnly);
+        trainingData.addAll(discountsJsonCompaniesOnly.subList(1, discountsJsonCompaniesOnly.size()));
         trainingData.addAll(archiveCompaniesOnly.subList(0, Math.min(120, archiveCompaniesOnly.size())));
 
         trainingData = trainingData.stream()
@@ -96,7 +93,7 @@ public class NewDataSorter {
         sortedNewDataDuplicatesAddedBack.keySet().forEach(System.out::println);
     }
 
-    public List<List<String>> readDataFromDataDirective(String filePath) {
+    public List<List<String>> readDataFromDiscountsJson(String filePath) {
         List<List<String>> dataBatches = new ArrayList<>();
 
         try {
@@ -107,16 +104,16 @@ public class NewDataSorter {
             List<String> tempArrayList = new ArrayList<>();
 
             while ((line = bufferedReader.readLine()) != null) {
-                if (line.contains("static dataArray")) {
+                if (line.contains("[")) {
                     inArray = true;
                     continue;
                 }
 
-                if (inArray && !line.trim().isEmpty() && !line.contains("];")) {
+                if (inArray && !line.trim().isEmpty() && !line.contains("]")) {
                     tempArrayList.add(line.trim());
                 }
 
-                if (inArray && (line.trim().isEmpty() || line.contains("];"))) {
+                if (inArray && (line.trim().isEmpty() || line.contains("]"))) {
                     dataBatches.add(new ArrayList<>(tempArrayList));
                     tempArrayList.clear();
                 }
