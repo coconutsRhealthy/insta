@@ -60,7 +60,7 @@ public class NewDataSorter {
 
     private void testMethode() {
         List<List<String>> discountsJson = readDataFromDiscountsJson("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/discounts.json");
-        List<List<String>> archive = readDataFromArchive("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/archive3.txt");
+        List<List<String>> archive = readDataFromArchive("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/archive4.txt");
 
         List<List<String>> discountsJsonCompaniesOnly = retainOnlyCompanyInDataLines(discountsJson);
         List<List<String>> archiveCompaniesOnly = retainOnlyCompanyInDataLines(archive);
