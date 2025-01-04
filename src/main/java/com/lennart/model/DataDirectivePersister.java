@@ -18,7 +18,7 @@ public class DataDirectivePersister {
     private void addNewDataDirectiveLinesToDb(String dateBoundry) throws Exception {
         //dateBoundry example: "03-29-2024";
         List<String> discountsJsonLines = getDiscountsJsonLines("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/discounts.json");
-        discountsJsonLines = addYearToDate(discountsJsonLines, 2024);
+        discountsJsonLines = addYearToDate(discountsJsonLines, 2025);
         discountsJsonLines = removeDataBeforeDate(discountsJsonLines, dateBoundry);
         addDataToDb(discountsJsonLines);
     }
@@ -30,7 +30,7 @@ public class DataDirectivePersister {
         List<String> archive2 = getArchiveLines("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/archive2.txt");
         List<String> archive = getArchiveLines("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/archive.txt");
 
-        discountsJsonLines = addYearToDate(discountsJsonLines, 2024);
+        discountsJsonLines = addYearToDate(discountsJsonLines, 2025);
         archive4 = addYearToDate(archive4, 2024);
         archive3 = addYearToDate(archive3, 2024);
         archive2 = addYearToDate(archive2, 2023);
