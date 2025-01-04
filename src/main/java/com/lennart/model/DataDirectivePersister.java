@@ -146,7 +146,7 @@ public class DataDirectivePersister {
 
                     lastMonth = month;
 
-                    String dateToUse = date.substring(0, date.length() - 2);
+                    String dateToUse = date.substring(0, date.length() - (date.endsWith(",") ? 2 : 1));
                     dateToUse = dateToUse + "-" + yearToStartWith + "\",";
 
                     parts[partsIndexToUse] = dateToUse;

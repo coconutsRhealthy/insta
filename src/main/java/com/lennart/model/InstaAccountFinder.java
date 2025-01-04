@@ -150,7 +150,7 @@ public class InstaAccountFinder {
 
     private Map<String, Integer> getRecentInfluencersFromCountry(String country) throws Exception {
         Map<String, Integer> allInfluencersFromCountry = getAllInfluencersFromCountry(country);
-        List<String> allInfluencers2024 = getInfluencers("2023-12-01", "2024-12-31");
+        List<String> allInfluencers2024 = getInfluencers("2024-01-01", "2026-12-31");
 
         Map<String, Integer> recentDutchInfluencers = allInfluencersFromCountry.entrySet().stream()
                 .filter(entry -> allInfluencers2024.contains(entry.getKey()))

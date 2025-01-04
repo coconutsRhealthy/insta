@@ -251,7 +251,7 @@ public class JsonReader {
         JSONParser jsonParser = new JSONParser();
 
         JSONArray apifyData = (JSONArray) jsonParser.parse(
-                new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/companies/27dec_nakdfashion.json"));
+                new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/companies/2025/3jan_nakdfashion.json"));
 
         JSONArray postDataForHashtag = new JSONArray();
 
