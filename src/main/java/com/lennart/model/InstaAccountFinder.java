@@ -36,7 +36,8 @@ public class InstaAccountFinder {
         });
 
         int counter = 0;
-        int sizeLimit = 1000;
+        //int sizeLimit = 930;
+        int sizeLimit = 800;
 
         for(Map.Entry<String, Integer> entry : recentDutchInfluencers.entrySet()) {
             counter++;

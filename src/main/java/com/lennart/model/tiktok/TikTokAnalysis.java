@@ -11,6 +11,9 @@ public class TikTokAnalysis {
 
     public static void main(String[] args) throws Exception {
         TikTokAnalysis tikTokAnalysis = new TikTokAnalysis();
+        //tikTokAnalysis.getTiktokkersForNewApifyList();
+        //tikTokAnalysis.getCompaniesThatGaveDiscount();
+        //tikTokAnalysis.updateDbForUsersWhoGaveDiscount();
         tikTokAnalysis.getTiktokkersForNewApifyList();
     }
 
@@ -18,7 +21,8 @@ public class TikTokAnalysis {
         Map<String, Integer> tikTokkersFromDb1 = getTikTokkersFromDb("Netherlands", "true", "2024-05-19");
         Map<String, Integer> tikTokkersFromDb2 = getTikTokkersFromDb("Netherlands", "true", "2024-07-17");
         Map<String, Integer> tikTokkersFromDb3 = getTikTokkersFromDb("Netherlands", "true", "2024-07-18");
-        Map<String, Integer> tikTokkersFromDb4 = getTikTokkersFromDb("Netherlands", "", "2024-10-15");
+        Map<String, Integer> tikTokkersFromDb4 = getTikTokkersFromDb("Netherlands", "true", "2024-10-15");
+        Map<String, Integer> tikTokkersFromDb5 = getTikTokkersFromDb("Netherlands", "", "2025-01-07");
 
         int minimumFollowersForNewUsers = 1000;
         tikTokkersFromDb4.entrySet().removeIf(entry -> entry.getValue() < minimumFollowersForNewUsers);
@@ -28,6 +32,7 @@ public class TikTokAnalysis {
         combined.putAll(tikTokkersFromDb2);
         combined.putAll(tikTokkersFromDb3);
         combined.putAll(tikTokkersFromDb4);
+        combined.putAll(tikTokkersFromDb5);
 
         combined = sortByValueHighToLow(combined);
         combined.keySet().forEach(key -> System.out.println("\"" + key + "\","));

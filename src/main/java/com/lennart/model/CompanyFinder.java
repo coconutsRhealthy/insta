@@ -22,9 +22,9 @@ public class CompanyFinder {
         //new CompanyFinder().getCodesForCompany("aybl", "2023-06-01");
         //new CompanyFinder().getCompanyFrequencyMap("2023-06-01");
         //new CompanyFinder().getCompanyFrequencyMap("2024-01-01");
-        //new CompanyFinder().getAllCompanies();
+        new CompanyFinder().getAllCompanies();
 
-        new CompanyFinder().getCompanyFrequencyMap("2024-06-30");
+        //new CompanyFinder().getCompanyFrequencyMap("2024-06-30");
     }
 
     private void testMethod() throws Exception {

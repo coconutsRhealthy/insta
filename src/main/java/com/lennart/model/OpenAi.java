@@ -15,7 +15,7 @@ public class OpenAi {
                 .build();
 
         var chatRequest = ChatRequest.builder()
-                .model("gpt-3.5-turbo-1106")
+                .model("gpt-3.5-turbo")
                 .messages(List.of(
                         new ChatMsgSystem("You should identify from which country an instagram account most likely is, " +
                                 "given its recent captions, its recenty used hashtags, its recent location tags and its bio." +
@@ -38,7 +38,7 @@ public class OpenAi {
                 .build();
 
         var chatRequest = ChatRequest.builder()
-                .model("gpt-3.5-turbo-1106")
+                .model("gpt-3.5-turbo")
                 .messages(List.of(
                         new ChatMsgSystem("You will receive a bunch of instagram post captions and their urls. You should" +
                                 "scan each caption and check if a discount code is being offered. The caption can be in any" +
@@ -62,7 +62,7 @@ public class OpenAi {
                 .build();
 
         var chatRequest = ChatRequest.builder()
-                .model("gpt-3.5-turbo-1106")
+                .model("gpt-3.5-turbo")
                 .messages(List.of(
                         new ChatMsgSystem("You will receive information of a Tiktok account, namely the username, bio " +
                                 "and one or a few captions. Based on this you should try to establish where the Tiktok " +

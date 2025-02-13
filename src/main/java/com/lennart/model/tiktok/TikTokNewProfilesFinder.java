@@ -18,6 +18,8 @@ import static com.lennart.model.tiktok.JsonReaderTikTok.captionContainsDiscountW
 public class TikTokNewProfilesFinder {
 
     public static void main(String[] args) throws Exception {
+        //new TikTokNewProfilesFinder().askOpenAiWhichCountry();
+        //new TikTokNewProfilesFinder().addNewUsersToTiktokDb();
         new TikTokNewProfilesFinder().askOpenAiWhichCountry();
     }
 
@@ -29,7 +31,7 @@ public class TikTokNewProfilesFinder {
         tiktokUsers.forEach((key, value) -> {
             try {
                 tikTokInfluencerPersister.addTiktokUserToDb
-                        (key, value, "-", "", "2024-10-15");
+                        (key, value, "-", "", "2025-01-07");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -39,7 +41,7 @@ public class TikTokNewProfilesFinder {
     private Map<String, Integer> getAllTiktokUsers() throws Exception {
         Map<String, Integer> allTiktokUsers = new HashMap<>();
 
-        List<String> filePaths = Files.list(Paths.get("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/tiktok_test/new_october"))
+        List<String> filePaths = Files.list(Paths.get("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/tiktok_test/new_jan25"))
                 .filter(Files::isRegularFile)
                 .map(Path::toString)
                 .collect(Collectors.toList());
@@ -65,7 +67,7 @@ public class TikTokNewProfilesFinder {
     private Map<String, JSONArray> getAllPostsForAllTiktokUsers() throws Exception {
         Map<String, JSONArray> allPostsForAllTiktokUsers = new HashMap<>();
 
-        List<String> filePaths = Files.list(Paths.get("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/tiktok_test/new_october"))
+        List<String> filePaths = Files.list(Paths.get("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/tiktok_test/new_jan25"))
                 .filter(Files::isRegularFile)
                 .map(Path::toString)
                 .collect(Collectors.toList());
@@ -97,14 +99,14 @@ public class TikTokNewProfilesFinder {
 
             String caption = (String) searchJson.get("text");
 
-            //if(captionContainsDiscountWords(caption)) {
+            if(captionContainsDiscountWords(caption)) {
                 JSONObject authorMeta = (JSONObject) searchJson.get("authorMeta");
 
                 String username = (String) authorMeta.get("name");
                 int followers = ((Long) authorMeta.get("fans")).intValue();
 
                 tiktokUsers.put(username, followers);
-            //}
+            }
         }
 
         tiktokUsers = tiktokUsers.entrySet().stream()
@@ -151,7 +153,7 @@ public class TikTokNewProfilesFinder {
                 String country = openAi.isTiktokProfileDutch(entry.getValue());
                 String lineToAdd = entry.getKey() + " - " + country + System.lineSeparator();
                 tikTokInfluencerPersister.executeUpdateCountryQuery(entry.getKey(), country);
-                Files.write(Paths.get("/Users/lennartmac/Desktop/influencer_persister_stuff/oct/tiktok_users.txt"), lineToAdd.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+                Files.write(Paths.get("/Users/lennartmac/Desktop/influencer_persister_stuff/2025/jan/tiktok_users.txt"), lineToAdd.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
                 System.out.println("******* " + counter++ + " *******");
             } else {
                 System.out.println("Country already set for: " + entry.getKey());
@@ -182,7 +184,7 @@ public class TikTokNewProfilesFinder {
                 String bio = (String) ((JSONObject) tiktokVideo.get("authorMeta")).get("signature");
                 String caption = (String) tiktokVideo.get("text");
 
-                //if(captionContainsDiscountWords(caption)) {
+                if(captionContainsDiscountWords(caption)) {
                     if(bioAndCaptionsPerUser.get(username) == null) {
                         bioAndCaptionsPerUser.put(username, new HashMap<>());
                         bioAndCaptionsPerUser.get(username).put("bio", new ArrayList<>());
@@ -194,7 +196,7 @@ public class TikTokNewProfilesFinder {
                     }
 
                     bioAndCaptionsPerUser.get(username).get("captions").add(caption);
-                //}
+                }
             }
         }
 
