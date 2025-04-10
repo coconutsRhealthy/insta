@@ -37,7 +37,8 @@ public class InstaAccountFinder {
 
         int counter = 0;
         //int sizeLimit = 930;
-        int sizeLimit = 800;
+        //int sizeLimit = 800;
+        int sizeLimit = 8000;
 
         for(Map.Entry<String, Integer> entry : recentDutchInfluencers.entrySet()) {
             counter++;
@@ -149,7 +150,7 @@ public class InstaAccountFinder {
         return influencersFromCountry;
     }
 
-    private Map<String, Integer> getRecentInfluencersFromCountry(String country) throws Exception {
+    public Map<String, Integer> getRecentInfluencersFromCountry(String country) throws Exception {
         Map<String, Integer> allInfluencersFromCountry = getAllInfluencersFromCountry(country);
         List<String> allInfluencers2024 = getInfluencers("2024-01-01", "2026-12-31");
 

@@ -15,7 +15,7 @@ public class JsonReaderTikTok {
 
     private void testGetRecentDiscountPostsTiktok() throws Exception {
         JSONParser jsonParser = new JSONParser();
-        JSONArray apifyData = (JSONArray) jsonParser.parse(new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/tiktok_test/users_test/2025/feb/tiktok_users_12feb.json"));
+        JSONArray apifyData = (JSONArray) jsonParser.parse(new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/tiktok_test/users_test/2025/apr/tiktok_users_9apr.json"));
         int counter = 1;
 
         for(Object apifyDataElement : apifyData) {

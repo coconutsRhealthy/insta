@@ -34,27 +34,27 @@ public class JsonReader {
     //loopearplugs
     //hunkemoller
 
-    //myburga / burga
-    //gymshark
-    //snuggs
-    //goboony
-    //ginatricot
-    //otrium / otriumcreators
-    //pinkgellac
-    //geurwolkje
-    //body&fit
-    //kaptenandson
-    //stevemaddeneu
-    //emmasleep
-    //hellofresh
-    //lookfantastic
-    //leolive
-    //only.nederland
-    //sellpy
-    //esncom
-    //aybl
-    //lyko_nl
-    //maniacnails.official
+    // myburga / burga
+    // gymshark
+    // snuggs
+    // goboony
+    // ginatricot
+    // otrium / otriumcreators
+    // pinkgellac
+    // geurwolkje
+    // body&fit
+    // kaptenandson
+    // stevemaddeneu
+    // emmasleep
+    // hellofresh
+    // lookfantastic
+    // leolive
+    // only.nederland
+    // sellpy
+    // esncom
+    // aybl
+    // lyko_nl
+    // maniacnails.official
 
 
 
@@ -113,7 +113,7 @@ public class JsonReader {
     //  zzz loavies / girlsgoneloavies / loaviesdiscount
     //  zzz sheinpartner
     //  zzz strongerlabel / strongermoments
-    //  zzz  gutsgusto
+    //  zzz gutsgusto
     //  zzz getdrezzed
     //  zzz begoldennl
     //  zzz mimamsterdam
@@ -128,27 +128,27 @@ public class JsonReader {
         //zzz loopearplugs
         //zzz hunkemoller
 
-        //zzz myburga / burga
-        //zzz gymshark
-        //zzz snuggs
-        //zzz goboony
-        //---> ginatricot
-        //zzz otrium / otriumcreators
-        //zzz pinkgellac
-        //zzz geurwolkje
-        //zzz body&fit
-        //zzz kaptenandson
-        //zzz stevemaddeneu
-        //zzz emmasleep
-        //zzz hellofresh
-        //zzz lookfantastic
-        //zzz leolive
-        //zzz only.nederland
-        //zzz sellpy
-        //zzz esncom
-        //zzz aybl
-        //zzz lyko_nl
-        //zzz maniacnails.official
+        // zzz myburga / burga
+        // zzz gymshark
+        // zzz snuggs
+        // zzz goboony
+        // ---> ginatricot
+        // zzz otrium / otriumcreators
+        // zzz pinkgellac
+        // zzz geurwolkje
+        // zzz body&fit
+        // zzz kaptenandson
+        // zzz stevemaddeneu
+        // zzz emmasleep
+        // zzz hellofresh
+        // zzz lookfantastic
+        // zzz leolive
+        // zzz only.nederland
+        // zzz sellpy
+        // zzz esncom
+        // zzz aybl
+        // zzz lyko_nl
+        // zzz maniacnails.official
 
 
     public static void main(String[] args) throws Exception {
@@ -252,7 +252,7 @@ public class JsonReader {
         JSONParser jsonParser = new JSONParser();
 
         JSONArray apifyData = (JSONArray) jsonParser.parse(
-                new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/companies/2025/feb/12feb_nakdfashion.json"));
+                new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/companies/2025/apr/9apr_nakdfashion.json"));
 
         JSONArray postDataForHashtag = new JSONArray();
 

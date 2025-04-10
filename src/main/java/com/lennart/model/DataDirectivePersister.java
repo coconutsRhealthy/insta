@@ -31,7 +31,7 @@ public class DataDirectivePersister {
         List<String> archive = getArchiveLines("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/archive.txt");
 
         discountsJsonLines = addYearToDate(discountsJsonLines, 2025);
-        archive4 = addYearToDate(archive4, 2024);
+        archive4 = addYearToDate(archive4, 2025);
         archive3 = addYearToDate(archive3, 2024);
         archive2 = addYearToDate(archive2, 2023);
         archive = addYearToDate(archive, 2022);
