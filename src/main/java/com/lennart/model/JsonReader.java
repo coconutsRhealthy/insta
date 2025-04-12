@@ -110,45 +110,45 @@ public class JsonReader {
 
 
     //  zzz nakdfashion / benakd / nakd
-    //  zzz loavies / girlsgoneloavies / loaviesdiscount
+    //  loavies / girlsgoneloavies / loaviesdiscount
     //  zzz sheinpartner
     //  zzz strongerlabel / strongermoments
     //  zzz gutsgusto
-    //  zzz getdrezzed
-    //  zzz begoldennl
-    //  zzz mimamsterdam
-    //  zzz paulie__pocket, pauliepocket
-    //  zzz myjewellery
-    //  zzz famousstore
-    //  zzz airup
-    //  zzz bjornborg
-    //  zzz myproteinnl
-    //  zzz esuals
-        //zzz terstal / mijnterstallook
-        //zzz loopearplugs
-        //zzz hunkemoller
+    //  getdrezzed
+    //  begoldennl
+    //  mimamsterdam
+    //  paulie__pocket, pauliepocket
+    //  myjewellery
+    //  famousstore
+    //  airup
+    //  bjornborg
+    //  myproteinnl
+    //  esuals
+        //terstal / mijnterstallook
+        //loopearplugs
+        //hunkemoller
 
         // zzz myburga / burga
-        // zzz gymshark
-        // zzz snuggs
-        // zzz goboony
-        // ---> ginatricot
-        // zzz otrium / otriumcreators
-        // zzz pinkgellac
-        // zzz geurwolkje
-        // zzz body&fit
-        // zzz kaptenandson
-        // zzz stevemaddeneu
-        // zzz emmasleep
-        // zzz hellofresh
-        // zzz lookfantastic
-        // zzz leolive
-        // zzz only.nederland
-        // zzz sellpy
-        // zzz esncom
-        // zzz aybl
-        // zzz lyko_nl
-        // zzz maniacnails.official
+        // gymshark
+        // snuggs
+        // goboony
+        // zzz ginatricot
+        // otrium / otriumcreators
+        // pinkgellac
+        // geurwolkje
+        // body&fit
+        // kaptenandson
+        // stevemaddeneu
+        // emmasleep
+        // hellofresh
+        // lookfantastic
+        // leolive
+        // only.nederland
+        // sellpy
+        // esncom
+        // aybl
+        // lyko_nl
+        // maniacnails.official
 
 
     public static void main(String[] args) throws Exception {
@@ -252,7 +252,7 @@ public class JsonReader {
         JSONParser jsonParser = new JSONParser();
 
         JSONArray apifyData = (JSONArray) jsonParser.parse(
-                new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/companies/2025/apr/9apr_nakdfashion.json"));
+                new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/companies/2025/apr/11apr_nakdfashion.json"));
 
         JSONArray postDataForHashtag = new JSONArray();
 
