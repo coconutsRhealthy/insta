@@ -8,20 +8,13 @@ import java.util.*;
 public class WebshopDiscountFinder {
 
     public static void main(String[] args) throws Exception {
-        new WebshopDiscountFinder().testMethod();
+        new WebshopDiscountFinder().extractDiscountSnippetsFromShop("zz");
     }
 
-    private void testMethod() throws Exception {
-        String html = getHtmlForShop("https://www.ikea.com/nl/nl/");
-
+    public Map<String, List<String>> extractDiscountSnippetsFromShop(String url) throws Exception {
+        String html = getHtmlForShop(url);
         Map<String, List<String>> result = extractDiscountSnippets(html, 20);
-
-        for (Map.Entry<String, List<String>> entry : result.entrySet()) {
-            System.out.println("Term: " + entry.getKey());
-            for (String snippet : entry.getValue()) {
-                System.out.println(" - " + snippet);
-            }
-        }
+        return result;
     }
 
     public Map<String, List<String>> extractDiscountSnippets(String shopHtmlText, int contextLength) {
