@@ -6,6 +6,7 @@ import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -21,7 +22,7 @@ public class AwinApi {
         new AwinApi().printIdentifiedDiscountposts();
     }
 
-    private void saveAwinPromotionsJson() {
+    private void saveAwinPromotionsJson() throws Exception {
         JSONParser parser = new JSONParser();
 
         for(int i = 57; i < 5000; i++) {
@@ -81,6 +82,8 @@ public class AwinApi {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                System.out.println("Waiting for 60 seconds to continue...");
+                TimeUnit.SECONDS.wait(60);
             }
         }
     }
