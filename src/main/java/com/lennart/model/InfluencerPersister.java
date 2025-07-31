@@ -16,7 +16,7 @@ public class InfluencerPersister {
     public static void main(String[] args) throws Exception {
         //new InfluencerPersister().addNewInfluencersToDb("2024-08-01");
         new InfluencerPersister().addFollowersToNewEntries();
-        new InfluencerPersister().printNewlyAddedInfluencers();
+        //new InfluencerPersister().printNewlyAddedInfluencers();
     }
 
     private void addNewInfluencersToDb(String fromDate) throws Exception {
@@ -132,7 +132,7 @@ public class InfluencerPersister {
         JSONParser jsonParser = new JSONParser();
 
         JSONArray apifyData = (JSONArray) jsonParser.parse(
-                new FileReader("/Users/lennartmac/Downloads/ai_data/new_insta_influencers_country_analysis_apr25.json"));
+                new FileReader("/Users/lennartmac/Downloads/ai_data/new_insta_influencers_country_analysis_jul25.json"));
 
         for(Object apifyDataElement : apifyData) {
             JSONObject influencerJson = (JSONObject) apifyDataElement;

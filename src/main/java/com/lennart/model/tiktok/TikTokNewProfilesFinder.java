@@ -18,9 +18,9 @@ import static com.lennart.model.tiktok.JsonReaderTikTok.captionContainsDiscountW
 public class TikTokNewProfilesFinder {
 
     public static void main(String[] args) throws Exception {
-        //new TikTokNewProfilesFinder().askOpenAiWhichCountry();
-        //new TikTokNewProfilesFinder().addNewUsersToTiktokDb();
         new TikTokNewProfilesFinder().askOpenAiWhichCountry();
+        //new TikTokNewProfilesFinder().addNewUsersToTiktokDb();
+        //new TikTokNewProfilesFinder().addNewUsersToTiktokDb();
     }
 
     private void addNewUsersToTiktokDb() throws Exception {
@@ -31,7 +31,7 @@ public class TikTokNewProfilesFinder {
         tiktokUsers.forEach((key, value) -> {
             try {
                 tikTokInfluencerPersister.addTiktokUserToDb
-                        (key, value, "-", "", "2025-01-07");
+                        (key, value, "-", "", "2025-07-30");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -41,7 +41,7 @@ public class TikTokNewProfilesFinder {
     private Map<String, Integer> getAllTiktokUsers() throws Exception {
         Map<String, Integer> allTiktokUsers = new HashMap<>();
 
-        List<String> filePaths = Files.list(Paths.get("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/tiktok_test/new_jan25"))
+        List<String> filePaths = Files.list(Paths.get("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/tiktok_test/new_jul25"))
                 .filter(Files::isRegularFile)
                 .map(Path::toString)
                 .collect(Collectors.toList());
@@ -67,7 +67,7 @@ public class TikTokNewProfilesFinder {
     private Map<String, JSONArray> getAllPostsForAllTiktokUsers() throws Exception {
         Map<String, JSONArray> allPostsForAllTiktokUsers = new HashMap<>();
 
-        List<String> filePaths = Files.list(Paths.get("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/tiktok_test/new_jan25"))
+        List<String> filePaths = Files.list(Paths.get("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/tiktok_test/new_jul25"))
                 .filter(Files::isRegularFile)
                 .map(Path::toString)
                 .collect(Collectors.toList());
@@ -100,10 +100,8 @@ public class TikTokNewProfilesFinder {
             String caption = (String) searchJson.get("text");
 
             if(captionContainsDiscountWords(caption)) {
-                JSONObject authorMeta = (JSONObject) searchJson.get("authorMeta");
-
-                String username = (String) authorMeta.get("name");
-                int followers = ((Long) authorMeta.get("fans")).intValue();
+                String username = (String) searchJson.get("authorMeta.name");
+                int followers = -1;
 
                 tiktokUsers.put(username, followers);
             }
@@ -129,8 +127,7 @@ public class TikTokNewProfilesFinder {
 
         for(Object apifyDataElement : apifyData) {
             JSONObject videoJson = (JSONObject) apifyDataElement;
-            JSONObject authorMeta = (JSONObject) videoJson.get("authorMeta");
-            String username = (String) authorMeta.get("name");
+            String username = (String) videoJson.get("authorMeta.name");
             postsPerTiktokUser.putIfAbsent(username, new JSONArray());
             postsPerTiktokUser.get(username).add(videoJson);
         }
@@ -153,7 +150,7 @@ public class TikTokNewProfilesFinder {
                 String country = openAi.isTiktokProfileDutch(entry.getValue());
                 String lineToAdd = entry.getKey() + " - " + country + System.lineSeparator();
                 tikTokInfluencerPersister.executeUpdateCountryQuery(entry.getKey(), country);
-                Files.write(Paths.get("/Users/lennartmac/Desktop/influencer_persister_stuff/2025/jan/tiktok_users.txt"), lineToAdd.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+                Files.write(Paths.get("/Users/lennartmac/Desktop/influencer_persister_stuff/2025/apr/tiktok_users.txt"), lineToAdd.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
                 System.out.println("******* " + counter++ + " *******");
             } else {
                 System.out.println("Country already set for: " + entry.getKey());

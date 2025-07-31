@@ -109,11 +109,11 @@ public class JsonReader {
     }
 
 
-    //  zzz nakdfashion / benakd / nakd
+    //  nakdfashion / benakd / nakd
     //  loavies / girlsgoneloavies / loaviesdiscount
-    //  zzz sheinpartner
-    //  zzz strongerlabel / strongermoments
-    //  zzz gutsgusto
+    //  sheinpartner
+    //  ---> strongerlabel / strongermoments
+    //  gutsgusto
     //  getdrezzed
     //  begoldennl
     //  mimamsterdam
@@ -128,11 +128,11 @@ public class JsonReader {
         //loopearplugs
         //hunkemoller
 
-        // zzz myburga / burga
-        // gymshark
+        // ---> myburga / burga
+        // ---> gymshark
         // snuggs
         // goboony
-        // zzz ginatricot
+        // ginatricot
         // otrium / otriumcreators
         // pinkgellac
         // geurwolkje
@@ -141,11 +141,11 @@ public class JsonReader {
         // stevemaddeneu
         // emmasleep
         // hellofresh
-        // lookfantastic
+        // ---> lookfantastic
         // leolive
-        // only.nederland
+        // ---> only.nederland
         // sellpy
-        // esncom
+        // ---> esncom
         // aybl
         // lyko_nl
         // maniacnails.official
@@ -252,7 +252,7 @@ public class JsonReader {
         JSONParser jsonParser = new JSONParser();
 
         JSONArray apifyData = (JSONArray) jsonParser.parse(
-                new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/companies/2025/apr/11apr_nakdfashion.json"));
+                new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/companies/2025/may/21mei_nakdfashion.json"));
 
         JSONArray postDataForHashtag = new JSONArray();
 

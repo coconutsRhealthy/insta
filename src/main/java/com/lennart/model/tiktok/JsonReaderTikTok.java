@@ -15,7 +15,7 @@ public class JsonReaderTikTok {
 
     private void testGetRecentDiscountPostsTiktok() throws Exception {
         JSONParser jsonParser = new JSONParser();
-        JSONArray apifyData = (JSONArray) jsonParser.parse(new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/tiktok_test/users_test/2025/apr/tiktok_users_11apr.json"));
+        JSONArray apifyData = (JSONArray) jsonParser.parse(new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/tiktok_test/users_test/2025/may/tiktok_users_16mei.json"));
         int counter = 1;
 
         for(Object apifyDataElement : apifyData) {
@@ -55,6 +55,7 @@ public class JsonReaderTikTok {
                         StringUtils.containsIgnoreCase(caption, "met code") ||
                         StringUtils.containsIgnoreCase(caption, "use code") ||
                         StringUtils.containsIgnoreCase(caption, "gebruik code") ||
+                        StringUtils.containsIgnoreCase(caption, "coupon") ||
                         StringUtils.containsIgnoreCase(caption, "werbung") ||
                         StringUtils.containsIgnoreCase(caption, "anzeige") ||
                         StringUtils.containsIgnoreCase(caption, "rabatt") ||

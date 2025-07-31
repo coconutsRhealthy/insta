@@ -14,7 +14,9 @@ public class TikTokAnalysis {
         //tikTokAnalysis.getTiktokkersForNewApifyList();
         //tikTokAnalysis.getCompaniesThatGaveDiscount();
         //tikTokAnalysis.updateDbForUsersWhoGaveDiscount();
-        tikTokAnalysis.getTiktokkersForNewApifyList();
+        //tikTokAnalysis.getTiktokkersForNewApifyList();
+        //tikTokAnalysis.getTiktokkersForNewApifyList();
+        tikTokAnalysis.printTiktokkersAddedOnDateForApify("2025-07-30");
     }
 
     private void getTiktokkersForNewApifyList() throws Exception {
@@ -22,7 +24,8 @@ public class TikTokAnalysis {
         Map<String, Integer> tikTokkersFromDb2 = getTikTokkersFromDb("Netherlands", "true", "2024-07-17");
         Map<String, Integer> tikTokkersFromDb3 = getTikTokkersFromDb("Netherlands", "true", "2024-07-18");
         Map<String, Integer> tikTokkersFromDb4 = getTikTokkersFromDb("Netherlands", "true", "2024-10-15");
-        Map<String, Integer> tikTokkersFromDb5 = getTikTokkersFromDb("Netherlands", "", "2025-01-07");
+        Map<String, Integer> tikTokkersFromDb5 = getTikTokkersFromDb("Netherlands", "true", "2025-01-07");
+        Map<String, Integer> tikTokkersFromDb6 = getTikTokkersFromDb("Netherlands", "", "2025-04-13");
 
         int minimumFollowersForNewUsers = 1000;
         tikTokkersFromDb4.entrySet().removeIf(entry -> entry.getValue() < minimumFollowersForNewUsers);
@@ -33,6 +36,7 @@ public class TikTokAnalysis {
         combined.putAll(tikTokkersFromDb3);
         combined.putAll(tikTokkersFromDb4);
         combined.putAll(tikTokkersFromDb5);
+        combined.putAll(tikTokkersFromDb6);
 
         combined = sortByValueHighToLow(combined);
         combined.keySet().forEach(key -> System.out.println("\"" + key + "\","));
@@ -171,6 +175,30 @@ public class TikTokAnalysis {
                         Map.Entry::getValue,
                         (e1, e2) -> e1,
                         LinkedHashMap::new));
+    }
+
+    private void printTiktokkersAddedOnDateForApify(String dateAdded) throws Exception {
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM tiktok_influencers WHERE date_added = '" + Date.valueOf(dateAdded) + "';");
+
+        List<String> newTiktokkers = new ArrayList<>();
+
+        while(rs.next()) {
+            newTiktokkers.add(rs.getString("name"));
+        }
+
+        rs.close();
+        st.close();
+
+        closeDbConnection();
+
+        Collections.sort(newTiktokkers);
+
+        newTiktokkers.forEach(tiktokker -> {
+            System.out.println("\"" + tiktokker + "\",");
+        });
     }
 
     private void initializeDbConnection() throws Exception {

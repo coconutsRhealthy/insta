@@ -13,14 +13,14 @@ import java.io.FileReader;
 public class JsonReaderTagged {
 
     public static void main(String[] args) throws Exception {
-        new JsonReaderTagged().checkUserTaggedPostsForDiscountCodes("nakdfashion");
+        new JsonReaderTagged().checkUserTaggedPostsForDiscountCodes("zzz");
     }
 
     private void checkUserTaggedPostsForDiscountCodes(String company) throws Exception {
         JSONParser jsonParser = new JSONParser();
 
         JSONArray apifyData = (JSONArray) jsonParser.parse(
-                new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/specific_tagged/nakdfashion_22okt.json"));
+                new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/specific_tagged/2025_19mei_small.json"));
 
         int counter = 1;
 

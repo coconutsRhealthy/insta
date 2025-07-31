@@ -28,7 +28,7 @@ public class JsonReaderProfiles {
         JSONParser jsonParser = new JSONParser();
 
         JSONArray apifyData = (JSONArray) jsonParser.parse(
-                new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/users/2025/apr/users_11apr.json"));
+                new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/users/2025/may/users_16may.json"));
 
         int counter = 1;
 
@@ -105,6 +105,7 @@ public class JsonReaderProfiles {
                 StringUtils.containsIgnoreCase(caption, "met code") ||
                 StringUtils.containsIgnoreCase(caption, "use code") ||
                 StringUtils.containsIgnoreCase(caption, "gebruik code") ||
+                StringUtils.containsIgnoreCase(caption, "coupon") ||
                 StringUtils.containsIgnoreCase(caption, "werbung") ||
                 StringUtils.containsIgnoreCase(caption, "anzeige") ||
                 StringUtils.containsIgnoreCase(caption, "rabatt") ||

@@ -16,7 +16,7 @@ public class AwinApi {
 
     private static final String API_TOKEN = "af150887-1156-4193-aeff-ccf83d7cdb0b";
     private static final String PUBLISHER_ID = "1870794";
-    private static final String OUTPUT_FILE = "src/main/resources/static/awin/awin-promotionsbig";
+    private static final String OUTPUT_FILE = "src/main/resources/static/awin/awin-promotionsbig_active";
 
     public static void main(String[] args) throws Exception {
         new AwinApi().printIdentifiedDiscountposts();
@@ -24,8 +24,16 @@ public class AwinApi {
 
     private void saveAwinPromotionsJson() throws Exception {
         JSONParser parser = new JSONParser();
+        int extraCounter = 1;
 
-        for(int i = 57; i < 5000; i++) {
+        for(int i = 150; i < 5000; i++) {
+            extraCounter++;
+
+            if(extraCounter == 18) {
+                System.out.println("Waiting for 15 seconds to continue...");
+                TimeUnit.SECONDS.sleep(15);
+                extraCounter = 0;
+            }
             try {
                 String endpoint = "https://api.awin.com/publisher/" + PUBLISHER_ID + "/promotions";
                 URL url = new URL(endpoint);
@@ -42,7 +50,7 @@ public class AwinApi {
                         + "\"filters\": {"
                         +     "\"membership\": \"all\","
                         +     "\"status\": \"active\","
-                        +     "\"type\": \"voucher\""
+                        +     "\"type\": \"all\""
                         + "},"
                         + "\"pagination\": {"
                         +     "\"page\": " + i + ","
@@ -82,8 +90,6 @@ public class AwinApi {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                System.out.println("Waiting for 60 seconds to continue...");
-                TimeUnit.SECONDS.wait(60);
             }
         }
     }
@@ -93,7 +99,7 @@ public class AwinApi {
 
         int counter = 1;
 
-        for(int i = 1; i <= 100; i++) {
+        for(int i = 1; i <= 13; i++) {
             JSONObject awinFullDataObject = (JSONObject) jsonParser.parse(
                     new FileReader("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/awin/awin-promotionsbig_" + i + ".json"));
 
@@ -106,10 +112,11 @@ public class AwinApi {
 
                 if(regionsMap.keySet().contains("NL") || regionsMap.values().contains("Netherlands")) {
                     JSONObject advertiserJson = (JSONObject) advertiserVoucherJson.get("advertiser");
-                    JSONObject voucherJson = (JSONObject) advertiserVoucherJson.get("voucher");
+                    //JSONObject voucherJson = (JSONObject) advertiserVoucherJson.get("voucher");
 
                     String advertiser = (String) advertiserJson.get("name");
-                    String code = (String) voucherJson.get("code");
+                    //String code = (String) voucherJson.get("code");
+                    String code = "zzz";
                     String url = (String) advertiserVoucherJson.get("url");
                     String title = (String) advertiserVoucherJson.get("title");
                     String startDate = (String) advertiserVoucherJson.get("startDate");
@@ -117,7 +124,9 @@ public class AwinApi {
                     String region = regionsMap.get("NL");
 
                     if(wasStartDateRecent(startDate) && isEndDateSoon(endDate)) {
-                        print(advertiser, code, url, title, startDate, endDate, region, counter++);
+                        System.out.println(url);
+
+                        //print(advertiser, code, url, title, startDate, endDate, region, counter++);
                     }
                 }
             }
@@ -171,9 +180,11 @@ public class AwinApi {
     }
 
     private boolean isEndDateSoon(String endDate) {
-        ZonedDateTime end = ZonedDateTime.parse(endDate);
-        ZonedDateTime fourWeeksFromNow = ZonedDateTime.now().plusWeeks(4);
-        return end.isBefore(fourWeeksFromNow);
+//        ZonedDateTime end = ZonedDateTime.parse(endDate);
+//        ZonedDateTime fourWeeksFromNow = ZonedDateTime.now().plusWeeks(4);
+//        return end.isBefore(fourWeeksFromNow);
+
+        return true;
     }
 }
 
