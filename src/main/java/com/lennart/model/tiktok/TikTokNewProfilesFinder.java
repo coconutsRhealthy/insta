@@ -100,8 +100,10 @@ public class TikTokNewProfilesFinder {
             String caption = (String) searchJson.get("text");
 
             if(captionContainsDiscountWords(caption)) {
-                String username = (String) searchJson.get("authorMeta.name");
-                int followers = -1;
+                JSONObject authorMeta = (JSONObject) searchJson.get("authorMeta");
+
+                String username = (String) authorMeta.get("name");
+                int followers = ((Long) authorMeta.get("fans")).intValue();
 
                 tiktokUsers.put(username, followers);
             }
@@ -127,7 +129,18 @@ public class TikTokNewProfilesFinder {
 
         for(Object apifyDataElement : apifyData) {
             JSONObject videoJson = (JSONObject) apifyDataElement;
-            String username = (String) videoJson.get("authorMeta.name");
+            JSONObject authorMeta = (JSONObject) videoJson.get("authorMeta");
+            String username;
+
+            if(authorMeta == null) {
+                String input = (String) videoJson.get("input");
+                String error = (String) videoJson.get("error");
+                System.out.println("authorMeta null. Input: " + input + " Error: " + error);
+                continue;
+            } else {
+                username = (String) authorMeta.get("name");
+            }
+
             postsPerTiktokUser.putIfAbsent(username, new JSONArray());
             postsPerTiktokUser.get(username).add(videoJson);
         }
@@ -150,7 +163,7 @@ public class TikTokNewProfilesFinder {
                 String country = openAi.isTiktokProfileDutch(entry.getValue());
                 String lineToAdd = entry.getKey() + " - " + country + System.lineSeparator();
                 tikTokInfluencerPersister.executeUpdateCountryQuery(entry.getKey(), country);
-                Files.write(Paths.get("/Users/lennartmac/Desktop/influencer_persister_stuff/2025/apr/tiktok_users.txt"), lineToAdd.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+                Files.write(Paths.get("/Users/lennartmac/Desktop/influencer_persister_stuff/2025/jul/tiktok_users.txt"), lineToAdd.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
                 System.out.println("******* " + counter++ + " *******");
             } else {
                 System.out.println("Country already set for: " + entry.getKey());
@@ -177,11 +190,12 @@ public class TikTokNewProfilesFinder {
         for(Map.Entry<String,JSONArray> entry : allPostsForTiktokUsers.entrySet()) {
             for(Object tiktokVideoObject : entry.getValue()) {
                 JSONObject tiktokVideo = (JSONObject) tiktokVideoObject;
-                String username = (String) ((JSONObject) tiktokVideo.get("authorMeta")).get("name");
-                String bio = (String) ((JSONObject) tiktokVideo.get("authorMeta")).get("signature");
                 String caption = (String) tiktokVideo.get("text");
 
                 if(captionContainsDiscountWords(caption)) {
+                    String username = (String) ((JSONObject) tiktokVideo.get("authorMeta")).get("name");
+                    String bio = (String) ((JSONObject) tiktokVideo.get("authorMeta")).get("signature");
+
                     if(bioAndCaptionsPerUser.get(username) == null) {
                         bioAndCaptionsPerUser.put(username, new HashMap<>());
                         bioAndCaptionsPerUser.get(username).put("bio", new ArrayList<>());

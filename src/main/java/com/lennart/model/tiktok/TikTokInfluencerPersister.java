@@ -48,7 +48,6 @@ public class TikTokInfluencerPersister {
 
     private void executeAddQuery(String username, int followers, String country,
                                     String gaveDiscount, String addedToDbDate) throws Exception {
-        initializeDbConnection();
         Statement st = con.createStatement();
 
         st.executeUpdate("INSERT INTO tiktok_influencers (" +
@@ -66,7 +65,6 @@ public class TikTokInfluencerPersister {
                 ")");
 
         st.close();
-        closeDbConnection();
     }
 
     public void executeUpdateCountryQuery(String username, String country) throws Exception {
