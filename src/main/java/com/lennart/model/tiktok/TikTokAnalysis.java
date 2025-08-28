@@ -1,8 +1,12 @@
 package com.lennart.model.tiktok;
 
+import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public class TikTokAnalysis {
@@ -15,8 +19,8 @@ public class TikTokAnalysis {
         //tikTokAnalysis.getCompaniesThatGaveDiscount();
         //tikTokAnalysis.updateDbForUsersWhoGaveDiscount();
         //tikTokAnalysis.getTiktokkersForNewApifyList();
-        //tikTokAnalysis.getTiktokkersForNewApifyList();
-        tikTokAnalysis.printTiktokkersAddedOnDateForApify("2025-07-30");
+        tikTokAnalysis.getTiktokkersForNewApifyList();
+        //tikTokAnalysis.printTiktokkersAddedOnDateForApify("2025-07-30");
     }
 
     private void getTiktokkersForNewApifyList() throws Exception {
@@ -25,7 +29,8 @@ public class TikTokAnalysis {
         Map<String, Integer> tikTokkersFromDb3 = getTikTokkersFromDb("Netherlands", "true", "2024-07-18");
         Map<String, Integer> tikTokkersFromDb4 = getTikTokkersFromDb("Netherlands", "true", "2024-10-15");
         Map<String, Integer> tikTokkersFromDb5 = getTikTokkersFromDb("Netherlands", "true", "2025-01-07");
-        Map<String, Integer> tikTokkersFromDb6 = getTikTokkersFromDb("Netherlands", "", "2025-04-13");
+        Map<String, Integer> tikTokkersFromDb6 = getTikTokkersFromDb("Netherlands", "true", "2025-04-13");
+        Map<String, Integer> tikTokkersFromDb7 = getTikTokkersFromDb("Netherlands", "", "2025-07-30");
 
         int minimumFollowersForNewUsers = 1000;
         tikTokkersFromDb4.entrySet().removeIf(entry -> entry.getValue() < minimumFollowersForNewUsers);
@@ -37,9 +42,18 @@ public class TikTokAnalysis {
         combined.putAll(tikTokkersFromDb4);
         combined.putAll(tikTokkersFromDb5);
         combined.putAll(tikTokkersFromDb6);
+        //combined.putAll(tikTokkersFromDb7);
+        tikTokkersFromDb7.entrySet().stream()
+                .filter(e -> ThreadLocalRandom.current().nextDouble() < 0.37)
+                .forEach(e -> combined.put(e.getKey(), e.getValue()));
 
-        combined = sortByValueHighToLow(combined);
-        combined.keySet().forEach(key -> System.out.println("\"" + key + "\","));
+        Map<String, Integer> sortedCombined = sortByValueHighToLow(combined);
+
+        StringBuilder sb = new StringBuilder();
+        sortedCombined.keySet().forEach(key -> sb.append(key).append("\n"));
+        System.out.print(sb);
+        StringSelection selection = new StringSelection(sb.toString());
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, null);
     }
 
     private void updateDbForUsersWhoGaveDiscount() throws Exception {

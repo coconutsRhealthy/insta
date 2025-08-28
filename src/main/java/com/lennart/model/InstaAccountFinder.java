@@ -1,7 +1,10 @@
 package com.lennart.model;
 
+import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.sql.*;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class InstaAccountFinder {
@@ -16,9 +19,15 @@ public class InstaAccountFinder {
     private void printInfluList() throws Exception {
         Map<String, Integer> influList = fillInfluList();
 
+        StringBuilder sb = new StringBuilder();
         influList.keySet().stream()
-            .map(account -> "\"https://www.instagram.com/" + account + "\",\n")
-            .forEach(System.out::print);
+            .map(account -> "https://www.instagram.com/" + account + "\n")
+            .forEach(sb::append);
+
+        System.out.print(sb);
+
+        StringSelection selection = new StringSelection(sb.toString());
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, null);
     }
 
     private Map<String, Integer> fillInfluList() throws Exception {
