@@ -132,7 +132,7 @@ public class InfluencerPersister {
         JSONParser jsonParser = new JSONParser();
 
         JSONArray apifyData = (JSONArray) jsonParser.parse(
-                new FileReader("/Users/lennartmac/Downloads/ai_data/new_insta_influencers_country_analysis_jul25.json"));
+                new FileReader("/Users/lennartmac/Downloads/ai_data/new_insta_influencers_country_analysis_oct25.json"));
 
         for(Object apifyDataElement : apifyData) {
             JSONObject influencerJson = (JSONObject) apifyDataElement;
