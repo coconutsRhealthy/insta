@@ -27,7 +27,7 @@ public class InstaAccountFinder {
         System.out.print(sb);
 
         StringSelection selection = new StringSelection(sb.toString());
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, null);
+        //Toolkit.getDefaultToolkit().getSystemClipboard().setContents(selection, null);
     }
 
     private Map<String, Integer> fillInfluList() throws Exception {
@@ -68,7 +68,7 @@ public class InstaAccountFinder {
 
         while(influencersToUse.size() < sizeLimit) {
             if(stillEligibleKeys.isEmpty()) {
-                System.out.println("Not enough eligible entries, will add sportInfluencers");
+                //System.out.println("Not enough eligible entries, will add sportInfluencers");
                 //addRandomSportInfluencer(influencersToUse, sportInfluencers, sizeLimit);
                 break;
             }
@@ -161,7 +161,7 @@ public class InstaAccountFinder {
 
     public Map<String, Integer> getRecentInfluencersFromCountry(String country) throws Exception {
         Map<String, Integer> allInfluencersFromCountry = getAllInfluencersFromCountry(country);
-        List<String> allInfluencers2024 = getInfluencers("2024-01-01", "2026-12-31");
+        List<String> allInfluencers2024 = getInfluencers("2024-10-01", "2026-12-31");
 
         Map<String, Integer> recentDutchInfluencers = allInfluencersFromCountry.entrySet().stream()
                 .filter(entry -> allInfluencers2024.contains(entry.getKey()))
