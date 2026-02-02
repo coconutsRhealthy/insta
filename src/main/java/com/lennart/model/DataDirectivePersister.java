@@ -25,13 +25,15 @@ public class DataDirectivePersister {
 
     private void fillEmptyDb() throws Exception {
         List<String> discountsJsonLines = getDiscountsJsonLines("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/discounts.json");
+        List<String> archive6 = getArchiveLines("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/archive6.txt");
         List<String> archive5 = getArchiveLines("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/archive5.txt");
         List<String> archive4 = getArchiveLines("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/archive4.txt");
         List<String> archive3 = getArchiveLines("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/archive3.txt");
         List<String> archive2 = getArchiveLines("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/archive2.txt");
         List<String> archive = getArchiveLines("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/archive.txt");
 
-        discountsJsonLines = addYearToDate(discountsJsonLines, 2025);
+        discountsJsonLines = addYearToDate(discountsJsonLines, 2026);
+        archive6 = addYearToDate(archive6, 2025);
         archive5 = addYearToDate(archive5, 2025);
         archive4 = addYearToDate(archive4, 2025);
         archive3 = addYearToDate(archive3, 2024);
@@ -39,6 +41,7 @@ public class DataDirectivePersister {
         archive = addYearToDate(archive, 2022);
 
         addDataToDb(discountsJsonLines);
+        addDataToDb(archive6);
         addDataToDb(archive5);
         addDataToDb(archive4);
         addDataToDb(archive3);

@@ -22,7 +22,7 @@ public class CountryIdentifier {
     }
 
     private String createGptQuestionString() throws Exception {
-        Map<String, Map<String, List<String>>> allData = getDataForAllUsers("/Users/lennartmac/Downloads/ai_data/new_insta_influencers_country_analysis_oct25.json");
+        Map<String, Map<String, List<String>>> allData = getDataForAllUsers("/Users/lennartmac/Downloads/ai_data/new_insta_influencers_country_analysis_jan26.json");
 
         int counter = 0;
         OpenAi openAi = new OpenAi();
