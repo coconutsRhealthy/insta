@@ -24,7 +24,10 @@ public class DataDirectivePersister {
     }
 
     private void fillEmptyDb() throws Exception {
+        emptyDb();
+
         List<String> discountsJsonLines = getDiscountsJsonLines("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/discounts.json");
+        List<String> archive7 = getArchiveLines("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/archive7.txt");
         List<String> archive6 = getArchiveLines("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/archive6.txt");
         List<String> archive5 = getArchiveLines("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/archive5.txt");
         List<String> archive4 = getArchiveLines("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/archive4.txt");
@@ -33,6 +36,7 @@ public class DataDirectivePersister {
         List<String> archive = getArchiveLines("/Users/lennartmac/Documents/Projects/diski-input-insta/src/assets/archive.txt");
 
         discountsJsonLines = addYearToDate(discountsJsonLines, 2026);
+        archive7 = addYearToDate(archive7, 2026);
         archive6 = addYearToDate(archive6, 2025);
         archive5 = addYearToDate(archive5, 2025);
         archive4 = addYearToDate(archive4, 2025);
@@ -41,6 +45,7 @@ public class DataDirectivePersister {
         archive = addYearToDate(archive, 2022);
 
         addDataToDb(discountsJsonLines);
+        addDataToDb(archive7);
         addDataToDb(archive6);
         addDataToDb(archive5);
         addDataToDb(archive4);
@@ -49,34 +54,43 @@ public class DataDirectivePersister {
         addDataToDb(archive);
     }
 
+    private void emptyDb() throws Exception {
+        initializeDbConnection();
+
+        Statement st = con.createStatement();
+        st.executeUpdate("DELETE FROM discounts");
+        st.close();
+
+        closeDbConnection();
+    }
+
     private void addDataToDb(List<String> dataLines) throws Exception {
         initializeDbConnection();
+
+        PreparedStatement st = con.prepareStatement("INSERT INTO discounts (" +
+            "company, " +
+            "discount_code, " +
+            "discount_percentage, " +
+            "influencer, " +
+            "date) " +
+            "VALUES (?, ?, ?, ?, ?)");
 
         for(String line : dataLines) {
             line = removeQuotesAndLastCommaFromLine(line);
             line = addEmptyDiscountCodeToLineIfNeeded(line);
 
             if(line.length() > 5) {
-                Statement st = con.createStatement();
+                st.setString(1, getCompanyFromLine(line));
+                st.setString(2, getDiscountCodeFromLine(line));
+                st.setString(3, getDiscountPercentageFromLine(line));
+                st.setString(4, getInfluencerFromLine(line));
+                st.setDate(5, getDateFromLine(line));
 
-                st.executeUpdate("INSERT INTO discounts (" +
-                    "company, " +
-                    "discount_code, " +
-                    "discount_percentage, " +
-                    "influencer, " +
-                    "date) " +
-                    "VALUES ('" +
-                    getCompanyFromLine(line) + "', '" +
-                    getDiscountCodeFromLine(line) + "', '" +
-                    getDiscountPercentageFromLine(line) + "', '" +
-                    getInfluencerFromLine(line) + "', '" +
-                    getDateFromLine(line) + "'" +
-                    ")");
-
-                st.close();
+                st.executeUpdate();
             }
         }
 
+        st.close();
         closeDbConnection();
     }
 
