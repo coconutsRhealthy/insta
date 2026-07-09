@@ -30,7 +30,8 @@ public class TikTokAnalysis {
         Map<String, Integer> tikTokkersFromDb4 = getTikTokkersFromDb("Netherlands", "true", "2024-10-15");
         Map<String, Integer> tikTokkersFromDb5 = getTikTokkersFromDb("Netherlands", "true", "2025-01-07");
         Map<String, Integer> tikTokkersFromDb6 = getTikTokkersFromDb("Netherlands", "true", "2025-04-13");
-        Map<String, Integer> tikTokkersFromDb7 = getTikTokkersFromDb("Netherlands", "", "2025-07-30");
+        Map<String, Integer> tikTokkersFromDb7 = getTikTokkersFromDb("Netherlands", "true", "2025-07-30");
+        Map<String, Integer> tikTokkersFromDb8 = getTikTokkersFromDb("Netherlands", "", "2026-04-20");
 
         int minimumFollowersForNewUsers = 1000;
         tikTokkersFromDb4.entrySet().removeIf(entry -> entry.getValue() < minimumFollowersForNewUsers);
@@ -42,8 +43,8 @@ public class TikTokAnalysis {
         combined.putAll(tikTokkersFromDb4);
         combined.putAll(tikTokkersFromDb5);
         combined.putAll(tikTokkersFromDb6);
-        //combined.putAll(tikTokkersFromDb7);
-        tikTokkersFromDb7.entrySet().stream()
+        combined.putAll(tikTokkersFromDb7);
+        tikTokkersFromDb8.entrySet().stream()
                 .filter(e -> ThreadLocalRandom.current().nextDouble() < 0.37)
                 .forEach(e -> combined.put(e.getKey(), e.getValue()));
 

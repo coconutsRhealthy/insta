@@ -31,7 +31,7 @@ public class TikTokNewProfilesFinder {
         tiktokUsers.forEach((key, value) -> {
             try {
                 tikTokInfluencerPersister.addTiktokUserToDb
-                        (key, value, "-", "", "2025-07-30");
+                        (key, value, "-", "", "2026-04-20");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -41,7 +41,7 @@ public class TikTokNewProfilesFinder {
     private Map<String, Integer> getAllTiktokUsers() throws Exception {
         Map<String, Integer> allTiktokUsers = new HashMap<>();
 
-        List<String> filePaths = Files.list(Paths.get("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/tiktok_test/new_jul25"))
+        List<String> filePaths = Files.list(Paths.get("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/tiktok_test/new_apr26"))
                 .filter(Files::isRegularFile)
                 .map(Path::toString)
                 .collect(Collectors.toList());
@@ -67,7 +67,7 @@ public class TikTokNewProfilesFinder {
     private Map<String, JSONArray> getAllPostsForAllTiktokUsers() throws Exception {
         Map<String, JSONArray> allPostsForAllTiktokUsers = new HashMap<>();
 
-        List<String> filePaths = Files.list(Paths.get("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/tiktok_test/new_jul25"))
+        List<String> filePaths = Files.list(Paths.get("/Users/lennartmac/Documents/Projects/insta/src/main/resources/static/apify/tiktok_test/new_apr26"))
                 .filter(Files::isRegularFile)
                 .map(Path::toString)
                 .collect(Collectors.toList());
@@ -163,7 +163,7 @@ public class TikTokNewProfilesFinder {
                 String country = openAi.isTiktokProfileDutch(entry.getValue());
                 String lineToAdd = entry.getKey() + " - " + country + System.lineSeparator();
                 tikTokInfluencerPersister.executeUpdateCountryQuery(entry.getKey(), country);
-                Files.write(Paths.get("/Users/lennartmac/Desktop/influencer_persister_stuff/2025/jul/tiktok_users.txt"), lineToAdd.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+                Files.write(Paths.get("/Users/lennartmac/Desktop/influencer_persister_stuff/2026/apr/tiktok_users.txt"), lineToAdd.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
                 System.out.println("******* " + counter++ + " *******");
             } else {
                 System.out.println("Country already set for: " + entry.getKey());
